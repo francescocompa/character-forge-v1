@@ -273,9 +273,3 @@
   font-variant-numeric: tabular-nums;
   padding: var(--space-1);
 }
-
-/* Focus visibility for interactive controls unique to this view. */
-.gear-item__toggle input:focus-visible {
-  outline: var(--focus-ring-color) solid 2px;
-  outline-offset: 2px;
-}

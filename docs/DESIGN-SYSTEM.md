@@ -186,3 +186,13 @@ outline icons, even within its own 4-button rail):
 - Shared modal/scrim base across `library/`, `manage/`, `session/additions/`.
 - Chip/badge audit against §5's checklist as new views get built (T22 and
   beyond) — not urgent today, just don't skip the check.
+- **From Francesco's own post-interview UX audit (D23):** a real button
+  taxonomy (radius/size are ad hoc across 18 uses); rest icons redone in the
+  new outline set (currently flat-filled, emoji-adjacent); feature-tappability
+  gap (`ProgressionRow` — needs a UI-vs-compile-pipeline call first); Saves
+  and Skills moved adjacent (monster-forge's own statblock combines them into
+  one table); top-bar consolidation into a settings affordance; the macro
+  character-list ↔ sheet nav layer (not a D18 reopening — a different layer);
+  a real layout pass on the Equipment/gear section; the type scale extended
+  past chrome/sm/md (20 hardcoded font-size values today) and all call sites
+  migrated. Full detail and verification notes: `docs/DECISIONS.md` D23.

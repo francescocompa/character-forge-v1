@@ -77,7 +77,7 @@ body {
 .variant-chip.is-active {
   background: var(--accent-soft);
   border-color: transparent;
-  color: var(--ink-primary);
+  color: var(--ink-on-accent);
 }
 
 /* --- session actions (add / export) ------------------------------------- */

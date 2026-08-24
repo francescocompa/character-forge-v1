@@ -3,6 +3,33 @@
 Newest batch first. One entry per task/batch; reference the planning task ids
 (T01–T22) where applicable.
 
+## 2026-08-24 — docs + fix: D23, Francesco's own UX audit filed to T25
+
+After the interview batch below, Francesco reviewed the live app himself and
+flagged 10 more findings the interview hadn't surfaced (buttons, feature
+tappability, block organization, top-bar clutter, macro nav, contrast,
+spacing, gear density, type scale). Each verified against the actual
+code/live UI before filing — see `docs/DECISIONS.md` D23.
+
+- **Fixed today:** `.variant-chip.is-active` contrast (`app/appShell.css`)
+  — was `--ink-primary` (near-white) on `--accent-soft` (light lavender),
+  two light colors; now `--ink-on-accent`, the token that already existed
+  for exactly this case. A leftover duplicate `:focus-visible` override
+  removed from `equipment.css` (dead code once the global rule landed).
+- **Filed to `T25`** (data folder): a real button taxonomy (18 controls
+  mixing `--radius-pill` with the sm/md/lg/xl scale, no rule for which gets
+  which — monster-forge's own unresolved CTA-unification mistake,
+  inherited rather than fixed); rest icons redone in the new outline set
+  (currently flat-filled SVG, reads as emoji); a feature-tappability gap
+  (`ProgressionRow` — needs a UI-vs-compile-pipeline call first, not
+  guessed); Saves+Skills moved adjacent (monster-forge's actual statblock
+  renderer combines ability/mod/save into one table, skills as one line
+  below — verified precedent); top-bar consolidation into a settings
+  affordance; the macro character-list↔sheet nav layer; a real layout pass
+  on Equipment/gear; the type scale extended past chrome/sm/md (20
+  hardcoded `font-size` values today) and migrated.
+- `verify` green; contrast fix screenshot-verified live.
+
 ## 2026-08-24 — docs + fix: UX/UI skeleton interview, quick wins (T25 opened)
 
 T23 (monster-forge DS alignment) merged without its acceptance boxes ticked

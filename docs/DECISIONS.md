@@ -153,3 +153,109 @@ selector replacing the per-file box-shadow rule).
 Affects: `app/src/tokens/tokens.css` (`--focus-ring` → a single `outline`-based
 rule), every file currently setting `box-shadow: var(--focus-ring)` on
 `:focus-visible` (drops the per-file declaration once the global rule lands).
+
+### D23 — Francesco's post-interview UX audit: 10 findings, filed to T25 · 2026-08-24 · DECIDED
+
+Mechanism: direct feedback in chat, not an AskUserQuestion round — Francesco
+reviewed the live app himself after D16–D22 and flagged 10 items the
+interview hadn't surfaced. Each was verified against the actual code/live UI
+before filing (not transcribed at face value) — see per-item notes below.
+Raw note (verbatim): "the buttons are all over the place: too big sometimes,
+usage of rounded buttons that were never used elsewhere, use of emoji like
+icons for short and long rest / not all features are clickable showing the
+modal (ex. second wind in features should also be) / the organization of
+the blocks is weird (ex. skills should be under saves) / saves and in
+general the stats should be treated more like they do in monster forge, in
+one element / the clunky settings on top should take all that space, but
+should be reorganized and nested in settings / the macro navigation
+structure (ex. character list and character sheet) should be organized like
+monster forge / some elements have not enough visual contrast (ex. variants
+chip in your characters) / spacing between lines is too cramped sometimes /
+the gear section is a mess / the font sizes are a mess and inconsistent"
+
+Chosen: all 10 are real; filed to `planning/tasks/T25-ux-skeleton.md`
+(data folder) as new deliverables, two fixed immediately as trivial
+same-session corrections. Verification per item:
+
+1. **Buttons inconsistent** — confirmed: `--radius-pill` (999px) is used on
+   18 different button/chip/control types across 12 files, mixed
+   indiscriminately with the `--radius-sm/md/lg/xl` scale, with no rule for
+   which control gets which. Exactly monster-forge's own unresolved
+   `.btn`/`.fab`/`.start-combat` non-unification (Batch 100) — character-forge
+   inherited the mistake rather than the fix.
+2. **Emoji-like rest icons** — confirmed, but not literally emoji: `RecoverIcon`
+   (`components/chips/RecoverIcon.tsx`) is a hand-rolled flat-filled SVG (a
+   solid circle for "sun", a solid crescent for "moon") — visually reads as
+   emoji-style icon language even though it's real SVG. Conflicts with D21's
+   new outline-icon rule; redo it in the new icon library as part of D21's
+   rollout, not left as a bespoke exception.
+3. **Second Wind not clickable** — confirmed in `ProgressionRow.tsx`: a
+   feature name is only a `RefLink` (opens the library popover) when
+   `item.ref` is set on the compiled data; when absent it's plain text with
+   no way to see more. Open question, not guessed: is this a UI bug (every
+   feature should be tappable to _something_, ref or not) or a compile-layer
+   data gap (this fixture's Second Wind is just missing a `ref` it should
+   have)? Different owners — UI fix belongs in T25, data-completeness fix
+   belongs in the compile pipeline. Ask Francesco before assuming which.
+4. **Block organization / saves+skills combined** — confirmed in
+   `MainSheet.tsx`: `SavesBlock` lives in the left rail; `SkillsBlock` lives
+   in the third ("detail") column, after Defense/Resources/Attacks/Actions —
+   spatially far apart, and on mobile several unrelated panels stack between
+   them. Cross-checked monster-forge's actual statblock renderer
+   (`engine.js` `sbAbilityTableHTML`): ability score + modifier + save render
+   as **one compact table**, with skills as a single inline paragraph
+   directly below it — not three separate cards. Real, verified precedent for
+   "in one element."
+5. **Top bar clutter** — confirmed by inspection: the chrome above the tab
+   row is 3 stacked rows (back+name / +Add+Export+Level·Build / variant
+   chips) before any sheet content appears. Needs consolidating into a
+   settings affordance rather than permanent top-of-screen real estate —
+   design work, not a code bug; scope it in T25 rather than guessing a
+   layout.
+6. **Macro nav (character list ↔ sheet)** — the character-list screen
+   ("Your characters") is a flat list with no persistent structure; opening
+   a character replaces it entirely with the sheet (back button to return).
+   Not a re-litigation of D18 (which is about in-sheet section tabs) — this
+   is the outer app-level navigation layer, genuinely new scope. Needs its
+   own look at monster-forge's Forge/Bestiary/Adventures/Combat rail pattern
+   for _this_ layer specifically.
+7. **Variant chip contrast** — confirmed and fixed today:
+   `.variant-chip.is-active` (`app/appShell.css`) set `color: var(--ink-primary)`
+   (near-white) on `background: var(--accent-soft)` (a light lavender) — two
+   light colors, poor contrast. `--ink-on-accent` exists in `tokens.css`
+   specifically for text-on-light-accent-fill and wasn't being used here.
+   Now fixed. The _inactive_ chip's dim-on-dark pairing is the same
+   `--ink-secondary`-on-`--surface-raised` combo used as the app's standard
+   secondary-text convention everywhere else — if that reads as low-contrast
+   too, it's an app-wide token question, not a one-off fix; flagged for T25
+   rather than changed unilaterally (would touch every secondary-text
+   instance in the app).
+8. **Cramped line spacing** — not independently verified line-by-line (no
+   single root cause found); filed to T25 as a targeted pass rather than a
+   guessed global `line-height` bump, since over-correcting risks breaking
+   the sheet's intentionally dense, printed-sheet feel.
+9. **Gear section a mess** — `equipment.css` itself is actually well-tokenized
+   (correct micro-label usage, consistent chrome tokens); the "mess" reads as
+   a density/visual-rhythm problem (many near-identical gray
+   `surface-overlay` cards stacked with checkbox+qty+weight+cost all inline)
+   rather than a code-hygiene one. Needs an actual layout pass, not a token
+   fix — filed to T25.
+10. **Font sizes a mess** — confirmed: 20 hardcoded `font-size` values (not
+    token references) across 10 files — `1.5rem`, `1.25rem`, `1.1rem`,
+    `1.05rem`, `0.85em`, `1rem`, etc. Root cause: the type scale
+    (`--font-size-chrome/sm/md` in `tokens.css`) only covers three small
+    sizes — nothing for headings or big stat numbers — so every view invents
+    its own value for anything larger. Real fix is extending the token scale
+    (e.g. `--font-size-lg`/`--font-size-xl`), then migrating the 20 call
+    sites onto it — filed to T25, not done as a quick win (touches too many
+    files to do safely without a dedicated pass).
+
+Fixed today (trivial, same-session): #7 (variant-chip contrast →
+`--ink-on-accent`); a leftover duplicate `:focus-visible` override in
+`equipment.css` found while investigating #9 (dead code once D22's global
+rule landed — removed).
+Enforced by: prose only; #1–#6, #8–#10 are new T25 deliverables/acceptance
+items; #3 needs a Francesco call before scoping (data vs. UI fix).
+Affects: `planning/tasks/T25-ux-skeleton.md` (data folder, expanded),
+`app/src/app/appShell.css`, `app/src/views/Equipment/equipment.css` (both
+fixed today).
