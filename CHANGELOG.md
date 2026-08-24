@@ -47,6 +47,11 @@ option: `docs/DECISIONS.md` D29–D34.
   pins for situational features/spells) and a monster-forge-style inspect/
   breakdown tool (score composition, proficiency source) — both need their
   own design pass first.
+- **Tools duplication (D35), fixed post-review.** "Tools" rendered in both
+  the new Skills chip row and the existing Senses & Proficiencies flat
+  list. Removed from `SensesBlock` — Tools stays exclusively in Skills
+  (it has a check-shaped role), Senses & Proficiencies keeps Armor/Weapons
+  (never rolled).
 
 `verify` green throughout (220/41/50 tests); `character-forge-validate`
 passes both fixtures; screenshot-verified at 1280px and 375px on the main

@@ -39,12 +39,16 @@ export function DefensesBlock() {
   )
 }
 
-/** Senses, languages, and armor/weapon/tool proficiencies. */
+/**
+ * Senses, languages, and armor/weapon proficiencies. Tool proficiencies live
+ * in the Skills panel instead (T26) — tools get a check, same as skills;
+ * armor/weapons don't, so they stay here as a flat reference list. Showing
+ * tools in both places was redundant (flagged post-T26).
+ */
 export function SensesBlock() {
   const { character } = useCharacter()
   const { senses, languages, proficiencies } = character.stats
-  const hasProf =
-    proficiencies?.armor?.length || proficiencies?.weapons?.length || proficiencies?.tools?.length
+  const hasProf = proficiencies?.armor?.length || proficiencies?.weapons?.length
   if (!senses?.length && !languages?.length && !hasProf) return null
   return (
     <section className="panel senses" aria-label="Senses, languages, and proficiencies">
@@ -77,12 +81,6 @@ export function SensesBlock() {
         <div className="senses__group">
           <span className="field-label">Weapons</span>
           <span className="senses__value">{proficiencies.weapons.join(', ')}</span>
-        </div>
-      )}
-      {proficiencies?.tools && proficiencies.tools.length > 0 && (
-        <div className="senses__group">
-          <span className="field-label">Tools</span>
-          <span className="senses__value">{proficiencies.tools.join(', ')}</span>
         </div>
       )}
     </section>

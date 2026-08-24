@@ -671,3 +671,23 @@ Chosen: both logged as named backlog items, not built:
   Enforced by: prose only — named here so neither gets silently re-proposed
   or built ad hoc inside a future, unrelated task.
   Affects: `planning/tasks/T26-check-rows.md` (backlog section).
+
+### D35 — Tools shown once, in Skills only · 2026-08-24 · DECIDED
+
+Mechanism: direct feedback in chat — Francesco caught, from the T26
+screenshots, that "Tools" rendered in both the new Skills panel chip row
+and the existing Senses & Proficiencies flat list (same data,
+`stats.proficiencies.tools`, two places).
+Chosen: removed from `SensesBlock` (`views/MainSheet/Defenses.tsx`) —
+Senses & Proficiencies keeps Senses/Languages/Armor/Weapons, a flat
+reference list of things that don't get a roll. Tools stays exclusively in
+the Skills panel, where they got a check-shaped role in T26 (proficient
+tools as chips below a divider) — the same reasoning that put them next to
+Skills in the first place (a tool proficiency is closer to "something you
+roll for" than to armor/weapon permissions, which never get a check).
+`hasProf` (the panel's own visibility gate) updated to stop counting tools,
+so a character with only tool proficiency and no armor/weapons doesn't
+render an empty Senses & Proficiencies panel.
+Enforced by: `verify` green; screenshot-verified live — "Tools" now
+appears exactly once.
+Affects: `app/src/views/MainSheet/Defenses.tsx`.
