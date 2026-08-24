@@ -288,6 +288,17 @@ same-session corrections. Verification per item:
    `surface-overlay` cards stacked with checkbox+qty+weight+cost all inline)
    rather than a code-hygiene one. Needs an actual layout pass, not a token
    fix — filed to T25.
+
+   **Implemented 2026-08-24 (T25 #14):** each gear card split into two
+   rows — `.gear-item__row--main` (name/qty/attuned, the identity line) and
+   `.gear-item__row--meta` (Equipped/Carried toggles left, weight/cost
+   right via `margin-left: auto` on `.gear-item__stats`), separated by a
+   subtle hairline. Weight/cost now land at the same right edge on every
+   card in a section instead of trailing wherever they fell in one wrapping
+   row — the actual "no column alignment" complaint. Tokens untouched (the
+   file was already correct); screenshot-verified at 1280px and 375px, 44px
+   toggle targets unchanged.
+
 10. **Font sizes a mess** — confirmed: 20 hardcoded `font-size` values (not
     token references) across 10 files — `1.5rem`, `1.25rem`, `1.1rem`,
     `1.05rem`, `0.85em`, `1rem`, etc. Root cause: the type scale

@@ -14,32 +14,38 @@ function ItemRowBody({ item }: { item: Item }) {
 
   return (
     <div className="gear-item">
-      <div className="gear-item__head">
-        <label className="gear-item__toggle">
-          <input
-            type="checkbox"
-            checked={equipped}
-            onChange={(e) => store.setEquipped(item.id, { equipped: e.target.checked })}
-          />
-          Equipped
-        </label>
-        <label className="gear-item__toggle">
-          <input
-            type="checkbox"
-            checked={carried}
-            onChange={(e) => store.setEquipped(item.id, { carried: e.target.checked })}
-          />
-          Carried
-        </label>
+      <div className="gear-item__row gear-item__row--main">
         <span className="gear-item__name">
           {item.ref ? <RefLink label={item.name} onClick={() => openRef(item.ref!)} /> : item.name}
         </span>
         {item.quantity > 1 && <span className="gear-item__qty">×{item.quantity}</span>}
-        {item.weightLb !== undefined && (
-          <span className="gear-item__weight">{item.weightLb} lb</span>
-        )}
-        {item.cost && <span className="gear-item__cost">{item.cost}</span>}
         {item.attuned && <span className="chip gear-item__attuned">Attuned</span>}
+      </div>
+      <div className="gear-item__row gear-item__row--meta">
+        <div className="gear-item__toggles">
+          <label className="gear-item__toggle">
+            <input
+              type="checkbox"
+              checked={equipped}
+              onChange={(e) => store.setEquipped(item.id, { equipped: e.target.checked })}
+            />
+            Equipped
+          </label>
+          <label className="gear-item__toggle">
+            <input
+              type="checkbox"
+              checked={carried}
+              onChange={(e) => store.setEquipped(item.id, { carried: e.target.checked })}
+            />
+            Carried
+          </label>
+        </div>
+        <div className="gear-item__stats">
+          {item.weightLb !== undefined && (
+            <span className="gear-item__weight">{item.weightLb} lb</span>
+          )}
+          {item.cost && <span className="gear-item__cost">{item.cost}</span>}
+        </div>
       </div>
       {item.summary && (
         <div className="gear-item__summary">
@@ -75,15 +81,19 @@ function AdditionRow({ addition }: { addition: Addition }) {
   return (
     <li className="gear-item-wrap">
       <div className="gear-item gear-item--addition">
-        <div className="gear-item__head">
+        <div className="gear-item__row gear-item__row--main">
           <span className="gear-item__name">{addition.name}</span>
           {quantity > 1 && <span className="gear-item__qty">×{quantity}</span>}
-          {addition.weightLb !== undefined && (
-            <span className="gear-item__weight">{addition.weightLb} lb</span>
-          )}
           <SessionMarker />
           <AdditionControls addition={addition} />
         </div>
+        {addition.weightLb !== undefined && (
+          <div className="gear-item__row gear-item__row--meta">
+            <span className="gear-item__stats">
+              <span className="gear-item__weight">{addition.weightLb} lb</span>
+            </span>
+          </div>
+        )}
         {addition.summary && (
           <div className="gear-item__summary">
             <MarkupText source={addition.summary} />

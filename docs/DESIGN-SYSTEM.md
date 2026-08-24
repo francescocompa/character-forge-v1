@@ -230,8 +230,12 @@ env(safe-area-inset-bottom, 0px)` on the bar itself, plus a
   - ~~Saves and Skills moved adjacent~~ — minimum done: both in
     `.main-sheet__col--detail`, directly touching. The full combined-table
     merge (monster-forge's precedent) is a future pass, not guessed here.
+  - ~~Gear section layout~~ — done: each card split into an identity row
+    (name/qty/attuned) and a controls/stats row (toggles left, weight/cost
+    right, consistently aligned across a section) — a density/rhythm fix,
+    tokens untouched (the file was already correct).
   - Still open: top-bar consolidation into a settings affordance (needs a
     mockup + Francesco sign-off); the macro character-list ↔ sheet nav
     layer (not a D18 reopening — a different layer, also needs a mockup +
-    sign-off); a real layout pass on the Equipment/gear section.
-    Full detail and verification notes: `docs/DECISIONS.md` D23–D25.
+    sign-off).
+    Full detail and verification notes: `docs/DECISIONS.md` D23–D26.

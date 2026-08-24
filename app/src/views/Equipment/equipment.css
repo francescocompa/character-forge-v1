@@ -49,17 +49,38 @@
 .gear-item {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-1);
   padding: var(--space-2);
   background: var(--surface-overlay);
   border-radius: var(--radius-sm);
 }
 
-.gear-item__head {
+/* Two-tier layout (T25 #14): identity (name/qty/attuned) on top, controls +
+   stats below on their own row — was one wrapping row with 7 unrelated
+   pieces of information at equal weight and no row-to-row alignment. */
+.gear-item__row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
+}
+
+.gear-item__row--meta {
+  padding-top: 2px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.gear-item__toggles {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.gear-item__stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
 }
 
 .gear-item__toggle {
