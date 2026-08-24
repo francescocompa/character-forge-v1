@@ -23,13 +23,32 @@ truth for scope, architecture, and decisions.
 ## The content boundary (this repo is PUBLIC)
 
 **No WotC/game content in this repo.** Real character files (which embed rules
-extracts) and copyrighted text are git-ignored by design and live in a local
-Google Drive-synced data folder. Tests use synthetic fixtures only.
+extracts) and copyrighted text are git-ignored by design and live in a local,
+non-synced data folder (`~/Documents/D&D/D&D Character Builder`, its own
+`CLAUDE.md`). Tests use synthetic fixtures only.
+
+## Guardrails
+
+- **The app never writes character files.** Only `compile` and `kb-audit`
+  (Claude Code sessions, run in the data folder) do — see
+  [`pipeline/README.md`](pipeline/README.md#guardrails-scope-4).
+- **The contract is [`schema/`](schema/README.md)** — compiler, validator,
+  and renderer all code against it; where a doc and the schema disagree, the
+  schema wins.
+- **No cross-contamination** from Francesco's other projects (design or
+  code) — this repo's conventions and visual language are its own.
 
 ## The verify gate
 
 **`npm run verify` = typecheck + lint + test — run after any code edit** before
 treating it as done.
+
+## Conventions
+
+Strict TypeScript throughout (`app/`, `schema/`, `pipeline/validate/`).
+Styling is tokens-only (`app/src/tokens/tokens.css` — no ad-hoc colors/sizes).
+Conventional commits (`feat(app): … (T24)`, `fix(pipeline): …`), one task or
+batch per commit, logged in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Context boundary
 

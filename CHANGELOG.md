@@ -3,6 +3,30 @@
 Newest batch first. One entry per task/batch; reference the planning task ids
 (T01–T22) where applicable.
 
+## 2026-08-24 — docs: finish T21 (project docs)
+
+Completed the deliverables the 2026-07-26 index commit left open.
+
+- **`CLAUDE.md`**: added the missing guardrails (app never writes character
+  files, schema is the contract, no cross-contamination), the `schema/`
+  pointer, and a conventions section (strict TS, tokens-only styling,
+  conventional commits). Fixed a stale claim that the data folder is
+  Google Drive-synced — it's local-only.
+- **`README.md`**: added an architecture section (pipeline diagram +
+  `schema`/`pipeline`/`app` roles), an install link, and a license line.
+  Screenshot still owed (manual capture).
+- **License resolved with Francesco (not assumed): MIT.** Added `LICENSE`,
+  updated `package.json`.
+- **`docs/README.md`**: was a stale stub ("land in later tasks") — now
+  cross-links the doc set.
+- Data-folder `CLAUDE.md` written and the top-level `~/Documents/D&D/CLAUDE.md`
+  sub-context list updated (4th row) — both outside this repo, in the local
+  data home and the synced D&D `Local Files` folder.
+- **⚑ Flagged, not fixed:** `docs/PROJECT-SCOPE.md` (D3, D9) and
+  `docs/INSTALL.md` assume the data folder is Drive-synced for phone
+  transfer; it isn't. Needs a decision from Francesco before those get
+  rewritten — see T21's Done note in `planning/tasks/`.
+
 ## 2026-07-05 — chore: prettier sweep + format gate in verify
 
 Housekeeping after merging the T19/T20/T23/T24 branches to main.
