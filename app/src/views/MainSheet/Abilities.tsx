@@ -5,6 +5,7 @@ import { MarkupText } from '../../library'
 import { useCharacter } from '../../character/CharacterProvider'
 import { rollCheck, rollableProps } from '../../dice'
 import { ABILITY_ORDER, signed } from './format'
+import { CheckRow } from './CheckRow'
 
 function abilityStyle(ability: Ability): CSSVarStyle {
   return { '--chip-fg': ABILITY_COLOR[ability], '--chip-bg': ABILITY_SOFT[ability] }
@@ -55,7 +56,10 @@ export function ProficiencyDot({ level }: { level: keyof typeof PROF_LABEL }) {
   )
 }
 
-/** Saving throws: ability-colored, with a proficiency marker and final modifier. */
+/** Saving throws (T26): its own compact list next to the ability rail, same row
+ *  anatomy as Skills — moved out of the ability cards (D19-adjacent decision,
+ *  T26) once a save with an edge badge + note turned out too tight to fit
+ *  inside the small card. */
 export function SavesBlock() {
   const { character } = useCharacter()
   // Present saves in canonical ability order regardless of file order.
@@ -63,23 +67,22 @@ export function SavesBlock() {
   return (
     <section className="panel saves" aria-label="Saving throws">
       <h2 className="panel__title">Saves</h2>
-      <ul className="saves__list">
+      <ul className="check-list">
         {ABILITY_ORDER.map((ability) => {
           const save = byAbility.get(ability)
           if (!save) return null
           return (
-            <li
+            <CheckRow
               key={ability}
-              style={abilityStyle(ability)}
-              {...rollableProps(
-                (mode) => rollCheck(`${ability} save`, save.modifier, { mode, isAttack: false }),
-                { className: 'save-row', label: `Roll ${ability} saving throw` },
-              )}
-            >
-              <ProficiencyDot level={save.proficient ? 'proficient' : 'none'} />
-              <span className="save-row__abbr">{ability}</span>
-              <span className="save-row__mod">{signed(save.modifier)}</span>
-            </li>
+              label={ability}
+              ability={ability}
+              modifier={save.modifier}
+              proficiency={save.proficient ? 'proficient' : 'none'}
+              edge={save.edge}
+              bonusDice={save.bonusDice}
+              note={save.note}
+              rollLabel={`${ability} save`}
+            />
           )
         })}
       </ul>
@@ -87,30 +90,46 @@ export function SavesBlock() {
   )
 }
 
-/** Skills: proficiency/expertise dot, ability tint, final modifier; plus passives. */
+/** Skills (T26): uniform rows — ability-tinted name chip (monster-forge's
+ *  cc-skill/cc-ab convention), optional edge badge + bonus dice, modifier
+ *  right-aligned, note collapsed behind the chip's own chevron. Tools with
+ *  proficiency follow as plain chips (no fixed ability/modifier in the
+ *  schema — a DM picks the ability contextually, same as monster-forge). */
 export function SkillsBlock() {
   const { character } = useCharacter()
-  const { skills, passives } = character.stats
+  const { skills, passives, proficiencies } = character.stats
+  const tools = proficiencies?.tools ?? []
   return (
     <section className="panel skills" aria-label="Skills">
       <h2 className="panel__title">Skills</h2>
-      <ul className="skills__list">
+      <ul className="check-list">
         {skills.map((skill) => (
-          <li
+          <CheckRow
             key={skill.name}
-            style={{ '--chip-fg': ABILITY_COLOR[skill.ability] } as CSSVarStyle}
-            {...rollableProps(
-              (mode) => rollCheck(skill.name, skill.modifier, { mode, isAttack: false }),
-              { className: 'skill-row', label: `Roll ${skill.name}` },
-            )}
-          >
-            <ProficiencyDot level={skill.proficiency} />
-            <span className="skill-row__name">{skill.name}</span>
-            <span className="skill-row__abil">{skill.ability}</span>
-            <span className="skill-row__mod">{signed(skill.modifier)}</span>
-          </li>
+            label={skill.name}
+            ability={skill.ability}
+            modifier={skill.modifier}
+            proficiency={skill.proficiency}
+            edge={skill.edge}
+            bonusDice={skill.bonusDice}
+            note={skill.note}
+            rollLabel={skill.name}
+          />
         ))}
       </ul>
+      {tools.length > 0 && (
+        <>
+          <hr className="section-div" />
+          <span className="field-label">Tools</span>
+          <div className="tool-chips">
+            {tools.map((tool) => (
+              <span key={tool} className="tool-chip">
+                {tool}
+              </span>
+            ))}
+          </div>
+        </>
+      )}
       {passives && (
         <ul className="passives">
           {passives.perception !== undefined && (

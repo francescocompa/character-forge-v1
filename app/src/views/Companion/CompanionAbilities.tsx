@@ -2,7 +2,7 @@ import type { Ability, CompanionSheet } from '@character-forge/schema/types.ts'
 import { ABILITY_COLOR, ABILITY_SOFT } from '../../components/chips/colorMaps'
 import type { CSSVarStyle } from '../../components/chips/css-vars'
 import { ABILITY_ORDER, signed } from '../MainSheet/format'
-import { ProficiencyDot } from '../MainSheet/Abilities'
+import { CheckRow } from '../MainSheet/CheckRow'
 
 function abilityStyle(ability: Ability): CSSVarStyle {
   return { '--chip-fg': ABILITY_COLOR[ability], '--chip-bg': ABILITY_SOFT[ability] }
@@ -33,16 +33,22 @@ export function CompanionSaves({ companion }: { companion: CompanionSheet }) {
   return (
     <section className="panel saves" aria-label={`${companion.name} saving throws`}>
       <h2 className="panel__title">Saves</h2>
-      <ul className="saves__list">
+      <ul className="check-list">
         {ABILITY_ORDER.map((ability) => {
           const save = byAbility.get(ability)
           if (!save) return null
           return (
-            <li key={ability} className="save-row" style={abilityStyle(ability)}>
-              <ProficiencyDot level={save.proficient ? 'proficient' : 'none'} />
-              <span className="save-row__abbr">{ability}</span>
-              <span className="save-row__mod">{signed(save.modifier)}</span>
-            </li>
+            <CheckRow
+              key={ability}
+              label={ability}
+              ability={ability}
+              modifier={save.modifier}
+              proficiency={save.proficient ? 'proficient' : 'none'}
+              edge={save.edge}
+              bonusDice={save.bonusDice}
+              note={save.note}
+              rollLabel={`${companion.name} ${ability} save`}
+            />
           )
         })}
       </ul>
@@ -56,18 +62,19 @@ export function CompanionSkills({ companion }: { companion: CompanionSheet }) {
   return (
     <section className="panel skills" aria-label={`${companion.name} skills`}>
       <h2 className="panel__title">Skills</h2>
-      <ul className="skills__list">
+      <ul className="check-list">
         {companion.skills.map((skill) => (
-          <li
+          <CheckRow
             key={skill.name}
-            className="skill-row"
-            style={{ '--chip-fg': ABILITY_COLOR[skill.ability] } as CSSVarStyle}
-          >
-            <ProficiencyDot level={skill.proficiency} />
-            <span className="skill-row__name">{skill.name}</span>
-            <span className="skill-row__abil">{skill.ability}</span>
-            <span className="skill-row__mod">{signed(skill.modifier)}</span>
-          </li>
+            label={skill.name}
+            ability={skill.ability}
+            modifier={skill.modifier}
+            proficiency={skill.proficiency}
+            edge={skill.edge}
+            bonusDice={skill.bonusDice}
+            note={skill.note}
+            rollLabel={`${companion.name} ${skill.name}`}
+          />
         ))}
       </ul>
     </section>

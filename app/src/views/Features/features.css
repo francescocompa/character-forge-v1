@@ -172,6 +172,7 @@
 .feature-row__summary {
   color: var(--ink-secondary);
   font-size: var(--font-size-sm);
+  line-height: var(--line-height-prose);
 }
 
 .feature-row__use {

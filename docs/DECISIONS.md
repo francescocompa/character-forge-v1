@@ -483,3 +483,191 @@ fix" — it can resurface as its own task later.
 Enforced by: prose only.
 Affects: `planning/tasks/T25-ux-skeleton.md` (#11 marked deferred, not
 done); no code changed.
+
+---
+
+## T26 — post-T25 design interview (D23 items #9/#11/#13, reopened 2026-08-24)
+
+Francesco asked to keep going on T25's leftover items via a real back-and-forth
+(in-chat mockups + AskUserQuestion rounds, several iterations each) rather than
+close them out at the T25-minimum bar. What came out of it grew past the
+original three items into a genuine redesign of the ability/save/skill area —
+tracked as its own task, `planning/tasks/T26-check-rows.md`.
+
+### D29 — Line spacing: `--line-height-prose` token, value 1.4 · 2026-08-24 · DECIDED
+
+Mechanism: investigation (no line-height was set anywhere in the app —
+every wrapping description fell back to the browser/Inter default of
+~1.19–1.2, measured directly: a 100px-wide clone of `.rider` rendered at
+~15.5px per line against a 13px font) + AskUserQuestion, 1 round, with an
+in-chat mockup (three real sheet lines at 1.2/1.4/1.55).
+Raw note: "1.4, however the most meaningful test is with an inline chip, to
+make sure it doesn't encroach on the nearest lines."
+Options: 1.4 (recommended) / 1.55 / skip it entirely.
+Chosen: 1.4. Verified live (not just the mockup) against the actual
+concern: `.attack__riders .rider` at 375px wraps "Riposte on parry deal
+**1d4** extra with your longsword" to two lines with an inline
+`DamageText` chip mid-line-1, and the Shortbow rider wraps around an
+inline condition chip — both screenshot-verified with clean line
+separation, no encroachment.
+Rejected 1.55 — Francesco's own earlier framing (T25) was "don't undo the
+sheet's dense, printed-sheet feel"; 1.4 already fixed the complaint without
+drifting toward article-spacing. Rejected "skip it" — the browser default
+is objectively tight for multi-line prose, confirmed by measurement, not
+just a subjective read.
+Enforced by: one token in `tokens.css`, applied to the ~15 selectors that
+render wrapping secondary prose (feature/spell/gear/mastery/attunement/
+capacity summaries and notes, attack riders, session notes, the add-dialog
+preview, and the new `.check-row__note`). Single-line labels, headers, and
+buttons are untouched — the browser default still applies there.
+Affects: `app/src/tokens/tokens.css`; `app/src/views/{MainSheet,Features,
+Spells,Equipment}/*.css`; `app/src/session/additions/additions.css`.
+
+### D30 — Saves/Skills/Abilities: shared row anatomy, saves move next to the rail · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 5 rounds across the interview, each with an
+in-chat mockup (chip-field vs. uniform rows; ability+save merge options A/B;
+revised row anatomy; row-anatomy confirmation; save-row placement).
+Raw notes (verbatim, in order):
+
+1. "saves could be embedded not with skills, but with their stats" (reframed
+   the original T25 D23#9 "merge saves+skills" direction toward "merge
+   saves+abilities" instead, matching monster-forge's actual
+   `sbAbilityTableHTML` precedent more literally).
+2. "skills should follow the monster-forge design convention and be chips
+   with a background color tied to their most tied ability."
+3. "Skills should be rows of same size, not a chipfield, with only the name
+   in chip bg and the number outside right aligned. There could be a
+   collapsed dropdown on skills with notes that when opened shows the note.
+   However, flat bonuses are included in the number, adv. is shown directly
+   in row as well as always on bonus dice."
+4. "place the dropdown indicator inside the name chip after the name,
+   clicking the name chip opens it; expertise should be marked differently
+   in the proficiency indicator and should not be featured as a note (only
+   with the inspector later); for adv/disadv., use the chip with text from
+   monster-forge." Verified against monster-forge's actual source
+   (`engine.js` `rlPartsHTML`/`.rl-advlbl`, `styles.css:753-755`): a small
+   bordered text badge ("ADV"/"DIS", `color`/`border-color: var(--ok)`/
+   `var(--bad)`), not an icon — a different, new row-level context from the
+   existing icon-based `AdvBadge`/`DisBadge` (those stay as-is, used only
+   for inline `{adv}`/`{dis}` prose tokens).
+5. "Yes, matches" (row anatomy confirmed) / "Separate compact save list,
+   next to the rail" (once a mockup showed a full save row — dot + edge
+   badge + note chevron — was tight inside the small ability card).
+   Options considered: ability+save merge — (A) augment the existing big
+   ability cards with a 4th save line [chosen initially] vs. (B) replace them
+   with monster-forge's literal compact 2-column table. Save-row home, after
+   (A) proved cramped — keep inside the cards vs. (C) a separate compact list
+   next to the rail [chosen].
+   Chosen: the existing 6 ability cards stay exactly as they were (score/mod
+   only, D18-era design, not touched) — merging saves in didn't survive
+   contact with the fuller row anatomy the notes/badges needed. `SavesBlock`
+   instead moved from `.main-sheet__col--detail` into `.main-sheet__rail`,
+   directly under `AbilityRail` — **supersedes T25 D23#9**, which had moved
+   `SavesBlock` next to `SkillsBlock` in the detail column as the "minimum
+   adjacency" bar. That adjacency is no longer the design; Saves and Skills
+   are simply two separate, fully-featured panels now.
+   Rejected: the literal monster-forge table (B) — drops the big at-a-glance
+   card identity `.ability`/`AbilityRail` already has, which was never in
+   question. Rejected keeping the full save row inside the ability card —
+   tight even in the mockup, confirmed by Francesco directly.
+   Enforced by: `CheckRow` (new, `app/src/views/MainSheet/CheckRow.tsx`) is
+   the single shared implementation for both `SavesBlock` and `SkillsBlock`
+   (MainSheet) and `CompanionSaves`/`CompanionSkills` (Companion) — one
+   component, four consumers (D19). `.check-chip` reuses `.ability-chip`'s
+   exact background/border/radius recipe (chips.css) rather than a new one.
+   Screenshot-verified at 1280px and 375px on both the main sheet and the
+   Companion view (Ember Sprite).
+   Affects: `app/src/views/MainSheet/{Abilities,CheckRow,MainSheet,
+mainSheet.css}`, `app/src/views/Companion/CompanionAbilities.tsx`.
+
+### D31 — New schema fields: `Save`/`Skill.edge` and `.bonusDice`, structured not parsed · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round.
+Raw note: (selected) "New structured fields (recommended)."
+Options: A new structured fields (`edge?: EdgeState`, `bonusDice?: string`)
+/ B keep the schema as-is, have the UI detect a leading `{adv}`/`{dis}`/
+`{dice:}` markup token in `note` and hoist it into the row.
+Chosen: A. `EdgeState = 'adv' | 'adv-situational' | 'dis' | 'dis-situational'`
+— explicit, no markup-parsing coupling between row rendering and
+authoring convention. Both fields optional (backward compatible — no
+existing character file needs to change to keep validating).
+Rejected B — would make the row's visual state depend on how a compile
+session happens to phrase the note's first token, fragile and implicit.
+Enforced by: `schema/types.ts` (`EdgeState`, `Save`/`Skill.edge`/
+`.bonusDice`) + `schema/character.schema.json` (`$defs.EdgeState`,
+both properties on `Save`/`Skill`, `additionalProperties: false` means the
+JSON Schema needed the explicit addition too, not just the TS type).
+`npx character-forge-validate` confirmed both fixtures still pass.
+Affects: `schema/types.ts`, `schema/character.schema.json`.
+
+### D32 — Fixture completeness: all 6 saves, all 18 skills, tools proficiency · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round (framed as "is the all-skills gap
+compile-pipeline scope, like D24" — Francesco redirected the framing).
+Raw note: "If the current schema supports it, then make sure it is shown
+in the precompiled character. In general, make this character more
+complete, at least at low levels, so that it renders correctly all
+features."
+Chosen: rejected the D24-style "out of scope, compile-pipeline only"
+framing — `fixtures/synthetic.character.json` (+ its variant) is the
+wholly-invented, public-repo-safe synthetic fixture (confirmed via
+`app/src/character/characterFile.ts`'s own header comment), not a real
+character file bound by the data-folder IP guardrail, so completing it is
+squarely in this repo's scope. Previously: 3 of 6 saves present (DEX/WIS/
+CHA silently missing — `SavesBlock` rendered nothing for them, not even a
+"+0, not proficient" row), 2 of 18 skills present. Now: all 6 saves and all
+18 skills, computed from the character's actual ability mods + PB, plus one
+worked example each of `edge` (situational) and `bonusDice` on both a save
+(DEX/CON) and a skill (Perception/Athletics) so the new UI states have
+something real to render. `npx character-forge-validate` passes both
+files; `npm run verify` green (220/41/50 tests, no count-specific
+assertions broken).
+Enforced by: the fixture files themselves + the validator CLI.
+Affects: `fixtures/synthetic.character.json`, `fixtures/
+synthetic-variant.character.json`.
+
+### D33 — Macro nav direction confirmed: desktop rail; implementation still deferred · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round, in-chat mockup (3 options: current
+full-replace / desktop rail / quick-switch dropdown).
+Raw note: "Desktop rail, plan for later."
+Chosen: **supersedes D28** — D28's "leave it as-is for now" is no longer
+the state; a direction is now picked (a persistent, collapsible character-
+list rail beside the open sheet, desktop only — mobile stays full-replace).
+"Plan for later" means the direction is locked but implementation is still
+not part of this pass — filed to `T26` as an explicitly-scoped, not-yet-
+built deliverable, so a future session doesn't have to re-litigate the
+direction.
+Enforced by: prose only; no code changed.
+Affects: `planning/tasks/T26-check-rows.md`.
+
+### D34 — Backlog, explicitly not built now: reminders-pinning, full inspect tool · 2026-08-24 · DECIDED
+
+Mechanism: direct feedback in chat, not an AskUserQuestion round — Francesco
+flagged both while scoping the check-row redesign, explicitly as future
+work ("let's plan for later"), not as part of this pass.
+Raw note: "for these sections but also others, there could be a space
+where you can pin auto generated reminders (ex. for skills, one could pin
+Guidance if available as spell, or Second Wind upgrade, choosing from a
+precompiled list of features you have access to). You could also not
+choose something, like Enlarge/Reduce adv. on STR saves/checks is
+situational... let's plan for later an inspect tool similar to the one in
+monster-forge... inspecting a skill should give you a custom tooltip that
+includes how the score is made (ex. PB + INT) and from where you got the
+proficiency."
+Chosen: both logged as named backlog items, not built:
+
+- **Reminders-pinning**: a per-row (skill/save, "but also others") optional
+  pin surfacing a relevant situational feature/spell from a precompiled
+  list the player chooses from (or declines) — e.g. pinning "Guidance" to
+  a skill, or a conditional ASI note to a save. Needs its own design pass
+  (what "precompiled list" is generated from, where the pin UI lives).
+- **Inspect tool**: a monster-forge-style breakdown tooltip (score
+  composition — PB + ability, proficiency source) for any check-row,
+  eventually replacing today's plain collapsible note. Explicitly named as
+  the reason expertise doesn't get a note in the meantime (D30) — that
+  breakdown belongs here, not bolted onto the interim note mechanism.
+  Enforced by: prose only — named here so neither gets silently re-proposed
+  or built ad hoc inside a future, unrelated task.
+  Affects: `planning/tasks/T26-check-rows.md` (backlog section).

@@ -123,6 +123,7 @@
 .gear-item__summary {
   color: var(--ink-secondary);
   font-size: var(--font-size-sm);
+  line-height: var(--line-height-prose);
 }
 
 .gear-item--addition {
@@ -149,6 +150,7 @@
   margin: 0;
   font-size: var(--font-size-sm);
   color: var(--ink-secondary);
+  line-height: var(--line-height-prose);
 }
 
 .mastery-option-list {
@@ -186,6 +188,7 @@
   margin-left: calc(1rem + var(--space-2));
   font-size: var(--font-size-sm);
   color: var(--ink-secondary);
+  line-height: var(--line-height-prose);
 }
 
 /* --- attunement ------------------------------------------------------------ */
@@ -220,6 +223,7 @@
 .attunement__note {
   font-size: var(--font-size-sm);
   color: var(--ink-secondary);
+  line-height: var(--line-height-prose);
 }
 
 /* --- weight & capacity ----------------------------------------------------- */
@@ -253,6 +257,7 @@
 .capacity__note {
   font-size: var(--font-size-sm);
   color: var(--ink-secondary);
+  line-height: var(--line-height-prose);
 }
 
 /* --- currency --------------------------------------------------------------- */

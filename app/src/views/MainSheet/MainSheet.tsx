@@ -21,7 +21,12 @@ export function MainSheet() {
       <IdentityStrip />
       <div className="main-sheet__grid">
         <div className="main-sheet__rail">
+          {/* Saves next to the ability rail (T26, supersedes D23 #9's
+              detail-column placement) — a full save row (edge badge + note
+              chevron) turned out too tight to fit inside the small ability
+              cards, so it's its own compact list here instead. */}
           <AbilityRail />
+          <SavesBlock />
         </div>
         <div className="main-sheet__col main-sheet__col--tempo">
           <DefenseBlock />
@@ -30,11 +35,6 @@ export function MainSheet() {
           <ActionsSlot />
         </div>
         <div className="main-sheet__col main-sheet__col--detail">
-          {/* Saves + Skills adjacent (D23 #9) — both moved here from the
-              narrow rail/tempo split so they read as one related pair,
-              matching monster-forge's own ability+save+skill precedent
-              without cramming skill names into the rail's 9–12rem width. */}
-          <SavesBlock />
           <SkillsBlock />
           <DefensesBlock />
           <SensesBlock />

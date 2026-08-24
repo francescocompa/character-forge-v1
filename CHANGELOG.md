@@ -4,6 +4,54 @@ Newest batch first. One entry per task/batch; reference the planning task ids
 (T01–T22) where applicable. T01–T16 batches archived 2026-08-24 —
 [`docs/ARCHIVE.md`](docs/ARCHIVE.md).
 
+## 2026-08-24 — feat: T26 check-row redesign, line spacing, macro nav direction
+
+A real back-and-forth design interview (in-chat mockups + AskUserQuestion,
+several rounds each) on T25's three leftover items grew into a genuine
+redesign of the ability/save/skill area. Full rationale and every rejected
+option: `docs/DECISIONS.md` D29–D34.
+
+- **Line spacing.** `--line-height-prose: 1.4` (new token, `tokens.css`) —
+  no line-height was set anywhere before, so wrapping prose fell back to the
+  browser/Inter default of ~1.2. Applied to the ~15 selectors that render
+  wrapping secondary text; single-line labels untouched. Verified live at
+  375px against the actual concern — an inline dice/condition chip inside a
+  wrapped attack rider, no encroachment.
+- **`CheckRow`** (new, `app/src/views/MainSheet/CheckRow.tsx`): the shared
+  save/skill row — proficiency dot, ability-tinted name chip (reuses
+  `.ability-chip`'s recipe), an optional edge badge (monster-forge's literal
+  bordered `ADV`/`DIS` text convention, verified against its actual source)
+  and bonus-dice pill, modifier right-aligned, note collapsed behind the
+  chip's own chevron. One component, four consumers: `SavesBlock`/
+  `SkillsBlock` (main sheet) and `CompanionSaves`/`CompanionSkills`
+  (Companion view) — all previously independent implementations.
+- **Layout.** Ability cards unchanged (augmenting them with a full save row
+  proved too tight, confirmed live). `SavesBlock` moved back into
+  `.main-sheet__rail`, next to `AbilityRail` — supersedes T25's D23#9
+  adjacency placement. Skills now render all 18 (previously only 2 existed
+  in the sample data), plus a proficient-tools chip row below a divider.
+- **Schema.** `Save`/`Skill` gained optional `edge?: EdgeState` and
+  `bonusDice?: string` (`schema/types.ts` + `character.schema.json`) —
+  advantage and bonus dice are circumstantial, never folded into the flat
+  modifier number. Both fields backward-compatible; existing files still
+  validate.
+- **Fixture completeness.** `fixtures/synthetic.character.json` (+ variant)
+  now carry all 6 saves and all 18 skills (previously 3 and 2), computed
+  from the character's real ability mods + PB, plus worked `edge`/
+  `bonusDice` examples. This is the wholly-invented, public-repo-safe
+  fixture (not a real character file) — completing it is in-repo scope.
+- **Macro nav.** Direction confirmed (a persistent desktop-only character-
+  list rail beside the open sheet) but not built — filed to `T26` so the
+  direction doesn't need re-litigating later.
+- **Backlog, named not built:** a reminders-pinning system (per-row optional
+  pins for situational features/spells) and a monster-forge-style inspect/
+  breakdown tool (score composition, proficiency source) — both need their
+  own design pass first.
+
+`verify` green throughout (220/41/50 tests); `character-forge-validate`
+passes both fixtures; screenshot-verified at 1280px and 375px on the main
+sheet and the Companion view.
+
 ## 2026-08-24 — feat: T25 UX/UI skeleton pass executed (D24–D28)
 
 Everything D23's post-interview audit filed to `T25` is done except the one

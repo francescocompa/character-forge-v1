@@ -81,6 +81,7 @@
 .casting-header__rule {
   font-size: var(--font-size-sm);
   color: var(--ink-secondary);
+  line-height: var(--line-height-prose);
 }
 
 .casting-header__note {
@@ -88,6 +89,7 @@
   margin: 0;
   font-size: var(--font-size-sm);
   color: var(--ink-secondary);
+  line-height: var(--line-height-prose);
 }
 
 /* --- slot pools ------------------------------------------------------------ */
@@ -209,6 +211,7 @@
 .spell-row__summary {
   color: var(--ink-secondary);
   font-size: var(--font-size-sm);
+  line-height: var(--line-height-prose);
 }
 
 @media (min-width: 768px) {
@@ -278,6 +281,7 @@
   margin: 0;
   font-size: var(--font-size-sm);
   color: var(--ink-secondary);
+  line-height: var(--line-height-prose);
 }
 
 .manage-source__level {

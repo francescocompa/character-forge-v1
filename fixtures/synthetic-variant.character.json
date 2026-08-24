@@ -20,62 +20,263 @@
         }
       ]
     },
-    "background": { "ref": "ember-cartographer" },
+    "background": {
+      "ref": "ember-cartographer"
+    },
     "classes": [
       {
         "ref": "fighter",
         "levels": 1,
         "hitDie": "d10",
         "classOrder": 1,
-        "subclass": { "ref": "eldritch-knight", "unlockLevel": 5 }
+        "subclass": {
+          "ref": "eldritch-knight",
+          "unlockLevel": 5
+        }
       },
       {
         "ref": "wizard",
         "levels": 2,
         "hitDie": "d6",
         "classOrder": 2,
-        "subclass": { "ref": "bladesinging", "unlockLevel": 2 }
+        "subclass": {
+          "ref": "bladesinging",
+          "unlockLevel": 2
+        }
       }
     ]
   },
   "abilities": {
-    "STR": { "base": 10, "final": 10, "modifier": 0 },
-    "DEX": { "base": 14, "final": 14, "modifier": 2 },
-    "CON": { "base": 14, "final": 14, "modifier": 2 },
-    "INT": { "base": 16, "final": 17, "modifier": 3, "note": "+1 from ASI" },
-    "WIS": { "base": 10, "final": 10, "modifier": 0 },
-    "CHA": { "base": 8, "final": 8, "modifier": -1 }
+    "STR": {
+      "base": 10,
+      "final": 10,
+      "modifier": 0
+    },
+    "DEX": {
+      "base": 14,
+      "final": 14,
+      "modifier": 2
+    },
+    "CON": {
+      "base": 14,
+      "final": 14,
+      "modifier": 2
+    },
+    "INT": {
+      "base": 16,
+      "final": 17,
+      "modifier": 3,
+      "note": "+1 from ASI"
+    },
+    "WIS": {
+      "base": 10,
+      "final": 10,
+      "modifier": 0
+    },
+    "CHA": {
+      "base": 8,
+      "final": 8,
+      "modifier": -1
+    }
   },
   "stats": {
-    "ac": { "value": 16, "note": "10 + DEX (2) + studded leather (4)" },
-    "maxHp": { "value": 24 },
-    "initiative": { "value": 2 },
+    "ac": {
+      "value": 16,
+      "note": "10 + DEX (2) + studded leather (4)"
+    },
+    "maxHp": {
+      "value": 24
+    },
+    "initiative": {
+      "value": 2
+    },
     "proficiencyBonus": 2,
-    "speeds": [{ "type": "walk", "value": 35 }],
+    "speeds": [
+      {
+        "type": "walk",
+        "value": 35
+      }
+    ],
     "hitDice": [
       {
         "classRef": "fighter",
         "die": "d10",
         "count": 1,
-        "recover": [{ "on": "long", "amount": 1, "note": "Half of 1, minimum 1" }]
+        "recover": [
+          {
+            "on": "long",
+            "amount": 1,
+            "note": "Half of 1, minimum 1"
+          }
+        ]
       },
       {
         "classRef": "wizard",
         "die": "d6",
         "count": 2,
-        "recover": [{ "on": "long", "amount": 1, "note": "Half of 2" }]
+        "recover": [
+          {
+            "on": "long",
+            "amount": 1,
+            "note": "Half of 2"
+          }
+        ]
       }
     ],
     "saves": [
-      { "ability": "STR", "modifier": 2, "proficient": true },
-      { "ability": "CON", "modifier": 2, "proficient": false },
-      { "ability": "INT", "modifier": 5, "proficient": true }
+      {
+        "ability": "STR",
+        "modifier": 2,
+        "proficient": true
+      },
+      {
+        "ability": "DEX",
+        "modifier": 2,
+        "proficient": false,
+        "edge": "adv-situational",
+        "note": "Adv. vs area effects while wearing studded leather (Ember Ward stitching, homebrew)"
+      },
+      {
+        "ability": "CON",
+        "modifier": 2,
+        "proficient": false,
+        "bonusDice": "1d4",
+        "note": "+1d4 vs exhaustion on extended travel (ashwalker endurance, homebrew)"
+      },
+      {
+        "ability": "INT",
+        "modifier": 5,
+        "proficient": true
+      },
+      {
+        "ability": "WIS",
+        "modifier": 0,
+        "proficient": false
+      },
+      {
+        "ability": "CHA",
+        "modifier": -1,
+        "proficient": false
+      }
     ],
     "skills": [
-      { "name": "Arcana", "ability": "INT", "proficiency": "proficient", "modifier": 5 },
-      { "name": "Investigation", "ability": "INT", "proficiency": "expertise", "modifier": 7 }
+      {
+        "name": "Acrobatics",
+        "ability": "DEX",
+        "proficiency": "none",
+        "modifier": 2
+      },
+      {
+        "name": "Animal Handling",
+        "ability": "WIS",
+        "proficiency": "none",
+        "modifier": 0
+      },
+      {
+        "name": "Arcana",
+        "ability": "INT",
+        "proficiency": "proficient",
+        "modifier": 5
+      },
+      {
+        "name": "Athletics",
+        "ability": "STR",
+        "proficiency": "none",
+        "modifier": 0,
+        "bonusDice": "1d4",
+        "note": "+1d4 when climbing or swimming in combat (Practiced Athlete, homebrew)"
+      },
+      {
+        "name": "Deception",
+        "ability": "CHA",
+        "proficiency": "none",
+        "modifier": -1
+      },
+      {
+        "name": "History",
+        "ability": "INT",
+        "proficiency": "none",
+        "modifier": 3
+      },
+      {
+        "name": "Insight",
+        "ability": "WIS",
+        "proficiency": "none",
+        "modifier": 0
+      },
+      {
+        "name": "Intimidation",
+        "ability": "CHA",
+        "proficiency": "none",
+        "modifier": -1
+      },
+      {
+        "name": "Investigation",
+        "ability": "INT",
+        "proficiency": "expertise",
+        "modifier": 7
+      },
+      {
+        "name": "Medicine",
+        "ability": "WIS",
+        "proficiency": "none",
+        "modifier": 0
+      },
+      {
+        "name": "Nature",
+        "ability": "INT",
+        "proficiency": "none",
+        "modifier": 3
+      },
+      {
+        "name": "Perception",
+        "ability": "WIS",
+        "proficiency": "none",
+        "modifier": 0,
+        "edge": "adv-situational",
+        "note": "Adv. on Perception checks relying on sight (ashwalker low-light vision)"
+      },
+      {
+        "name": "Performance",
+        "ability": "CHA",
+        "proficiency": "none",
+        "modifier": -1
+      },
+      {
+        "name": "Persuasion",
+        "ability": "CHA",
+        "proficiency": "none",
+        "modifier": -1
+      },
+      {
+        "name": "Religion",
+        "ability": "INT",
+        "proficiency": "none",
+        "modifier": 3
+      },
+      {
+        "name": "Sleight of Hand",
+        "ability": "DEX",
+        "proficiency": "none",
+        "modifier": 2
+      },
+      {
+        "name": "Stealth",
+        "ability": "DEX",
+        "proficiency": "none",
+        "modifier": 2
+      },
+      {
+        "name": "Survival",
+        "ability": "WIS",
+        "proficiency": "none",
+        "modifier": 0
+      }
     ],
-    "passives": { "perception": 10, "investigation": 15 },
+    "passives": {
+      "perception": 10,
+      "investigation": 15
+    },
     "senses": ["Darkvision 60 ft"],
     "languages": ["Common", "Ignan"],
     "proficiencies": {
@@ -148,7 +349,9 @@
     {
       "name": "Longsword",
       "ref": "longsword",
-      "toHit": { "modifier": 4 },
+      "toHit": {
+        "modifier": 4
+      },
       "range": "5 ft",
       "damage": "{dmg:slashing|1d8+2}",
       "riders": [
@@ -162,7 +365,9 @@
     {
       "name": "Shortbow",
       "ref": "shortbow",
-      "toHit": { "modifier": 4 },
+      "toHit": {
+        "modifier": 4
+      },
       "range": "80/320 ft",
       "damage": "{dmg:piercing|1d6+2}",
       "consumableRef": "arrows",
@@ -203,7 +408,12 @@
         "sourceId": "wizard",
         "slotLevel": 1,
         "count": 3,
-        "recover": [{ "on": "long", "amount": "all" }]
+        "recover": [
+          {
+            "on": "long",
+            "amount": "all"
+          }
+        ]
       },
       {
         "id": "arcane-font-1",
@@ -211,7 +421,12 @@
         "sourceId": "wizard",
         "slotLevel": 1,
         "count": 1,
-        "recover": [{ "on": "short", "amount": "all" }],
+        "recover": [
+          {
+            "on": "short",
+            "amount": "all"
+          }
+        ],
         "note": "Homebrew feat slot"
       }
     ],
@@ -257,9 +472,18 @@
       "sourceId": "wizard",
       "chooseCount": 4,
       "options": [
-        { "ref": "mending-charm", "name": "Mending Charm" },
-        { "ref": "ashen-bolt", "name": "Ashen Bolt" },
-        { "ref": "featherfall-ward", "name": "Featherfall Ward" }
+        {
+          "ref": "mending-charm",
+          "name": "Mending Charm"
+        },
+        {
+          "ref": "ashen-bolt",
+          "name": "Ashen Bolt"
+        },
+        {
+          "ref": "featherfall-ward",
+          "name": "Featherfall Ward"
+        }
       ],
       "defaults": ["mending-charm", "ashen-bolt"]
     },
@@ -268,8 +492,16 @@
       "name": "Weapon Masteries",
       "chooseCount": 2,
       "options": [
-        { "ref": "longsword", "name": "Longsword", "summary": "Sap" },
-        { "ref": "shortbow", "name": "Shortbow", "summary": "Slow" }
+        {
+          "ref": "longsword",
+          "name": "Longsword",
+          "summary": "Sap"
+        },
+        {
+          "ref": "shortbow",
+          "name": "Shortbow",
+          "summary": "Slow"
+        }
       ],
       "defaults": ["longsword", "shortbow"]
     }
@@ -280,8 +512,14 @@
       "name": "Second Wind",
       "max": 2,
       "recover": [
-        { "on": "long", "amount": "all" },
-        { "on": "short", "amount": 1 }
+        {
+          "on": "long",
+          "amount": "all"
+        },
+        {
+          "on": "short",
+          "amount": 1
+        }
       ],
       "unlockLevel": 1
     },
@@ -289,7 +527,12 @@
       "id": "arcane-recovery",
       "name": "Arcane Recovery",
       "max": 1,
-      "recover": [{ "on": "long", "amount": "all" }],
+      "recover": [
+        {
+          "on": "long",
+          "amount": "all"
+        }
+      ],
       "unlockLevel": 1
     }
   ],
@@ -334,9 +577,16 @@
         "carried": true
       }
     ],
-    "currency": { "gp": 32, "sp": 5 },
-    "attunement": { "max": 3 },
-    "carryingCapacity": { "lb": 150 }
+    "currency": {
+      "gp": 32,
+      "sp": 5
+    },
+    "attunement": {
+      "max": 3
+    },
+    "carryingCapacity": {
+      "lb": 150
+    }
   },
   "companions": [
     {
@@ -344,24 +594,70 @@
       "name": "Ember Sprite",
       "ref": "ember-sprite-familiar",
       "abilities": {
-        "STR": { "base": 3, "final": 3, "modifier": -4 },
-        "DEX": { "base": 16, "final": 16, "modifier": 3 },
-        "CON": { "base": 10, "final": 10, "modifier": 0 },
-        "INT": { "base": 10, "final": 10, "modifier": 0 },
-        "WIS": { "base": 12, "final": 12, "modifier": 1 },
-        "CHA": { "base": 11, "final": 11, "modifier": 0 }
+        "STR": {
+          "base": 3,
+          "final": 3,
+          "modifier": -4
+        },
+        "DEX": {
+          "base": 16,
+          "final": 16,
+          "modifier": 3
+        },
+        "CON": {
+          "base": 10,
+          "final": 10,
+          "modifier": 0
+        },
+        "INT": {
+          "base": 10,
+          "final": 10,
+          "modifier": 0
+        },
+        "WIS": {
+          "base": 12,
+          "final": 12,
+          "modifier": 1
+        },
+        "CHA": {
+          "base": 11,
+          "final": 11,
+          "modifier": 0
+        }
       },
-      "ac": { "value": 13 },
-      "maxHp": { "value": 5 },
-      "speeds": [{ "type": "fly", "value": 30 }],
-      "saves": [{ "ability": "DEX", "modifier": 5, "proficient": true }],
+      "ac": {
+        "value": 13
+      },
+      "maxHp": {
+        "value": 5
+      },
+      "speeds": [
+        {
+          "type": "fly",
+          "value": 30
+        }
+      ],
+      "saves": [
+        {
+          "ability": "DEX",
+          "modifier": 5,
+          "proficient": true
+        }
+      ],
       "skills": [
-        { "name": "Stealth", "ability": "DEX", "proficiency": "proficient", "modifier": 7 }
+        {
+          "name": "Stealth",
+          "ability": "DEX",
+          "proficiency": "proficient",
+          "modifier": 7
+        }
       ],
       "attacks": [
         {
           "name": "Ember Touch",
-          "toHit": { "modifier": 4 },
+          "toHit": {
+            "modifier": 4
+          },
           "range": "5 ft",
           "damage": "{dmg:fire|1d4}"
         }

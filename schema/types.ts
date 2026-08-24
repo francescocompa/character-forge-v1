@@ -191,10 +191,21 @@ export interface HitDiceGroup {
   recover?: RecoverModel
 }
 
+/** Row-level advantage/disadvantage state for a save or skill (T26). "-situational"
+ *  means it applies only in some circumstance (the sheet still surfaces it, the
+ *  circumstance itself lives in `note`) rather than unconditionally. */
+export type EdgeState = 'adv' | 'adv-situational' | 'dis' | 'dis-situational'
+
 export interface Save {
   ability: Ability
   modifier: number
   proficient: boolean
+  /** Shown directly on the row (T26) — not folded into `modifier` since it's
+   *  circumstantial, not a flat bonus. */
+  edge?: EdgeState
+  /** Extra dice on top of `modifier`, e.g. "1d4" — always shown, never folded
+   *  into `modifier` since it doesn't collapse to one static number (T26). */
+  bonusDice?: string
   note?: Markup
 }
 
@@ -203,6 +214,12 @@ export interface Skill {
   ability: Ability
   proficiency: 'none' | 'half' | 'proficient' | 'expertise'
   modifier: number
+  /** Shown directly on the row (T26) — not folded into `modifier` since it's
+   *  circumstantial, not a flat bonus. */
+  edge?: EdgeState
+  /** Extra dice on top of `modifier`, e.g. "1d4" — always shown, never folded
+   *  into `modifier` since it doesn't collapse to one static number (T26). */
+  bonusDice?: string
   note?: Markup
 }
 

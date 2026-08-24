@@ -200,4 +200,12 @@
   --font-size-3xl: 1.5rem;
   --font-size-inline: 0.85em;
   --weight-content: 400;
+  /* No line-height was ever set anywhere (T26 line-spacing pass) — every
+     wrapping description fell back to the browser/Inter default of ~1.2,
+     tight enough that it read as cramped. Applied only to the ~15 selectors
+     that render wrapping secondary prose (feature/spell/gear summaries,
+     attack riders, notes) — single-line labels are untouched, so the
+     sheet's dense feel elsewhere doesn't change. Value confirmed against
+     real wrapped text with an inline chip present (T26 D29). */
+  --line-height-prose: 1.4;
 }

@@ -99,6 +99,7 @@
   flex: 1;
   color: var(--ink-secondary);
   white-space: pre-wrap;
+  line-height: var(--line-height-prose);
 }
 
 /* --- add / edit dialog --------------------------------------------------- */
@@ -233,6 +234,7 @@
 .add-preview__body {
   color: var(--ink-primary);
   white-space: pre-wrap;
+  line-height: var(--line-height-prose);
 }
 .add-preview__warn {
   font-size: var(--font-size-sm);

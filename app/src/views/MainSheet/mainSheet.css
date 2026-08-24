@@ -25,6 +25,7 @@
 .ability__note {
   font-size: var(--font-size-sm);
   color: var(--ink-secondary);
+  line-height: var(--line-height-prose);
 }
 
 /* --- identity strip ------------------------------------------------------ */
@@ -191,49 +192,124 @@
     0 0 0 3.5px var(--chip-fg, var(--ink-secondary));
 }
 
-/* --- saves --------------------------------------------------------------- */
-.saves__list,
-.skills__list {
+/* --- saves & skills: check rows (T26) -------------------------------------
+ * Shared anatomy for both blocks (`CheckRow`, MainSheet/CheckRow.tsx): a
+ * proficiency dot, an ability-tinted name chip (monster-forge's cc-skill/
+ * cc-ab convention — background/border/radius match `.ability-chip`,
+ * chips.css), an optional edge badge + bonus-dice pill, the modifier
+ * right-aligned, and a note that only renders once the chip's own chevron
+ * is toggled open (not an always-visible line — keeps the common case, a
+ * bare modifier, uncluttered).
+ * ------------------------------------------------------------------------ */
+.check-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
 }
 
-.save-row,
-.skill-row {
+.check-row {
+  border-bottom: 1px solid var(--border-subtle);
+}
+.check-row:last-child {
+  border-bottom: none;
+}
+
+.check-row__main {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-1);
+  min-height: 44px;
+  cursor: pointer;
   border-radius: var(--radius-sm);
 }
-.save-row:nth-child(odd),
-.skill-row:nth-child(odd) {
-  background: color-mix(in srgb, var(--surface-overlay) 45%, transparent);
+
+.check-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--chip-bg);
+  color: var(--chip-fg);
+  border-radius: var(--radius-sm);
+  padding: 2px 7px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.check-chip--toggle {
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+.check-chip__chevron {
+  font-size: 11px;
+  transition: transform 0.12s ease;
+}
+.check-chip__chevron.is-expanded {
+  transform: rotate(180deg);
 }
 
-.save-row__abbr {
-  color: var(--chip-fg);
-  font-weight: 600;
+/* Monster-forge's literal roll-log badge (rl-advlbl) — bordered text, never
+   filled; --adv/--dis are the same tokens the {adv}/{dis} markup icons use. */
+.edge-badge {
+  flex: none;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 3px;
+  padding: 1px 4px;
+  border: 1px solid;
 }
-.save-row__mod,
-.skill-row__mod {
+.edge-badge--adv {
+  color: var(--adv);
+  border-color: var(--adv);
+}
+.edge-badge--dis {
+  color: var(--dis);
+  border-color: var(--dis);
+}
+
+.bonus-dice-pill {
+  flex: none;
+  background: var(--surface-panel3);
+  color: var(--ink-secondary);
+  border-radius: var(--radius-sm);
+  padding: 1px 5px;
+  font-size: var(--font-size-chrome);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.check-row__mod {
   margin-left: auto;
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--ink-primary);
 }
 
-.skill-row__name {
-  flex: 1;
-  min-width: 0;
+.check-row__note {
+  padding: 0 var(--space-2) var(--space-2) var(--space-4);
+  color: var(--ink-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-prose);
 }
-.skill-row__abil {
-  font-size: var(--font-size-chrome);
-  letter-spacing: var(--letter-spacing-chrome);
-  color: var(--chip-fg);
+
+/* --- tools (T26): plain chips, no fixed ability/modifier in the schema --- */
+.tool-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+.tool-chip {
+  background: var(--surface-overlay);
+  color: var(--ink-secondary);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
 }
 
 /* --- passives ------------------------------------------------------------ */
@@ -636,6 +712,7 @@
 .rider {
   font-size: var(--font-size-sm);
   color: var(--ink-secondary);
+  line-height: var(--line-height-prose);
 }
 .rider__name {
   font-weight: 600;
@@ -685,6 +762,7 @@
 .action-row__summary {
   font-size: var(--font-size-sm);
   color: var(--ink-secondary);
+  line-height: var(--line-height-prose);
 }
 
 /* Desktop: groups run side by side inside the tempo column (three-column IA). */

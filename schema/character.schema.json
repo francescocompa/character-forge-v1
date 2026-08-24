@@ -76,6 +76,11 @@
       "type": "string",
       "enum": ["2014", "2024", "UA", "Homebrew"]
     },
+    "EdgeState": {
+      "description": "Row-level advantage/disadvantage for a save or skill (T26). \"-situational\" applies only in some circumstance, described in the row's own note.",
+      "type": "string",
+      "enum": ["adv", "adv-situational", "dis", "dis-situational"]
+    },
     "ActionCost": {
       "description": "Where an item sits in the action economy.",
       "type": "string",
@@ -377,6 +382,8 @@
         "ability": { "$ref": "#/$defs/Ability" },
         "modifier": { "type": "integer" },
         "proficient": { "type": "boolean" },
+        "edge": { "$ref": "#/$defs/EdgeState" },
+        "bonusDice": { "type": "string" },
         "note": { "$ref": "#/$defs/Markup" }
       }
     },
@@ -392,6 +399,8 @@
           "enum": ["none", "half", "proficient", "expertise"]
         },
         "modifier": { "type": "integer" },
+        "edge": { "$ref": "#/$defs/EdgeState" },
+        "bonusDice": { "type": "string" },
         "note": { "$ref": "#/$defs/Markup" }
       }
     },
