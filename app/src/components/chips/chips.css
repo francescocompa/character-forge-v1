@@ -112,13 +112,15 @@
   font-size: var(--font-size-sm);
 }
 
-/* Recovery icon — inline SVG, sized to sit in running text next to numbers. */
+/* Recovery icon — lucide outline icon (D21/D23 #7), sized to sit in running
+   text next to numbers. `color` drives the icon's `stroke="currentColor"`. */
 .recover-icon {
   display: inline-block;
   width: 1em;
   height: 1em;
   vertical-align: -0.15em;
   flex: none;
+  color: var(--chip-fg);
 }
 
 /* Unlock-level badge. */

@@ -63,6 +63,18 @@ Enforced by: prose only; becomes an implementation detail of T25.
 Affects: `app/src/app/appShell.css`, the shell component, needs a new
 breakpoint-driven bottom-tab-bar component + icon set (see D21).
 
+**Implemented 2026-08-24 (T25 #1):** `.bottom-tab-bar`/`.bottom-tab` added
+to `appShell.css`; a new `<nav>` in `AppShell.tsx` renders alongside the
+existing `.app-shell__tabs`, sharing the same `tabs`/`tab`/`setTab` state —
+one source of truth, CSS `display:none` swaps which renders at the
+≤768px breakpoint (`.app-shell__tabs` matches every other mobile
+breakpoint already used in this file). Fixed to the viewport bottom (not
+sticky) per D18's own rationale — "always visible" means it shouldn't
+scroll away. `.app-shell__view` gained a bottom `padding-bottom` so content
+never sits under the fixed bar; verified at 375px (bar clears the last
+Equipment card) and 1280px (bar absent, top tabs unchanged,
+`display:none`/`flex` confirmed via computed styles).
+
 ### D19 — Shared primitives are a hard rule; exceptions need Francesco's sign-off · 2026-08-24 · DECIDED
 
 Mechanism: AskUserQuestion, 1 round
@@ -144,6 +156,18 @@ Enforced by: prose only; package choice is a `package.json` dependency add in
 T25, self-verifying (offline build either works or it doesn't).
 Affects: new dependency in `app/package.json`; the D18 bottom-tab-bar icons
 are the first consumer.
+
+**Implemented 2026-08-24 (T25 #2/#7):** picked `lucide-react` (the more
+widely adopted of the two options, actively maintained, consistent 24×24
+outline grid). `npm run build` confirms real bundling — 79 precache entries
+(was 75 before T17), no external font/CDN request. Five nav icons for the
+bottom tab bar: `LayoutDashboard` (Main), `Sparkles` (Features), `BookOpen`
+(Spells), `Backpack` (Equipment), `PawPrint` (Companion). `RecoverIcon`
+(D23 #7) converted to `Sun`/`Moon`/`Sunrise` — a clean semantic swap, same
+`--chip-fg` color-var convention as every other chip, snapshot test updated.
+`DiceStateIcon` (the bespoke d20+chevron advantage/disadvantage glyph)
+deliberately **not** converted — no library icon matches it, and D21's own
+text says not to force a swap that isn't clean.
 
 ### D22 — Touch targets and focus ring: confirmed, unchanged · 2026-08-24 · DECIDED
 

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Backpack, BookOpen, LayoutDashboard, PawPrint, Sparkles } from 'lucide-react'
 import type { CharacterFile } from '@character-forge/schema/types.ts'
 import { LibraryProvider } from '../library'
 import { CharacterProvider, useCharacter } from '../character/CharacterProvider'
@@ -13,12 +14,12 @@ import './appShell.css'
 
 type Tab = 'main' | 'features' | 'spells' | 'equipment' | 'companion'
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: 'main', label: 'Main' },
-  { id: 'features', label: 'Features' },
-  { id: 'spells', label: 'Spells' },
-  { id: 'equipment', label: 'Equipment' },
-  { id: 'companion', label: 'Companion' },
+const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
+  { id: 'main', label: 'Main', icon: LayoutDashboard },
+  { id: 'features', label: 'Features', icon: Sparkles },
+  { id: 'spells', label: 'Spells', icon: BookOpen },
+  { id: 'equipment', label: 'Equipment', icon: Backpack },
+  { id: 'companion', label: 'Companion', icon: PawPrint },
 ]
 
 /** The global Level/Build view-mode switch (D14). Lives in the shell, drives all views. */
@@ -158,6 +159,27 @@ function Shell({
         {tab === 'equipment' && <Equipment />}
         {tab === 'companion' && hasCompanions && <Companion />}
       </main>
+
+      {/* Mobile-only (D18): swaps in for `.app-shell__tabs` at ≤768px via CSS,
+          same `tabs`/`tab`/`setTab` — one source of truth, two renderings. */}
+      <nav className="bottom-tab-bar" role="tablist" aria-label="Sheet sections">
+        {tabs.map((t) => {
+          const Icon = t.icon
+          return (
+            <button
+              key={t.id}
+              type="button"
+              role="tab"
+              aria-selected={tab === t.id}
+              className={`bottom-tab ${tab === t.id ? 'is-active' : ''}`}
+              onClick={() => setTab(t.id)}
+            >
+              <Icon aria-hidden="true" />
+              {t.label}
+            </button>
+          )
+        })}
+      </nav>
     </div>
   )
 }

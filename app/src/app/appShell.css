@@ -172,6 +172,16 @@ body {
   border-bottom-color: var(--focus-ring-color);
 }
 
+/* --- mobile bottom tab bar (D18) -----------------------------------------
+ * Fixed to the viewport bottom, always visible — the primary nav for a
+ * player's phone at the table, thumb-reachable without a reach-up motion.
+ * Desktop keeps the top `.app-shell__tabs` unchanged (§1, locked); this is a
+ * breakpoint swap, not an addition — only one of the two renders at a time.
+ * ------------------------------------------------------------------------ */
+.bottom-tab-bar {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .view-toggle__btn,
   .shell-btn {
@@ -180,6 +190,48 @@ body {
   .app-shell__topbar-tools {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .app-shell__tabs {
+    display: none;
+  }
+  .bottom-tab-bar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    background: var(--surface-raised);
+    border-top: 1px solid var(--border-subtle);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .bottom-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 56px;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    font: inherit;
+    font-size: var(--font-size-chrome);
+    font-weight: var(--weight-chrome);
+    cursor: pointer;
+  }
+  .bottom-tab.is-active {
+    color: var(--accent-soft);
+  }
+  .bottom-tab svg {
+    width: 22px;
+    height: 22px;
+  }
+  /* Reserve space so content never sits under the fixed bar. */
+  .app-shell__view {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + var(--space-3));
   }
 }
 

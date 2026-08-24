@@ -170,23 +170,24 @@ than guessing — same rule as §3.
 
 ## 6. Icons (D21)
 
-character-forge barely uses icons today (2 inline-SVG files: `DiceStateIcon`,
-`RecoverIcon`). That changes with the mobile bottom tab bar (D18, needs 5
-nav icons). Rule, so it doesn't drift the way monster-forge's primary nav
-did (a visible mix of filled Font-Awesome-style glyphs and Feather-style
-outline icons, even within its own 4-button rail):
+Rule, so this doesn't drift the way monster-forge's primary nav did (a
+visible mix of filled Font-Awesome-style glyphs and Feather-style outline
+icons, even within its own 4-button rail):
 
-- **One outline icon set, one stroke-width, one size grid.** Source:
-  `lucide-react` or `@tabler/icons-react` (pick one in T25; don't mix).
-- **Bundled as tree-shaken SVG React components — never a CDN webfont.**
-  This isn't a style preference, it's parity with an existing, load-bearing
-  rule: `tokens.css` documents Inter as "bundled via @fontsource,
-  offline-safe — no Google Fonts at runtime" specifically because
-  character-forge is an installable offline PWA (T17). A CDN icon font would
-  silently break the moment the app is used offline at the table.
-- No hero/bespoke icon exception exists yet. If one emerges later (a d20/
-  brand mark, say), it needs to be named explicitly as an exception here —
-  not introduced quietly.
+- **One outline icon set, one stroke-width, one size grid.** Fixed
+  2026-08-24: `lucide-react` (tree-shaken component imports, never a CDN
+  webfont — parity with `tokens.css`'s existing offline-safe Inter rule).
+  `npm run build` confirms real bundling (79 precache entries, no external
+  request).
+- **Consumers:** the bottom tab bar's 5 nav icons (`LayoutDashboard`,
+  `Sparkles`, `BookOpen`, `Backpack`, `PawPrint` — §7 has the mapping) and
+  `RecoverIcon` (`Sun`/`Moon`/`Sunrise`, replacing the old flat-filled
+  shapes that read as emoji-style icon language, D23 #7).
+- **`DiceStateIcon`** (the bespoke d20-outline + chevron advantage/
+  disadvantage glyph) is a **named, deliberate exception** — no library
+  icon matches a d20 with a direction chevron, and forcing a generic
+  up/down-arrow swap would lose the D&D-specific meaning. Not converted;
+  don't revisit without a reason.
 
 ## 7. Responsive
 
@@ -198,15 +199,18 @@ outline icons, even within its own 4-button rail):
 - Safe-area: character-forge already handles `env(safe-area-inset-*)` for
   the standalone-iOS sticky tab bar (T17/UX audit) — monster-forge barely
   addresses this at all (one instance, in its player-mode bottom sheet). The
-  new bottom tab bar (D18) needs the same safe-area treatment; don't regress
-  it.
+  bottom tab bar (D18) does the same: `padding-bottom:
+env(safe-area-inset-bottom, 0px)` on the bar itself, plus a
+  `padding-bottom` reservation on `.app-shell__view` so content never sits
+  under the fixed bar. Swaps with the top `.app-shell__tabs` at the
+  existing 768px breakpoint (`display: none` either side, one `tabs`/`tab`
+  state, not a duplicated component).
 - Touch targets: 44px comfort target, not monster-forge's 24px AA floor (D22,
   §1).
 
 ## 8. What's still open (owed to `planning/tasks/T25-ux-skeleton.md`)
 
-- Bottom tab bar for mobile nav (D18) — new component, icon set (D21),
-  breakpoint swap with the existing top tab bar.
+- ~~Bottom tab bar for mobile nav (D18)~~ — done, see §7.
 - ~~`FieldLabel` primitive + dialog form sweep (D20)~~ — done, see §3.
 - ~~Shared modal/scrim base~~ — done (D26): Manage/Import/Add dialogs
   converged on `.modal-overlay`/`.modal-surface`; the library popover is a
@@ -222,10 +226,9 @@ outline icons, even within its own 4-button rail):
     intentionally not part of the scale) migrated.
   - ~~Feature-tappability gap~~ — scoped (D24): data fix, not a UI change;
     out of this repo's/T25's engineering scope.
-  - Still open: rest icons redone in the new outline set (currently
-    flat-filled, emoji-adjacent — blocked on the icon-library pick, D21);
-    Saves and Skills moved adjacent; top-bar consolidation into a settings
-    affordance (needs a mockup + Francesco sign-off); the macro
+  - ~~Rest icons~~ — done: `Sun`/`Moon`/`Sunrise` (lucide), see §6.
+  - Still open: Saves and Skills moved adjacent; top-bar consolidation into
+    a settings affordance (needs a mockup + Francesco sign-off); the macro
     character-list ↔ sheet nav layer (not a D18 reopening — a different
     layer, also needs a mockup + sign-off); a real layout pass on the
     Equipment/gear section.
