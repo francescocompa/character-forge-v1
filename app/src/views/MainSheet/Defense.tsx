@@ -72,7 +72,7 @@ function HpBlock() {
     <div className="hp-block">
       <div className="hp-block__main">
         <div className="hp-current">
-          <span className="stat__label">Hit points</span>
+          <span className="field-label">Hit points</span>
           <div className="hp-current__row">
             <NumberStepper
               value={current}
@@ -91,7 +91,7 @@ function HpBlock() {
           <MaxHpOverrideControl compiled={maxNumeric} />
         </div>
         <div className="hp-temp">
-          <span className="stat__label">Temp HP</span>
+          <span className="field-label">Temp HP</span>
           <NumberStepper
             value={temp}
             label="Temporary hit points"
@@ -136,7 +136,7 @@ function HitDiceBlock() {
   if (groups.length === 0) return null
   return (
     <div className="hit-dice">
-      <span className="stat__label">Hit dice</span>
+      <span className="field-label">Hit dice</span>
       {groups.map((group) => {
         const spent = trackers.hitDice?.[group.classRef]?.spent ?? 0
         const setTo = (target: number) => {
@@ -177,7 +177,7 @@ function SpellcastingSummary() {
   if (sources.length === 0) return null
   return (
     <div className="cast-summary">
-      <span className="stat__label">Spellcasting</span>
+      <span className="field-label">Spellcasting</span>
       <ul className="cast-summary__list">
         {sources.map((src) => (
           <li
@@ -208,7 +208,7 @@ export function DefenseBlock() {
     <section className="panel defense" aria-label="Defense and tempo">
       <div className="defense__stats">
         <div className="stat stat--ac">
-          <span className="stat__label">AC</span>
+          <span className="field-label">AC</span>
           <span className="stat__value">{statText(stats.ac)}</span>
           {stats.ac.note && (
             <span className="stat__note">
@@ -227,21 +227,21 @@ export function DefenseBlock() {
               { className: 'stat', label: 'Roll initiative' },
             )}
           >
-            <span className="stat__label">Initiative</span>
+            <span className="field-label">Initiative</span>
             <span className="stat__value">{statText(stats.initiative, true)}</span>
           </div>
         ) : (
           <div className="stat">
-            <span className="stat__label">Initiative</span>
+            <span className="field-label">Initiative</span>
             <span className="stat__value">{statText(stats.initiative, true)}</span>
           </div>
         )}
         <div className="stat">
-          <span className="stat__label">Prof. bonus</span>
+          <span className="field-label">Prof. bonus</span>
           <span className="stat__value">{signed(stats.proficiencyBonus)}</span>
         </div>
         <div className="stat stat--speeds">
-          <span className="stat__label">Speed</span>
+          <span className="field-label">Speed</span>
           <span className="stat__value">
             {stats.speeds.map((s, i) => (
               <span key={`${s.type}-${i}`} className="speed">

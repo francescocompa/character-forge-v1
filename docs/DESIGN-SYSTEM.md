@@ -80,17 +80,17 @@ via AskUserQuestion before forking. Don't silently add a one-off.
 
 Current shared primitives (`app/src/components/primitives.css`):
 
-| Role                  | Class                                  | Notes                                                                                                                                                                                           |
-| --------------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Section block         | `.panel` / `.panel__title`             | Amber uppercase micro-label title. **Every** section header in **every** view and dialog uses this — no local `background/border/border-radius` recipe that happens to match it by coincidence. |
-| Field label           | _(new — see below)_                    | Dim uppercase micro-label, same voice as `.panel__title` but `--ink-muted` not `--accent-2`. Applies inside dialogs too (D20).                                                                  |
-| Divider               | `.section-div`                         |                                                                                                                                                                                                 |
-| Text input / textarea | element-level base in `primitives.css` |                                                                                                                                                                                                 |
-| Checkbox              | `input[type=checkbox]` skin            |                                                                                                                                                                                                 |
-| Selected state        | `.is-selected`                         | Border + tint, no glow — see §2.                                                                                                                                                                |
-| Stepper button        | `.step-btn` (`mainSheet.css`)          | 44px comfort target, a **deliberate** divergence from monster-forge's 20px stacked column — documented inline, keep it.                                                                         |
-| Action button         | `.btn` + `--primary`/`--ghost`/`--danger` | Standalone labeled action button, always pill radius (D25, 2026-08-24). `.mng-btn*`/`.add-btn*` (Manage/Import/Add dialogs) both consume this now — no independent copies.                  |
-| Icon-only button      | `.btn-icon`                            | Square control (dialog close, and any future icon-only button), always `--radius-sm`, never pill (D25). Both dialogs' close buttons consume this.                                              |
+| Role                  | Class                                     | Notes                                                                                                                                                                                           |
+| --------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Section block         | `.panel` / `.panel__title`                | Amber uppercase micro-label title. **Every** section header in **every** view and dialog uses this — no local `background/border/border-radius` recipe that happens to match it by coincidence. |
+| Field label           | `.field-label`                            | Dim uppercase micro-label, same voice as `.panel__title` but `--ink-muted` not `--accent-2`. Applies inside dialogs too (D20, fixed 2026-08-24).                                                |
+| Divider               | `.section-div`                            |                                                                                                                                                                                                 |
+| Text input / textarea | element-level base in `primitives.css`    |                                                                                                                                                                                                 |
+| Checkbox              | `input[type=checkbox]` skin               |                                                                                                                                                                                                 |
+| Selected state        | `.is-selected`                            | Border + tint, no glow — see §2.                                                                                                                                                                |
+| Stepper button        | `.step-btn` (`mainSheet.css`)             | 44px comfort target, a **deliberate** divergence from monster-forge's 20px stacked column — documented inline, keep it.                                                                         |
+| Action button         | `.btn` + `--primary`/`--ghost`/`--danger` | Standalone labeled action button, always pill radius (D25, 2026-08-24). `.mng-btn*`/`.add-btn*` (Manage/Import/Add dialogs) both consume this now — no independent copies.                      |
+| Icon-only button      | `.btn-icon`                               | Square control (dialog close, and any future icon-only button), always `--radius-sm`, never pill (D25). Both dialogs' close buttons consume this.                                               |
 
 **Confirmed violations, fixed 2026-08-24:**
 
@@ -101,18 +101,32 @@ Current shared primitives (`app/src/components/primitives.css`):
 - `views/Companion/companion.css` had its own `.companion-identity`
   (duplicating `.panel`'s exact recipe). Now consumes `.panel`.
 - `manage/manage.css`'s `.mng-btn*`/`.mng-dialog__close` and `session/
-  additions/additions.css`'s `.add-btn*`/`.add-sheet__close` were
+additions/additions.css`'s `.add-btn*`/`.add-sheet__close` were
   near-duplicate CSS for the same two roles (dialog action button, dialog
   close button) with real drift between the copies (`.add-btn` used
   `--radius-md` at a larger size than `.mng-btn`'s `--radius-pill`; the
   Add dialog's `--ghost` modifier had no CSS at all — a silent no-op). Both
   now consume `.btn`/`.btn-icon` (D25).
+- `views/MainSheet/mainSheet.css`'s `.stat__label`/`.chassis-item__label`/
+  `.defenses__label`/`.senses__label` and the dialogs' `.add-preview__label`/
+  `.add-field__label` (wrong, non-uppercase voice)/`.mng-field__label`/
+  `.mng-change__label` were 6 independent copies (one genuinely wrong) of
+  the same field-label recipe. All now consume `.field-label`; checked
+  `views/Spells`' and `views/Equipment`'s manage flows (the task's named
+  "Manage spells/masteries") and found no bold-label violation there — they
+  already use `.panel__title` correctly, so nothing to fix.
+
+**Known, deliberately deferred (not part of this pass):** `spells.css`'s
+`.spell-slots__level-label`/`.manage-source__level-label`/`.spell-row__role`/
+`.spell-swap__level` and `equipment.css`'s `.gear-section__title` re-declare
+the same chrome-micro-label recipe locally rather than consuming a shared
+class — a D19-style duplication, but a different semantic role (sub-section/
+role tag, not "names one input") and not a wrong-voice bug like the dialogs
+were. Worth a future consolidation pass; out of scope for T25's "quick wins,
+not a full redo" (D16).
 
 **Still owed (→ `T25`):**
 
-- A `FieldLabel` component/class so dialog forms (Add item, Manage spells,
-  Manage masteries) stop using ad-hoc bold `label` styling and pick up the
-  same micro-label voice as the sheet (D20).
 - A shared modal/scrim base — `.modal`/`.scrim` chrome currently isn't
   converged across `library/`, `manage/`, `session/additions/` the way
   monster-forge's `.menu`/`.popover`/`.modal` are.
@@ -211,4 +225,4 @@ outline icons, even within its own 4-button rail):
     character-list ↔ sheet nav layer (not a D18 reopening — a different
     layer, also needs a mockup + sign-off); a real layout pass on the
     Equipment/gear section.
-  Full detail and verification notes: `docs/DECISIONS.md` D23–D25.
+    Full detail and verification notes: `docs/DECISIONS.md` D23–D25.

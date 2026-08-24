@@ -17,16 +17,8 @@
  * in components/primitives.css (T23) so every view shares one skin. Field
  * micro-labels below stay dim — only section titles take the amber voice.
  * --------------------------------------------------------------------- */
-.stat__label,
-.chassis-item__label,
-.defenses__label,
-.senses__label {
-  font-size: var(--font-size-chrome);
-  letter-spacing: var(--letter-spacing-chrome);
-  font-weight: var(--weight-chrome);
-  text-transform: uppercase;
-  color: var(--ink-muted);
-}
+/* Field labels (AC, Hit points, Species, Senses…) are `.field-label`
+   (components/primitives.css) — one declaration, not a view-local copy. */
 
 .stat__note,
 .resource__note,

@@ -82,6 +82,20 @@ textarea {
   color: var(--accent-2);
 }
 
+/* Field label (T25, D20) — the micro-label voice's second role (DESIGN-
+   SYSTEM.md §4): dim/uppercase, naming one value or input, not a whole
+   section (that's `.panel__title`'s amber voice). One declaration for every
+   consumer — sheet stat labels (AC, Hit points, Species…) and dialog field
+   labels (Name, Qty, Display name…) are the same role; unifies what used to
+   be one un-uppercase dialog voice plus 3 duplicate copies of this one. */
+.field-label {
+  font-size: var(--font-size-chrome);
+  letter-spacing: var(--letter-spacing-chrome);
+  font-weight: var(--weight-chrome);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
 /* Divider between stacked sub-sections (monster-forge .section-div). */
 .section-div {
   border: none;

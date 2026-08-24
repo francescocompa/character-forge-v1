@@ -6,7 +6,7 @@ function ChipList({ title, items, tone }: { title: string; items?: Markup[]; ton
   if (!items || items.length === 0) return null
   return (
     <div className={`defenses__group defenses__group--${tone}`}>
-      <span className="defenses__label">{title}</span>
+      <span className="field-label">{title}</span>
       <ul className="defenses__items">
         {items.map((item, i) => (
           <li key={i} className="defenses__item">
@@ -51,7 +51,7 @@ export function SensesBlock() {
       <h2 className="panel__title">Senses & proficiencies</h2>
       {senses && senses.length > 0 && (
         <div className="senses__group">
-          <span className="senses__label">Senses</span>
+          <span className="field-label">Senses</span>
           <ul className="senses__items">
             {senses.map((s, i) => (
               <li key={i}>
@@ -63,25 +63,25 @@ export function SensesBlock() {
       )}
       {languages && languages.length > 0 && (
         <div className="senses__group">
-          <span className="senses__label">Languages</span>
+          <span className="field-label">Languages</span>
           <span className="senses__value">{languages.join(', ')}</span>
         </div>
       )}
       {proficiencies?.armor && proficiencies.armor.length > 0 && (
         <div className="senses__group">
-          <span className="senses__label">Armor</span>
+          <span className="field-label">Armor</span>
           <span className="senses__value">{proficiencies.armor.join(', ')}</span>
         </div>
       )}
       {proficiencies?.weapons && proficiencies.weapons.length > 0 && (
         <div className="senses__group">
-          <span className="senses__label">Weapons</span>
+          <span className="field-label">Weapons</span>
           <span className="senses__value">{proficiencies.weapons.join(', ')}</span>
         </div>
       )}
       {proficiencies?.tools && proficiencies.tools.length > 0 && (
         <div className="senses__group">
-          <span className="senses__label">Tools</span>
+          <span className="field-label">Tools</span>
           <span className="senses__value">{proficiencies.tools.join(', ')}</span>
         </div>
       )}

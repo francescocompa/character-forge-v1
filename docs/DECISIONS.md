@@ -106,6 +106,18 @@ one-off `label` style).
 Affects: Add-to-sheet dialog, Manage spells/mastery dialogs (`session/
 additions/additions.css`, `manage/manage.css`).
 
+**Implemented 2026-08-24 (T25 #3):** `.field-label` added to
+`components/primitives.css`. Consolidated 6 independent copies of the
+recipe onto it — the sheet's `.stat__label`/`.chassis-item__label`/
+`.defenses__label`/`.senses__label` (already-correct duplicates) plus the
+dialogs' `.add-preview__label`/`.mng-field__label`/`.mng-change__label`
+(also already-correct duplicates) and `.add-field__label` (the one
+genuinely wrong, non-uppercase voice this decision targeted). Checked
+Spells'/Equipment's manage-mode flows too (named in the original task text)
+— found no bold-label violation there, already `.panel__title`-correct.
+The open legibility concern is resolved: screenshot-verified at 375px in
+the live Add dialog, clearly legible.
+
 ### D21 — One outline icon library, bundled as SVG (not a CDN webfont) · 2026-08-24 · DECIDED
 
 Mechanism: AskUserQuestion, 2 rounds

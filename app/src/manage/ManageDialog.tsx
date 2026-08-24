@@ -58,7 +58,7 @@ export function ManageDialog({ group, onClose }: { group: CharacterGroup; onClos
         </div>
 
         <label className="mng-field">
-          <span className="mng-field__label">Display name</span>
+          <span className="field-label">Display name</span>
           <div className="mng-field__row">
             <input
               className="mng-input"
@@ -82,7 +82,7 @@ export function ManageDialog({ group, onClose }: { group: CharacterGroup; onClos
         </label>
 
         <div className="mng-variants">
-          <span className="mng-field__label">
+          <span className="field-label">
             {group.variants.length > 1 ? 'Variants' : 'This file'}
           </span>
           <ul className="mng-variant-list">

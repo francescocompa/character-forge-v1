@@ -184,11 +184,8 @@
 .add-field--narrow {
   flex: 0 0 6rem;
 }
-.add-field__label {
-  font-size: var(--font-size-sm);
-  color: var(--ink-secondary);
-  font-weight: 600;
-}
+/* Field label is `.field-label` (components/primitives.css) — D20 unifies
+   dialog form labels onto the sheet's dim-uppercase micro-label voice. */
 .add-input {
   font: inherit;
   color: var(--ink-primary);
@@ -254,13 +251,6 @@
   background: var(--surface-bg);
   border: 1px dashed var(--border-subtle);
   border-radius: var(--radius-sm);
-}
-.add-preview__label {
-  font-size: var(--font-size-chrome);
-  letter-spacing: var(--letter-spacing-chrome);
-  text-transform: uppercase;
-  color: var(--ink-muted);
-  font-weight: var(--weight-chrome);
 }
 .add-preview__body {
   color: var(--ink-primary);

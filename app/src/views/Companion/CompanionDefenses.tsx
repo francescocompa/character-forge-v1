@@ -5,7 +5,7 @@ function ChipList({ title, items, tone }: { title: string; items?: Markup[]; ton
   if (!items || items.length === 0) return null
   return (
     <div className={`defenses__group defenses__group--${tone}`}>
-      <span className="defenses__label">{title}</span>
+      <span className="field-label">{title}</span>
       <ul className="defenses__items">
         {items.map((item, i) => (
           <li key={i} className="defenses__item">
@@ -35,7 +35,7 @@ export function CompanionDefenses({ companion }: { companion: CompanionSheet }) 
       <ChipList title="Condition advantage" items={conditionAdvantages} tone="cond" />
       {senses && senses.length > 0 && (
         <div className="senses__group">
-          <span className="senses__label">Senses</span>
+          <span className="field-label">Senses</span>
           <ul className="senses__items">
             {senses.map((s, i) => (
               <li key={i}>
@@ -47,7 +47,7 @@ export function CompanionDefenses({ companion }: { companion: CompanionSheet }) 
       )}
       {languages && languages.length > 0 && (
         <div className="senses__group">
-          <span className="senses__label">Languages</span>
+          <span className="field-label">Languages</span>
           <span className="senses__value">{languages.join(', ')}</span>
         </div>
       )}

@@ -42,7 +42,7 @@ function MarkupPreview({ source }: { source: string }) {
   const problem = diagnostics.find((d) => d.severity === 'error')
   return (
     <div className="add-preview">
-      <span className="add-preview__label">Preview</span>
+      <span className="field-label">Preview</span>
       <div className="add-preview__body">
         <SheetMarkup source={source} />
       </div>
@@ -133,7 +133,7 @@ export function AddDialog({ editing, initialKind = 'item', onClose }: AddDialogP
         <div className="add-fields">
           {draft.kind !== 'note' && (
             <label className="add-field">
-              <span className="add-field__label">Name</span>
+              <span className="field-label">Name</span>
               <input
                 className="add-input"
                 type="text"
@@ -152,7 +152,7 @@ export function AddDialog({ editing, initialKind = 'item', onClose }: AddDialogP
           {draft.kind === 'item' && (
             <div className="add-row">
               <label className="add-field add-field--narrow">
-                <span className="add-field__label">Qty</span>
+                <span className="field-label">Qty</span>
                 <input
                   className="add-input"
                   type="number"
@@ -164,7 +164,7 @@ export function AddDialog({ editing, initialKind = 'item', onClose }: AddDialogP
                 />
               </label>
               <label className="add-field add-field--narrow">
-                <span className="add-field__label">Weight (lb)</span>
+                <span className="field-label">Weight (lb)</span>
                 <input
                   className="add-input"
                   type="number"
@@ -180,7 +180,7 @@ export function AddDialog({ editing, initialKind = 'item', onClose }: AddDialogP
           )}
 
           <label className="add-field">
-            <span className="add-field__label">{summaryLabel}</span>
+            <span className="field-label">{summaryLabel}</span>
             <textarea
               className="add-input add-textarea"
               rows={draft.kind === 'note' ? 4 : 3}
@@ -208,7 +208,7 @@ export function AddDialog({ editing, initialKind = 'item', onClose }: AddDialogP
               {draft.limited && (
                 <div className="add-row">
                   <label className="add-field add-field--narrow">
-                    <span className="add-field__label">Uses</span>
+                    <span className="field-label">Uses</span>
                     <input
                       className="add-input"
                       type="number"
@@ -220,7 +220,7 @@ export function AddDialog({ editing, initialKind = 'item', onClose }: AddDialogP
                     />
                   </label>
                   <div className="add-field">
-                    <span className="add-field__label">Recovers on</span>
+                    <span className="field-label">Recovers on</span>
                     <div className="add-recover" role="group" aria-label="Recovers on">
                       {RECOVER.map((r) => (
                         <button

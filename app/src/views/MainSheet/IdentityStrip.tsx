@@ -57,14 +57,14 @@ export function IdentityStrip() {
 
       <div className="identity__chassis">
         <span className="chassis-item">
-          <span className="chassis-item__label">Species</span>
+          <span className="field-label">Species</span>
           <RefTerm
             refKey={chassis.species.ref}
             label={nameOf(chassis.species.ref, chassis.species.displayName)}
           />
         </span>
         <span className="chassis-item">
-          <span className="chassis-item__label">Background</span>
+          <span className="field-label">Background</span>
           <RefTerm
             refKey={chassis.background.ref}
             label={nameOf(chassis.background.ref, chassis.background.displayName)}

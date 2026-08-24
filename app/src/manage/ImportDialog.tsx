@@ -143,7 +143,7 @@ function RefreshBody({
         <ul className="mng-changes">
           {rows.map((r) => (
             <li key={r.label} className="mng-change">
-              <span className="mng-change__label">{r.label}</span>
+              <span className="field-label">{r.label}</span>
               <span className="mng-change__from">{r.from}</span>
               <span className="mng-change__arrow" aria-hidden="true">
                 →

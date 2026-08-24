@@ -295,13 +295,7 @@
   background: var(--surface-input);
   border-radius: var(--radius-sm);
 }
-.mng-change__label {
-  font-size: var(--font-size-chrome);
-  letter-spacing: var(--letter-spacing-chrome);
-  text-transform: uppercase;
-  font-weight: var(--weight-chrome);
-  color: var(--ink-muted);
-}
+/* Field label is `.field-label` (components/primitives.css). */
 .mng-change__from {
   color: var(--ink-secondary);
 }
@@ -330,13 +324,7 @@
   flex-direction: column;
   gap: var(--space-2);
 }
-.mng-field__label {
-  font-size: var(--font-size-chrome);
-  letter-spacing: var(--letter-spacing-chrome);
-  text-transform: uppercase;
-  font-weight: var(--weight-chrome);
-  color: var(--ink-muted);
-}
+/* Field label is `.field-label` (components/primitives.css). */
 .mng-field__row {
   display: flex;
   gap: var(--space-2);

@@ -7,7 +7,7 @@ import { itemAdditionsWeightLb, pushDragLiftLb, totalCarriedWeightLb } from './e
 function WeightStat({ label, lb }: { label: string; lb: number }) {
   return (
     <div className="weight-stat">
-      <span className="stat__label">{label}</span>
+      <span className="field-label">{label}</span>
       <span className="weight-stat__value">
         {lb} lb <span className="weight-stat__kg">({lbToKg(lb)} kg)</span>
       </span>

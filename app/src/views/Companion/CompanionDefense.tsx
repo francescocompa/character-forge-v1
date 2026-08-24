@@ -27,11 +27,11 @@ export function CompanionDefense({ companion }: { companion: CompanionSheet }) {
     <section className="panel defense" aria-label={`${companion.name} defense`}>
       <div className="defense__stats">
         <div className="stat stat--ac">
-          <span className="stat__label">AC</span>
+          <span className="field-label">AC</span>
           <span className="stat__value">{companion.ac.value}</span>
         </div>
         <div className="stat stat--speeds">
-          <span className="stat__label">Speed</span>
+          <span className="field-label">Speed</span>
           <span className="stat__value">
             {companion.speeds.map((s, i) => (
               <span key={`${s.type}-${i}`} className="speed">
@@ -45,7 +45,7 @@ export function CompanionDefense({ companion }: { companion: CompanionSheet }) {
       <div className="hp-block">
         <div className="hp-block__main">
           <div className="hp-current">
-            <span className="stat__label">Hit points</span>
+            <span className="field-label">Hit points</span>
             <div className="hp-current__row">
               <NumberStepper
                 value={current}
@@ -58,7 +58,7 @@ export function CompanionDefense({ companion }: { companion: CompanionSheet }) {
             </div>
           </div>
           <div className="hp-temp">
-            <span className="stat__label">Temp HP</span>
+            <span className="field-label">Temp HP</span>
             <NumberStepper
               value={temp}
               label={`${companion.name} temporary hit points`}
@@ -71,7 +71,7 @@ export function CompanionDefense({ companion }: { companion: CompanionSheet }) {
 
       {companion.resources && companion.resources.length > 0 && (
         <div className="hit-dice" aria-label={`${companion.name} resources`}>
-          <span className="stat__label">Resources</span>
+          <span className="field-label">Resources</span>
           <ul className="resources__list">
             {companion.resources.map((resource) => {
               const total = maxCount(resource.max, character.stats.proficiencyBonus)
