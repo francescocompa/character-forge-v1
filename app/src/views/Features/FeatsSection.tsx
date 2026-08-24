@@ -20,7 +20,10 @@ export function FeatsSection({ feats }: { feats: ProgressionItem[] }) {
   const { nameOf, isVisible } = useCharacter()
   if (!feats.some((f) => isVisible(f.unlockLevel))) return null
   return (
-    <CollapsibleSection title="Feats" className="chassis-section">
+    <CollapsibleSection
+      title={<span className="panel__title">Feats</span>}
+      className="chassis-section"
+    >
       <FeatureList items={feats} originOf={(item) => originTag(item, nameOf)} />
     </CollapsibleSection>
   )

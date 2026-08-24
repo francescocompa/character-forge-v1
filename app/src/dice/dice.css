@@ -57,10 +57,6 @@
   color: var(--ink-primary);
   background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
-#d3dCard .d3dc-rr:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
 #d3dCard .d3dc-bar {
   position: absolute;
   left: 0;
@@ -184,8 +180,6 @@ body.dicing * {
   cursor: pointer;
 }
 .rollable:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
   border-radius: var(--radius-sm);
 }
 

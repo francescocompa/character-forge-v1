@@ -121,11 +121,6 @@
   color: var(--ink-primary);
 }
 
-.lib-icon-btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
 .lib-back {
   align-self: center;
 }

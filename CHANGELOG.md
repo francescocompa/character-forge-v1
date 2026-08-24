@@ -3,6 +3,43 @@
 Newest batch first. One entry per task/batch; reference the planning task ids
 (T01–T22) where applicable.
 
+## 2026-08-24 — docs + fix: UX/UI skeleton interview, quick wins (T25 opened)
+
+T23 (monster-forge DS alignment) merged without its acceptance boxes ticked
+or a Done note — no record of what it actually finished. Francesco asked for
+a fresh pass: study monster-forge directly (its actual `styles.css`, not a
+secondhand summary), audit character-forge's live UI against it, interview
+him on the open questions, distill guidelines. 7 AskUserQuestion rounds + 2
+visual mockups (mobile nav pattern, dialog label voice).
+
+Headline correction to what T23 assumed: monster-forge's own primary nav is
+a resizable left rail (not tabs), and its accent is coral/terracotta
+`#e2654d` (not indigo) — character-forge's indigo + tab shell were already
+confirmed deliberate divergences (2026-07-04), not a mislabeled port; now
+documented as such with the actual reasoning.
+
+- **`docs/DESIGN-SYSTEM.md`** (new): the component-level skeleton — what's
+  locked (accent, nav shape, touch targets — deliberate divergences from
+  monster-forge), what's adopted from monster-forge (verified against its
+  source, not its own unresolved rough edges like the 35-class chip sprawl),
+  the shared-primitives hard rule, the micro-label voice, chip/icon
+  conventions.
+- **`docs/DECISIONS.md`** (new): D16–D22, continuing `PROJECT-SCOPE.md`'s D#
+  numbering with a richer format (rejected options, verbatim notes).
+- **Fixed today** (the small, already-confirmed items):
+  - Focus ring: one global `:focus-visible` outline rule (`primitives.css`),
+    replacing a 23-instance per-component `box-shadow` ring — T23 asked for
+    this in July and it never happened.
+  - `.feature-section` (Features) and `.companion-identity` (Companion) now
+    share `.panel`'s surface recipe via one primitives.css declaration,
+    instead of two independent copies of the same three values.
+  - The "Feats" section title (Features view) now uses the amber micro-label
+    voice, matching every other plain-label section title in the app.
+- **T25 opened** (`planning/tasks/T25-ux-skeleton.md`, data folder) for the
+  real remaining work: mobile bottom tab bar + icon library, a `FieldLabel`
+  primitive + dialog sweep, a shared modal/scrim base.
+- `npm run verify` green (220 app tests); fixes screenshot-verified live.
+
 ## 2026-08-24 — docs: finish T21 (project docs)
 
 Completed the deliverables the 2026-07-26 index commit left open.

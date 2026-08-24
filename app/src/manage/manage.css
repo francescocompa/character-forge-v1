@@ -86,10 +86,6 @@
 .cf-card__open:hover {
   background: var(--surface-overlay);
 }
-.cf-card__open:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
 .cf-card__thumb {
   flex: 0 0 auto;
   width: 3rem;
@@ -151,10 +147,6 @@
 .cf-card__manage:hover {
   color: var(--ink-primary);
   background: var(--surface-overlay);
-}
-.cf-card__manage:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 /* --- empty state --------------------------------------------------------- */
@@ -354,10 +346,6 @@
 .mng-btn:hover {
   color: var(--ink-primary);
 }
-.mng-btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
 .mng-btn--primary {
   background: var(--accent);
   border-color: transparent;
@@ -411,10 +399,6 @@
   font: inherit;
   padding: var(--space-2) var(--space-3);
   min-height: 2.25rem;
-}
-.mng-input:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 .mng-variants {

@@ -138,10 +138,12 @@
   --origin-6: hsl(200 60% 62%);
 
   /* ---------------------------------------------------------------------
-   * Focus ring
+   * Focus ring — monster-forge's rule verbatim (one global outline, not a
+   * per-component box-shadow ring): :focus-visible{outline:2px solid
+   * var(--accent-soft);outline-offset:2px}. Also reused as an active-state
+   * accent (tab underline, toggle fill) — not focus-specific despite the name.
    * ------------------------------------------------------------------- */
   --focus-ring-color: var(--accent-soft);
-  --focus-ring: 0 0 0 2px var(--surface-bg), 0 0 0 4px var(--focus-ring-color);
 
   /* ---------------------------------------------------------------------
    * Spacing & radius scale (radius steps = monster-forge's --r-sm/--r/--r-lg;

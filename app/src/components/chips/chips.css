@@ -37,8 +37,6 @@
 }
 
 .chip--tappable:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
   border-radius: var(--radius-sm);
 }
 

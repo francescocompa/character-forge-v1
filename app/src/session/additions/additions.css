@@ -41,10 +41,6 @@
 .addition-btn--remove:hover {
   color: var(--bad);
 }
-.addition-btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
 
 /* --- session boons (Features) ------------------------------------------- */
 .boon-list {
@@ -180,10 +176,6 @@
   color: var(--ink-primary);
   box-shadow: inset 0 0 0 1px var(--border-subtle);
 }
-.add-kind:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
 
 .add-fields {
   display: flex;
@@ -222,10 +214,6 @@
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-}
-.add-input:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 .add-textarea {
   resize: vertical;
@@ -268,10 +256,6 @@
   background: var(--surface-overlay);
   color: var(--ink-primary);
   box-shadow: inset 0 0 0 1px var(--accent-soft);
-}
-.add-recover__btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 .add-preview {
@@ -330,10 +314,6 @@
 }
 .add-btn--primary:not(:disabled):hover {
   background: var(--accent-hover);
-}
-.add-btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 /* Bottom-sheet on phones: full-width, docked to the bottom, thumb-reachable. */

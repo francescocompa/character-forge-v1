@@ -55,10 +55,6 @@ body {
 .app-shell__back:hover {
   color: var(--ink-primary);
 }
-.app-shell__back:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
 
 /* --- variant switcher (D12) --------------------------------------------- */
 .variant-switcher {
@@ -82,10 +78,6 @@ body {
   background: var(--accent-soft);
   border-color: transparent;
   color: var(--ink-primary);
-}
-.variant-chip:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 /* --- session actions (add / export) ------------------------------------- */
@@ -114,10 +106,6 @@ body {
   background: var(--accent);
   border-color: transparent;
   color: var(--ink-on-accent);
-}
-.shell-btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 .shell-btn:hover {
   color: var(--ink-primary);
@@ -151,10 +139,6 @@ body {
   color: var(--ink-primary);
   box-shadow: inset 0 0 0 1px var(--border-subtle);
 }
-.view-toggle__btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
 
 /* --- tabs ---------------------------------------------------------------- */
 /* Sticky: the sheet runs 2000px+, and switching sections is the most frequent
@@ -186,10 +170,6 @@ body {
 .app-tab.is-active {
   color: var(--ink-primary);
   border-bottom-color: var(--focus-ring-color);
-}
-.app-tab:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 @media (max-width: 768px) {

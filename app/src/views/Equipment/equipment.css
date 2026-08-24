@@ -274,11 +274,6 @@
   padding: var(--space-1);
 }
 
-.currency-field__input:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
 /* Focus visibility for interactive controls unique to this view. */
 .gear-item__toggle input:focus-visible {
   outline: var(--focus-ring-color) solid 2px;

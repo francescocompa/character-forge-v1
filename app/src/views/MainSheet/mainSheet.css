@@ -781,12 +781,6 @@
 }
 
 /* Focus visibility for every interactive control on the sheet. */
-.tick:focus-visible,
-.step-btn:focus-visible,
-.rest-btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
 
 /* Mobile: enlarge tap targets to ≥ 44 px (T08 acceptance). */
 @media (max-width: 768px) {

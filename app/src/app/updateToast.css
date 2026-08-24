@@ -42,10 +42,6 @@
 .pwa-toast__btn:hover {
   color: var(--ink-primary);
 }
-.pwa-toast__btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
 .pwa-toast__btn--primary {
   background: var(--accent);
   border-color: transparent;

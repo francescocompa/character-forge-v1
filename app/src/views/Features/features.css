@@ -13,11 +13,11 @@
   font-family: var(--font-family);
 }
 
-/* --- section chrome (shared by class/species/background/feats) ---------- */
+/* --- section chrome (shared by class/species/background/feats) ----------
+   Surface (background/border/radius) comes from primitives.css's shared
+   .panel/.feature-section/.companion-identity rule (D19) — only this
+   component's own header+body layout lives here. */
 .feature-section {
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
@@ -64,11 +64,6 @@
   .feature-section__chevron {
     display: none;
   }
-}
-
-.feature-section__header:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 /* --- class section header ------------------------------------------------ */

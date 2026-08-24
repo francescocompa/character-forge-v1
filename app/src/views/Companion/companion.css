@@ -39,13 +39,14 @@
 }
 
 /* --- identity ---------------------------------------------------------------- */
+/* Surface (background/border/radius) comes from primitives.css's shared
+   .panel/.feature-section/.companion-identity rule (D19) — a portrait row
+   needs its own padding/align-items, so it can't take the .panel class
+   itself, but it stays surface-identical. */
 .companion-identity {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
 }
 .companion-identity__portrait {

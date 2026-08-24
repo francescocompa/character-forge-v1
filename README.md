@@ -13,7 +13,9 @@ character files (which embed rules extracts) are git-ignored by design and kept 
 local, non-synced data folder. Tests use an invented synthetic fixture only.
 
 - **Docs** — [`docs/PROJECT-SCOPE.md`](docs/PROJECT-SCOPE.md): the source of truth for
-  scope, architecture, and decisions.
+  scope, architecture, and decisions. [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md):
+  the component-level UX/UI skeleton — shared primitives, and what's a deliberate
+  divergence from sibling app monster-forge vs. what's drift.
 - **Pipeline** — [`pipeline/`](pipeline/): the Claude-facing compile/audit docs and the
   validator CLI.
 - **License** — [MIT](LICENSE) (code only; no game content ships in this repo).

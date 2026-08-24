@@ -50,6 +50,11 @@ Styling is tokens-only (`app/src/tokens/tokens.css` — no ad-hoc colors/sizes).
 Conventional commits (`feat(app): … (T24)`, `fix(pipeline): …`), one task or
 batch per commit, logged in [`CHANGELOG.md`](CHANGELOG.md).
 
+**Component-level UX/UI skeleton: [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md)**
+— read before touching component CSS. Shared primitives are a hard rule (no
+per-view forks); what's a deliberate divergence from sibling app monster-forge
+vs. what's still drift. Decisions D16+ in [`docs/DECISIONS.md`](docs/DECISIONS.md).
+
 ## Context boundary
 
 Software engineering here; cross-project rules in `~/.claude/CLAUDE.md`. Don't

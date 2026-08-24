@@ -40,16 +40,33 @@ textarea {
   background: transparent;
 }
 
+/* One global focus ring, monster-forge's rule verbatim (D22, docs/DECISIONS.md) —
+   every interactive element, no per-component override. */
+:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: 2px;
+}
+
 /* ---------------------------------------------------------------------------
  * Section block — the shared "SectionCard" (monster-forge fieldset.fieldset).
  * Panel surface, 1px hairline, card radius; title = the amber secondary voice
  * (fs-title), sub-heads dim (fs-sub). Consumed as `.panel` / `.panel__title`
  * across MainSheet, Spells, Equipment.
  * ------------------------------------------------------------------------- */
-.panel {
+/* Surface recipe, shared by every "panel-shaped" block regardless of its
+   internal layout (D19 — one declaration, not N independent copies of the
+   same three values). .feature-section and .companion-identity need their
+   own padding/flex rules (header+body disclosure structure; a portrait row),
+   so they can't take the .panel class itself — but they take this surface. */
+.panel,
+.feature-section,
+.companion-identity {
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
+}
+
+.panel {
   padding: var(--space-3);
   display: flex;
   flex-direction: column;
@@ -140,10 +157,6 @@ input[type='checkbox']:checked::after {
   background: #fff;
   -webkit-mask: var(--check-mask) center / 11px no-repeat;
   mask: var(--check-mask) center / 11px no-repeat;
-}
-input[type='checkbox']:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 /* ---------------------------------------------------------------------------

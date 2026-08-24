@@ -111,6 +111,10 @@ v13.1.3, hand-filled digitally. These conventions are the design canon:
 | D14 | View modes | No permanent graying. **Level view** (default): only content up to `currentLevel`. **Build view**: full progression with the paper-style grayed + level-badged treatment. Global toggle. |
 | D15 | Improvement mandate | The app should *beat* the paper system where manual editing forced compromises, not just replicate it — tracked in §14 with v1/backlog tags. |
 
+**D16 onward moved to [`DECISIONS.md`](DECISIONS.md)** (2026-08-24 — richer
+format: rejected options, verbatim notes, enforced-by). First batch: D16–D22,
+the UX/UI skeleton alignment pass against monster-forge.
+
 ## 4. Hard guardrails
 
 - **IP guardrail (public repo):** WotC-copyrighted text must **never** be
