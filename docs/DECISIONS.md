@@ -242,6 +242,18 @@ same-session corrections. Verification per item:
    as **one compact table**, with skills as a single inline paragraph
    directly below it — not three separate cards. Real, verified precedent for
    "in one element."
+
+   **Implemented 2026-08-24 (T25 #9), minimum bar only:** `SavesBlock` moved
+   from `.main-sheet__rail` into `.main-sheet__col--detail`, directly before
+   `SkillsBlock` — the two are now adjacent (touching, no panel between)
+   on both desktop and mobile. Screenshot-verified at 1280px and 375px.
+   Deliberately **not** attempted: the full combined-table merge (one panel,
+   ability+save+skill as a single element) monster-forge's precedent shows
+   — that's a real layout redesign of two components into one, which the
+   task itself frames as optional ("consider... if that reads better once
+   mocked up"), not the stated minimum. Left for a future pass with an
+   actual mockup, not guessed here.
+
 5. **Top bar clutter** — confirmed by inspection: the chrome above the tab
    row is 3 stacked rows (back+name / +Add+Export+Level·Build / variant
    chips) before any sheet content appears. Needs consolidating into a
