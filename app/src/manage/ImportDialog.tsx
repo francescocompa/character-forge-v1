@@ -27,9 +27,9 @@ export function ImportDialog({ state, onConfirm, onDismiss, busy }: ImportDialog
   }, [onDismiss])
 
   return (
-    <div className="mng-overlay" role="presentation" onClick={onDismiss}>
+    <div className="modal-overlay" role="presentation" onClick={onDismiss}>
       <div
-        className="mng-dialog"
+        className="modal-surface"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

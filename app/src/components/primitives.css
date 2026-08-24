@@ -201,6 +201,64 @@ textarea {
 }
 
 /* ---------------------------------------------------------------------------
+ * Modal base (T25 #4) — the confirmation/action-dialog shape shared by the
+ * Manage/Import and Add dialogs, which were near-identical CSS in two files
+ * (a D19 violation — `.mng-overlay`/`.mng-dialog` and `.add-overlay`/
+ * `.add-sheet` had an identical property list). Centered card on desktop,
+ * bottom sheet on mobile (D26 — the Manage/Import dialogs previously stayed
+ * centered on phone; converged onto the Add dialog's already-proven
+ * bottom-sheet behavior for consistency).
+ *
+ * The library's own popover/bottom-sheet (`library/library.css`) is a
+ * deliberately distinct component, not merged here: it's an anchored
+ * popover (desktop) that only becomes a sheet on mobile, with an invisible
+ * desktop scrim and a higher z-index so it can sit above an open modal —
+ * different role from a centered confirmation dialog. See D26.
+ * ------------------------------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  z-index: 100;
+}
+
+.modal-surface {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-pop);
+  width: 100%;
+  max-width: 30rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+.modal-surface--wide {
+  max-width: 34rem;
+}
+
+@media (max-width: 768px) {
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .modal-surface {
+    max-width: none;
+    max-height: 92vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
+  }
+}
+
+/* ---------------------------------------------------------------------------
  * Text inputs / textarea — the --in well, hairline, accent focus border.
  * Element-level base so every field converges; per-view class rules only add
  * sizing/layout on top. (Checkbox/radio opt out — skinned below.)

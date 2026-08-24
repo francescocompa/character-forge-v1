@@ -335,3 +335,42 @@ Affects: `app/src/components/primitives.css` (new), `app/src/manage/
 manage.css`, `app/src/manage/{CharacterList,ManageDialog,ImportDialog}.tsx`,
 `app/src/session/additions/additions.css`, `app/src/session/additions/
 AddDialog.tsx`, `app/src/views/MainSheet/mainSheet.css` (`.rest-btn` only).
+
+### D26 — Modal base scope: merge Manage/Import + Add dialogs, leave the library popover distinct · 2026-08-24 · DECIDED
+
+Mechanism: engineering judgment call while executing T25 #4, not an
+AskUserQuestion round — same kind of call as D25, narrow enough to fall
+inside T25's existing mandate.
+Chosen: added `.modal-overlay`/`.modal-surface`/`.modal-surface--wide` to
+`components/primitives.css`. `.mng-overlay`/`.mng-dialog` (Manage/Import) and
+`.add-overlay`/`.add-sheet` (Add) were already byte-identical CSS in two
+files (confirmed by the T25 survey) — a clean D19 violation, merged onto the
+shared primitive with no visual change on desktop. One real behavior change:
+the Manage/Import dialogs previously stayed a centered card on mobile while
+the Add dialog became a bottom sheet; both now get the bottom-sheet
+treatment, converging on the already-proven pattern rather than the
+lesser-tested one. Screenshot-verified at 375px and desktop width.
+Left distinct (not merged): the library's own popover/bottom-sheet
+(`library/library.css` — `.lib-overlay`/`.lib-scrim`/`.lib-surface`/
+`.lib-popover`/`.lib-sheet`). It's a different component role — an anchored
+popover on desktop (not centered), an invisible scrim except on mobile, a
+higher z-index (1000 vs 100, so it can sit above an open modal), and its own
+drag-grabber affordance — not a drop-in match for a centered confirmation
+dialog. Forcing it onto `.modal-surface` would mean either losing the
+anchored-popover behavior or bolting exceptions onto the shared class,
+which defeats the point of sharing it.
+Rejected: forcing all three into one literal class (what the original T25
+item #4 text suggested, "consumed by all three") — monster-forge's own
+stated precedent (DESIGN-SYSTEM.md §2) is a shared _surface recipe_
+(background/border/radius/shadow) across `.menu`/`.popover`/`.modal`, not
+one undifferentiated class; the library's popover is closer to
+monster-forge's `.popover` role, the Manage/Import/Add dialogs to its
+`.modal` role. Flagging this for Francesco to override if he wants full
+convergence — it's a scope call, not a closed question.
+Enforced by: `.modal-overlay`/`.modal-surface` in `components/primitives.css`;
+`verify` green (220 tests); screenshot-verified live (Manage dialog now a
+bottom sheet on mobile, unchanged centered card on desktop).
+Affects: `app/src/components/primitives.css` (new), `app/src/manage/
+manage.css`, `app/src/manage/{ManageDialog,ImportDialog}.tsx`,
+`app/src/session/additions/additions.css`, `app/src/session/additions/
+AddDialog.tsx`. `app/src/library/library.css` untouched — deliberately.

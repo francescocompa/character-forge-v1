@@ -40,9 +40,9 @@ export function ManageDialog({ group, onClose }: { group: CharacterGroup; onClos
   }
 
   return (
-    <div className="mng-overlay" role="presentation" onClick={onClose}>
+    <div className="modal-overlay" role="presentation" onClick={onClose}>
       <div
-        className="mng-dialog mng-dialog--wide"
+        className="modal-surface modal-surface--wide"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

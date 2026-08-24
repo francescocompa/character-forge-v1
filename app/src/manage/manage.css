@@ -195,34 +195,9 @@
 }
 
 /* --- dialogs (import + manage) ------------------------------------------- */
-.mng-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--scrim);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-4);
-  z-index: 100;
-}
-.mng-dialog {
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-pop);
-  width: 100%;
-  max-width: 30rem;
-  max-height: 90vh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
-}
-.mng-dialog--wide {
-  max-width: 34rem;
-}
+/* Overlay + surface are `.modal-overlay`/`.modal-surface`/`.modal-surface--wide`
+   (components/primitives.css) — same primitive the Add dialog uses (D26),
+   no local reimplementation. */
 .mng-dialog__head {
   display: flex;
   align-items: center;

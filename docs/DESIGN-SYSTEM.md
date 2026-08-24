@@ -51,8 +51,11 @@ there, not behind.
   `.is-selected` in `primitives.css` already does this correctly.
 - **Popup-surface base** (menu/popover/modal share background, border,
   radius, shadow) — one of monster-forge's genuine consistency wins.
-  character-forge's modal/scrim chrome should converge on one shared base the
-  same way (see §4, still owed).
+  Fixed 2026-08-24 (D26): the Manage/Import + Add dialogs now share
+  `.modal-overlay`/`.modal-surface` (§3). The library's own popover/sheet
+  stays its own component — a different role (anchored popover, not a
+  centered confirmation dialog), matching monster-forge's own
+  `.popover`-vs-`.modal` split, not one undifferentiated class.
 - **Micro-label _pattern_, not its un-tokenized values.** Monster-forge's
   section-header voice (uppercase, 600–700 weight, wide letter-spacing, dim
   or amber) is a real, 55-times-repeated rule in its source — but the exact
@@ -80,17 +83,18 @@ via AskUserQuestion before forking. Don't silently add a one-off.
 
 Current shared primitives (`app/src/components/primitives.css`):
 
-| Role                  | Class                                     | Notes                                                                                                                                                                                           |
-| --------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Section block         | `.panel` / `.panel__title`                | Amber uppercase micro-label title. **Every** section header in **every** view and dialog uses this — no local `background/border/border-radius` recipe that happens to match it by coincidence. |
-| Field label           | `.field-label`                            | Dim uppercase micro-label, same voice as `.panel__title` but `--ink-muted` not `--accent-2`. Applies inside dialogs too (D20, fixed 2026-08-24).                                                |
-| Divider               | `.section-div`                            |                                                                                                                                                                                                 |
-| Text input / textarea | element-level base in `primitives.css`    |                                                                                                                                                                                                 |
-| Checkbox              | `input[type=checkbox]` skin               |                                                                                                                                                                                                 |
-| Selected state        | `.is-selected`                            | Border + tint, no glow — see §2.                                                                                                                                                                |
-| Stepper button        | `.step-btn` (`mainSheet.css`)             | 44px comfort target, a **deliberate** divergence from monster-forge's 20px stacked column — documented inline, keep it.                                                                         |
-| Action button         | `.btn` + `--primary`/`--ghost`/`--danger` | Standalone labeled action button, always pill radius (D25, 2026-08-24). `.mng-btn*`/`.add-btn*` (Manage/Import/Add dialogs) both consume this now — no independent copies.                      |
-| Icon-only button      | `.btn-icon`                               | Square control (dialog close, and any future icon-only button), always `--radius-sm`, never pill (D25). Both dialogs' close buttons consume this.                                               |
+| Role                               | Class                                          | Notes                                                                                                                                                                                               |
+| ---------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Section block                      | `.panel` / `.panel__title`                     | Amber uppercase micro-label title. **Every** section header in **every** view and dialog uses this — no local `background/border/border-radius` recipe that happens to match it by coincidence.     |
+| Field label                        | `.field-label`                                 | Dim uppercase micro-label, same voice as `.panel__title` but `--ink-muted` not `--accent-2`. Applies inside dialogs too (D20, fixed 2026-08-24).                                                    |
+| Divider                            | `.section-div`                                 |                                                                                                                                                                                                     |
+| Text input / textarea              | element-level base in `primitives.css`         |                                                                                                                                                                                                     |
+| Checkbox                           | `input[type=checkbox]` skin                    |                                                                                                                                                                                                     |
+| Selected state                     | `.is-selected`                                 | Border + tint, no glow — see §2.                                                                                                                                                                    |
+| Stepper button                     | `.step-btn` (`mainSheet.css`)                  | 44px comfort target, a **deliberate** divergence from monster-forge's 20px stacked column — documented inline, keep it.                                                                             |
+| Action button                      | `.btn` + `--primary`/`--ghost`/`--danger`      | Standalone labeled action button, always pill radius (D25, 2026-08-24). `.mng-btn*`/`.add-btn*` (Manage/Import/Add dialogs) both consume this now — no independent copies.                          |
+| Icon-only button                   | `.btn-icon`                                    | Square control (dialog close, and any future icon-only button), always `--radius-sm`, never pill (D25). Both dialogs' close buttons consume this.                                                   |
+| Modal (confirmation/action dialog) | `.modal-overlay` / `.modal-surface` + `--wide` | Centered card on desktop, bottom sheet on mobile (D26, 2026-08-24). Manage/Import/Add dialogs consume this. The library's own popover/sheet is a **deliberate** exception — different role, see §2. |
 
 **Confirmed violations, fixed 2026-08-24:**
 
@@ -115,6 +119,11 @@ additions/additions.css`'s `.add-btn*`/`.add-sheet__close` were
   `views/Spells`' and `views/Equipment`'s manage flows (the task's named
   "Manage spells/masteries") and found no bold-label violation there — they
   already use `.panel__title` correctly, so nothing to fix.
+- `manage/manage.css`'s `.mng-overlay`/`.mng-dialog` and `session/additions/
+additions.css`'s `.add-overlay`/`.add-sheet` were byte-identical CSS in
+  two files. Both now consume `.modal-overlay`/`.modal-surface` (D26); the
+  Manage/Import dialogs also picked up the bottom-sheet-on-mobile behavior
+  the Add dialog already had (a deliberate convergence, not just dedup).
 
 **Known, deliberately deferred (not part of this pass):** `spells.css`'s
 `.spell-slots__level-label`/`.manage-source__level-label`/`.spell-row__role`/
@@ -124,12 +133,6 @@ class — a D19-style duplication, but a different semantic role (sub-section/
 role tag, not "names one input") and not a wrong-voice bug like the dialogs
 were. Worth a future consolidation pass; out of scope for T25's "quick wins,
 not a full redo" (D16).
-
-**Still owed (→ `T25`):**
-
-- A shared modal/scrim base — `.modal`/`.scrim` chrome currently isn't
-  converged across `library/`, `manage/`, `session/additions/` the way
-  monster-forge's `.menu`/`.popover`/`.modal` are.
 
 ## 4. Micro-label voice — the two roles
 
@@ -204,9 +207,10 @@ outline icons, even within its own 4-button rail):
 
 - Bottom tab bar for mobile nav (D18) — new component, icon set (D21),
   breakpoint swap with the existing top tab bar.
-- `FieldLabel` primitive + dialog form sweep (D20) — Add item, Manage
-  spells, Manage masteries.
-- Shared modal/scrim base across `library/`, `manage/`, `session/additions/`.
+- ~~`FieldLabel` primitive + dialog form sweep (D20)~~ — done, see §3.
+- ~~Shared modal/scrim base~~ — done (D26): Manage/Import/Add dialogs
+  converged on `.modal-overlay`/`.modal-surface`; the library popover is a
+  deliberate, documented exception (§2/§3).
 - Chip/badge audit against §5's checklist as new views get built (T22 and
   beyond) — not urgent today, just don't skip the check.
 - **From Francesco's own post-interview UX audit (D23), progress as of

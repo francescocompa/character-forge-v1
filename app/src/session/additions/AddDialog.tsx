@@ -97,9 +97,9 @@ export function AddDialog({ editing, initialKind = 'item', onClose }: AddDialogP
         : 'What it does (optional)'
 
   return (
-    <div className="add-overlay" role="presentation" onClick={onClose}>
+    <div className="modal-overlay" role="presentation" onClick={onClose}>
       <div
-        className="add-sheet"
+        className="modal-surface"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

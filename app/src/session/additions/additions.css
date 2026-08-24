@@ -102,31 +102,9 @@
 }
 
 /* --- add / edit dialog --------------------------------------------------- */
-.add-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--scrim);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-4);
-  z-index: 100;
-}
-.add-sheet {
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-pop);
-  width: 100%;
-  max-width: 30rem;
-  max-height: 90vh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
-}
+/* Overlay + surface are `.modal-overlay`/`.modal-surface`
+   (components/primitives.css) — same primitive the Manage/Import dialogs
+   use (D26), no local reimplementation. */
 .add-sheet__head {
   display: flex;
   align-items: center;
@@ -276,18 +254,9 @@
    in AddDialog.tsx with no matching CSS rule at all (a silent no-op); `.btn`'s
    base style now actually renders for it. */
 
-/* Bottom-sheet on phones: full-width, docked to the bottom, thumb-reachable. */
+/* Bottom-sheet-on-mobile is `.modal-overlay`/`.modal-surface`'s own media
+   query (components/primitives.css) — nothing view-specific needed here. */
 @media (max-width: 768px) {
-  .add-overlay {
-    align-items: flex-end;
-    padding: 0;
-  }
-  .add-sheet {
-    max-width: none;
-    max-height: 92vh;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
-  }
   /* Layout-only on mobile: split Cancel/Save evenly across the footer width.
      `.add-btn` no longer carries its own button skin — see the D19 note
      above — just this flex behavior, kept alongside `.btn` in AddDialog.tsx. */
