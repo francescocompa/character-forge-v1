@@ -9,6 +9,9 @@
   deliberate divergence from monster-forge vs. what's still drift.
 - [`INSTALL.md`](INSTALL.md) — installing the deployed PWA (iOS/Android/desktop) and
   its offline behavior.
+- [`ARCHIVE.md`](ARCHIVE.md) — consumed changelog batches (T01–T16). A cold
+  session doesn't need these to do the next task; `../CHANGELOG.md` keeps
+  T17 onward.
 
 Architecture overview and conventions now live in the [root `README.md`](../README.md)
 and [`CLAUDE.md`](../CLAUDE.md); the contract itself is [`schema/`](../schema/README.md)
