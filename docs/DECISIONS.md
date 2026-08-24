@@ -97,6 +97,21 @@ Affects: `app/src/views/Features/features.css` (`.feature-section*` →
 `.panel`/`.panel__title`), `app/src/views/Companion/companion.css`
 (`.companion-identity` → `.panel`) — fixed today as D16 quick wins.
 
+**T25 acceptance spot-check (2026-08-24):** grepped every `background:
+var(--surface-raised)` + `border: 1px solid var(--border-subtle)` pair
+outside `primitives.css`. Found two more real duplicates of `.panel`'s
+exact recipe: `.identity` (`views/MainSheet/mainSheet.css`, the character
+name/classes header) and `.casting-header` (`views/Spells/spells.css`,
+per-source spell-DC header) — both now share the surface via
+`primitives.css`, same technique as `.feature-section`/`.companion-identity`
+above. Screenshot-verified unchanged. `manage.css`'s `.cf-card` reviewed and
+left alone — `--radius-lg` (not `-md`) plus an `overflow:hidden` media-card
+structure `.panel` doesn't support: a genuinely different role, not a
+duplicate. Buttons/toggles sharing the same two tokens (`.shell-btn`,
+`.variant-chip`, `.view-toggle`, `.pwa-toast__btn`, `.manage-toggle`) are a
+control skin, not the SectionCard role `.panel` covers — already handled
+by D25's button taxonomy.
+
 ### D20 — Dialog forms unify with the sheet's micro-label voice · 2026-08-24 · DECIDED
 
 Mechanism: AskUserQuestion, 2 rounds (+ visual mockup: current bold app-chrome
@@ -421,3 +436,50 @@ Affects: `app/src/components/primitives.css` (new), `app/src/manage/
 manage.css`, `app/src/manage/{ManageDialog,ImportDialog}.tsx`,
 `app/src/session/additions/additions.css`, `app/src/session/additions/
 AddDialog.tsx`. `app/src/library/library.css` untouched — deliberately.
+
+### D27 — Top-bar consolidation shape: overflow menu · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round
+Raw note: (selected) "Overflow menu (recommended)"
+Options: A overflow menu (a single "⋯"/settings button opens a small
+dropdown with Export session, Level/Build toggle, and the variant
+switcher) / B settings drawer (gear icon → slide-over/bottom-sheet panel,
+same controls, more spacious) / C something else
+Chosen: A — lowest footprint, familiar pattern, collapses the topbar to
+one row (back+name … +Add, settings button) instead of 2–3.
+Rejected B — more chrome than 3 short controls need. C not elaborated —
+A was picked directly.
+Enforced by: prose only; implementation in T25.
+Affects: `app/src/app/AppShell.tsx`, `app/src/app/appShell.css`. `+ Add`
+stays outside the menu (primary, frequent action); Export session,
+Level/Build toggle, and the variant switcher move inside.
+
+**Implemented 2026-08-24:** `ShellMenu` (`AppShell.tsx`) — a "⚙ Settings"
+`.btn-icon` trigger opens `.shell-menu__panel`, reusing `.panel` for the
+surface (D19, no new recipe) with a click-outside + Escape handler.
+Collapses what was topbar row 1 (back+name / Add+Export+Level·Build) + a
+separate variant-chip row into **one** row on desktop (back+name … +Add,
+⚙) and two on mobile (down from what would otherwise be three). Bug found
+and fixed during verification: the panel was first anchored `right: 0`
+relative to `.shell-menu` (the narrow trigger wrapper) — on a phone, where
+the topbar wraps to two rows and the trigger sits mid-width rather than at
+the screen edge, the panel overflowed off the left of the viewport.
+Fixed by making `.app-shell__topbar` (the full-width row) the positioning
+context instead, so the panel's right edge always lines up with the
+topbar's own content edge. Screenshot-verified at 1280px and 375px
+(open/closed, view-toggle click keeps the menu open, variant-select and
+Export close it, outside-click and Escape both close it).
+
+### D28 — Macro nav (character list ↔ sheet): deferred, not part of T25 · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round
+Raw note: (selected) "Leave it as-is for now"
+Options: A persistent list rail on desktop only (mobile unchanged) / B a
+quick-switch dropdown in the topbar, both platforms / C leave it as-is,
+revisit later
+Chosen: C — the flat list + full-replace flow isn't broken enough to
+prioritize right now. D23 finding #11 stays open, not closed as "won't
+fix" — it can resurface as its own task later.
+Enforced by: prose only.
+Affects: `planning/tasks/T25-ux-skeleton.md` (#11 marked deferred, not
+done); no code changed.

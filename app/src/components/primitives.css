@@ -60,7 +60,9 @@ textarea {
    so they can't take the .panel class itself — but they take this surface. */
 .panel,
 .feature-section,
-.companion-identity {
+.companion-identity,
+.identity,
+.casting-header {
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);

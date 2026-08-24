@@ -57,14 +57,14 @@
   gap: var(--space-2);
 }
 
+/* Surface (background/border/radius) is shared with `.panel` via
+   components/primitives.css (D19 spot-check, T25) — was an independent
+   copy of the exact same recipe. */
 .casting-header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
   padding: var(--space-3);
 }
 

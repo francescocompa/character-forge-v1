@@ -234,8 +234,11 @@ env(safe-area-inset-bottom, 0px)` on the bar itself, plus a
     (name/qty/attuned) and a controls/stats row (toggles left, weight/cost
     right, consistently aligned across a section) — a density/rhythm fix,
     tokens untouched (the file was already correct).
-  - Still open: top-bar consolidation into a settings affordance (needs a
-    mockup + Francesco sign-off); the macro character-list ↔ sheet nav
-    layer (not a D18 reopening — a different layer, also needs a mockup +
-    sign-off).
-    Full detail and verification notes: `docs/DECISIONS.md` D23–D26.
+  - ~~Top-bar consolidation~~ — done (D27): a `ShellMenu` settings dropdown
+    (`.shell-menu__panel`, reusing `.panel`) collapses Export session,
+    Level/Build, and the variant switcher into one "⚙" button; topbar down
+    to one row on desktop. `+ Add` stays outside (primary action).
+  - Macro character-list ↔ sheet nav layer — **deferred, not done** (D28,
+    Francesco's own call: "leave it as-is for now"). Not a T25 gap; a
+    future task if it resurfaces.
+    Full detail and verification notes: `docs/DECISIONS.md` D23–D28.

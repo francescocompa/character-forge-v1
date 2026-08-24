@@ -24,6 +24,11 @@ body {
 }
 
 .app-shell__topbar {
+  /* Positioning context for `.shell-menu__panel` (D27) — anchored to the
+     topbar's own right edge, not the narrower `.shell-menu` trigger wrapper,
+     so it can't overflow past the viewport when the topbar wraps to two
+     rows on a phone and the trigger sits mid-width instead of at the edge. */
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -80,16 +85,12 @@ body {
   color: var(--ink-on-accent);
 }
 
-/* --- session actions (add / export) ------------------------------------- */
+/* --- topbar tools: + Add, and the settings menu (D27) -------------------- */
 .app-shell__topbar-tools {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  flex-wrap: wrap;
-}
-.app-shell__actions {
-  display: flex;
   gap: var(--space-2);
+  flex-wrap: wrap;
 }
 .shell-btn {
   border: 1px solid var(--border-subtle);
@@ -140,6 +141,52 @@ body {
   box-shadow: inset 0 0 0 1px var(--border-subtle);
 }
 
+/* --- settings menu (D23 #10, D27) ----------------------------------------
+ * Anchored dropdown, not a modal. Positioned relative to `.app-shell__topbar`
+ * (not the narrow `.shell-menu` trigger wrapper) so its right edge always
+ * lines up with the topbar's own content edge — anchoring to the trigger
+ * itself overflowed off the left of the viewport on a phone, where the
+ * topbar wraps to two rows and the gear button sits mid-width rather than
+ * at the screen edge. Reuses `.panel` for the surface recipe (background/
+ * border/radius/shadow) rather than inventing a new one (D19). Small enough
+ * (3 short sections) that it doesn't need the anchored-popover-vs-bottom-
+ * sheet responsive split the library popover has.
+ * ------------------------------------------------------------------------ */
+.shell-menu__panel {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--space-2);
+  z-index: 60;
+  width: max-content;
+  min-width: 14rem;
+  max-width: calc(100vw - 2 * var(--space-3));
+}
+.shell-menu__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-start;
+}
+.shell-menu__item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--ink-primary);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.shell-menu__item:hover {
+  background: var(--surface-overlay);
+}
+
 /* --- tabs ---------------------------------------------------------------- */
 /* Sticky: the sheet runs 2000px+, and switching sections is the most frequent
    navigation — the tab bar must survive the scroll. Sits above sheet content
@@ -186,10 +233,6 @@ body {
   .view-toggle__btn,
   .shell-btn {
     min-height: 44px;
-  }
-  .app-shell__topbar-tools {
-    width: 100%;
-    justify-content: space-between;
   }
 
   .app-shell__tabs {

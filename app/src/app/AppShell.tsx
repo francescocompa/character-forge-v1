@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Backpack, BookOpen, LayoutDashboard, PawPrint, Sparkles } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Backpack, BookOpen, LayoutDashboard, PawPrint, Settings, Sparkles } from 'lucide-react'
 import type { CharacterFile } from '@character-forge/schema/types.ts'
 import { LibraryProvider } from '../library'
 import { CharacterProvider, useCharacter } from '../character/CharacterProvider'
@@ -47,32 +47,6 @@ function ViewModeToggle() {
   )
 }
 
-/** In-session actions: add a boon/item/note, or export the session file (D2, T15). */
-function SessionActions() {
-  const { character } = useCharacter()
-  const { openAdd } = useAdditions()
-  const store = useSession()
-  return (
-    <div className="app-shell__actions">
-      <button
-        type="button"
-        className="shell-btn shell-btn--add"
-        aria-label="Add item, boon, or note"
-        onClick={() => openAdd()}
-      >
-        + Add
-      </button>
-      <button
-        type="button"
-        className="shell-btn"
-        onClick={() => downloadSession(character, store.getState())}
-      >
-        Export session
-      </button>
-    </div>
-  )
-}
-
 /** Chip-row switcher between a character's variants (D12); only shown when there's more than one. */
 function VariantSwitcher({
   variants,
@@ -100,6 +74,86 @@ function VariantSwitcher({
   )
 }
 
+/**
+ * Consolidated settings affordance (D23 #10, D27): collapses what used to be
+ * a permanent second topbar row + a third variant-chip row into one "⋯"
+ * button. `+ Add` stays outside (primary, frequent); view mode, the variant
+ * switcher, and Export session are secondary/occasional, so they move here.
+ */
+function ShellMenu({
+  variants,
+  activeVariantKey,
+  onSelectVariant,
+}: Pick<ShellChromeProps, 'variants' | 'activeVariantKey' | 'onSelectVariant'>) {
+  const { character } = useCharacter()
+  const store = useSession()
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onPointerDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
+
+  return (
+    <div className="shell-menu" ref={ref}>
+      <button
+        type="button"
+        className="btn-icon"
+        aria-label="Settings"
+        aria-haspopup="true"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <Settings aria-hidden="true" />
+      </button>
+      {open && (
+        <div className="panel shell-menu__panel" role="menu">
+          <div className="shell-menu__section">
+            <span className="field-label">View</span>
+            <ViewModeToggle />
+          </div>
+          {variants && activeVariantKey && onSelectVariant && (
+            <div className="shell-menu__section">
+              <span className="field-label">Variant</span>
+              <VariantSwitcher
+                variants={variants}
+                activeKey={activeVariantKey}
+                onSelect={(key) => {
+                  onSelectVariant(key)
+                  setOpen(false)
+                }}
+              />
+            </div>
+          )}
+          <button
+            type="button"
+            className="shell-menu__item"
+            role="menuitem"
+            onClick={() => {
+              downloadSession(character, store.getState())
+              setOpen(false)
+            }}
+          >
+            Export session
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function Shell({
   displayName,
   onBack,
@@ -108,6 +162,7 @@ function Shell({
   onSelectVariant,
 }: ShellChromeProps) {
   const { character } = useCharacter()
+  const { openAdd } = useAdditions()
   const [tab, setTab] = useState<Tab>('main')
   const hasCompanions = (character.companions?.length ?? 0) > 0
   const tabs = TABS.filter((t) => t.id !== 'companion' || hasCompanions)
@@ -124,18 +179,21 @@ function Shell({
           <span className="app-shell__title">{displayName ?? character.meta.name}</span>
         </div>
         <div className="app-shell__topbar-tools">
-          <SessionActions />
-          <ViewModeToggle />
+          <button
+            type="button"
+            className="shell-btn shell-btn--add"
+            aria-label="Add item, boon, or note"
+            onClick={() => openAdd()}
+          >
+            + Add
+          </button>
+          <ShellMenu
+            variants={variants}
+            activeVariantKey={activeVariantKey}
+            onSelectVariant={onSelectVariant}
+          />
         </div>
       </div>
-
-      {variants && activeVariantKey && onSelectVariant && (
-        <VariantSwitcher
-          variants={variants}
-          activeKey={activeVariantKey}
-          onSelect={onSelectVariant}
-        />
-      )}
 
       <nav className="app-shell__tabs" role="tablist" aria-label="Sheet sections">
         {tabs.map((t) => (
