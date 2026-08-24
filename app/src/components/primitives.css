@@ -90,6 +90,103 @@ textarea {
 }
 
 /* ---------------------------------------------------------------------------
+ * Button taxonomy (T25 #6, D23 finding #1) — one shared shape rule instead of
+ * `--radius-pill` used ad hoc on 18 unrelated controls with no rule for which
+ * one gets it. Two families:
+ *   .btn      — a standalone, labeled action button. Always pill radius.
+ *               Variants: --primary (solid accent) / --ghost (transparent
+ *               until hover) / --danger (solid --bad). Default size is the
+ *               app's normal control height (2.25rem); .btn--sm/--lg exist
+ *               for the few call sites that genuinely need a different scale
+ *               — most buttons should just be `.btn`.
+ *   .btn-icon — an icon-only square control (dialog close, stepper +/-).
+ *               Always --radius-sm, never pill — a circle reads as a toggle
+ *               or badge, not a button (matches `.step-btn`/`.lib-icon-btn`,
+ *               which already did this correctly).
+ * Segmented-group members (tabs, the Level/Build toggle, the Item/Boon/Note
+ * kind-picker) are a distinct component — the row itself IS the control, not
+ * a lone action — so they keep their own per-view class, not `.btn`. They
+ * already use pill radius, consistent with the rule below; that's correct,
+ * not a violation.
+ * ------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  color: var(--ink-secondary);
+  border-radius: var(--radius-pill);
+  padding: var(--space-1) var(--space-4);
+  min-height: 2.25rem;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  transition:
+    color 0.12s ease,
+    background 0.12s ease;
+}
+.btn:hover {
+  color: var(--ink-primary);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.btn--primary {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--ink-on-accent);
+}
+.btn--primary:not(:disabled):hover {
+  background: var(--accent-hover);
+  color: var(--ink-on-accent);
+}
+.btn--danger {
+  background: var(--bad);
+  border-color: transparent;
+  color: var(--ink-on-accent);
+}
+.btn--ghost {
+  background: transparent;
+}
+.btn--sm {
+  padding: var(--space-1) var(--space-3);
+  min-height: 2rem;
+}
+.btn--lg {
+  padding: var(--space-2) var(--space-5);
+  min-height: 2.75rem;
+  font-weight: 700;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  font-size: var(--font-size-lg);
+}
+.btn-icon:hover {
+  color: var(--ink-primary);
+  background: var(--surface-overlay);
+}
+
+@media (max-width: 768px) {
+  .btn,
+  .btn-icon {
+    min-height: 44px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
  * Text inputs / textarea — the --in well, hairline, accent focus border.
  * Element-level base so every field converges; per-view class rules only add
  * sizing/layout on top. (Checkbox/radio opt out — skinned below.)
@@ -174,7 +271,8 @@ input[type='checkbox']:checked::after {
 @media (prefers-reduced-motion: reduce) {
   input,
   textarea,
-  input[type='checkbox'] {
+  input[type='checkbox'],
+  .btn {
     transition: none;
   }
 }

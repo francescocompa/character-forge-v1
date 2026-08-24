@@ -89,6 +89,8 @@ Current shared primitives (`app/src/components/primitives.css`):
 | Checkbox              | `input[type=checkbox]` skin            |                                                                                                                                                                                                 |
 | Selected state        | `.is-selected`                         | Border + tint, no glow — see §2.                                                                                                                                                                |
 | Stepper button        | `.step-btn` (`mainSheet.css`)          | 44px comfort target, a **deliberate** divergence from monster-forge's 20px stacked column — documented inline, keep it.                                                                         |
+| Action button         | `.btn` + `--primary`/`--ghost`/`--danger` | Standalone labeled action button, always pill radius (D25, 2026-08-24). `.mng-btn*`/`.add-btn*` (Manage/Import/Add dialogs) both consume this now — no independent copies.                  |
+| Icon-only button      | `.btn-icon`                            | Square control (dialog close, and any future icon-only button), always `--radius-sm`, never pill (D25). Both dialogs' close buttons consume this.                                              |
 
 **Confirmed violations, fixed 2026-08-24:**
 
@@ -98,6 +100,13 @@ Current shared primitives (`app/src/components/primitives.css`):
   consumes `.panel`/`.panel__title`.
 - `views/Companion/companion.css` had its own `.companion-identity`
   (duplicating `.panel`'s exact recipe). Now consumes `.panel`.
+- `manage/manage.css`'s `.mng-btn*`/`.mng-dialog__close` and `session/
+  additions/additions.css`'s `.add-btn*`/`.add-sheet__close` were
+  near-duplicate CSS for the same two roles (dialog action button, dialog
+  close button) with real drift between the copies (`.add-btn` used
+  `--radius-md` at a larger size than `.mng-btn`'s `--radius-pill`; the
+  Add dialog's `--ghost` modifier had no CSS at all — a silent no-op). Both
+  now consume `.btn`/`.btn-icon` (D25).
 
 **Still owed (→ `T25`):**
 
@@ -186,13 +195,20 @@ outline icons, even within its own 4-button rail):
 - Shared modal/scrim base across `library/`, `manage/`, `session/additions/`.
 - Chip/badge audit against §5's checklist as new views get built (T22 and
   beyond) — not urgent today, just don't skip the check.
-- **From Francesco's own post-interview UX audit (D23):** a real button
-  taxonomy (radius/size are ad hoc across 18 uses); rest icons redone in the
-  new outline set (currently flat-filled, emoji-adjacent); feature-tappability
-  gap (`ProgressionRow` — needs a UI-vs-compile-pipeline call first); Saves
-  and Skills moved adjacent (monster-forge's own statblock combines them into
-  one table); top-bar consolidation into a settings affordance; the macro
-  character-list ↔ sheet nav layer (not a D18 reopening — a different layer);
-  a real layout pass on the Equipment/gear section; the type scale extended
-  past chrome/sm/md (20 hardcoded font-size values today) and all call sites
-  migrated. Full detail and verification notes: `docs/DECISIONS.md` D23.
+- **From Francesco's own post-interview UX audit (D23), progress as of
+  2026-08-24:**
+  - ~~Button taxonomy~~ — done (D25): `.btn`/`.btn-icon` in
+    `primitives.css`, dialog actions unified.
+  - ~~Type scale~~ — done: `--font-size-lg/xl/2xl/3xl/inline` added, all 19
+    rem/em call sites (the 20th, `global.css`'s iOS zoom-fix 16px, is
+    intentionally not part of the scale) migrated.
+  - ~~Feature-tappability gap~~ — scoped (D24): data fix, not a UI change;
+    out of this repo's/T25's engineering scope.
+  - Still open: rest icons redone in the new outline set (currently
+    flat-filled, emoji-adjacent — blocked on the icon-library pick, D21);
+    Saves and Skills moved adjacent; top-bar consolidation into a settings
+    affordance (needs a mockup + Francesco sign-off); the macro
+    character-list ↔ sheet nav layer (not a D18 reopening — a different
+    layer, also needs a mockup + sign-off); a real layout pass on the
+    Equipment/gear section.
+  Full detail and verification notes: `docs/DECISIONS.md` D23–D25.

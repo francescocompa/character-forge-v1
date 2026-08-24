@@ -52,7 +52,7 @@ export function ManageDialog({ group, onClose }: { group: CharacterGroup; onClos
           <h2 id={titleId} className="mng-dialog__title">
             Manage character
           </h2>
-          <button type="button" className="mng-dialog__close" aria-label="Close" onClick={onClose}>
+          <button type="button" className="btn-icon" aria-label="Close" onClick={onClose}>
             ✕
           </button>
         </div>
@@ -69,7 +69,7 @@ export function ManageDialog({ group, onClose }: { group: CharacterGroup; onClos
             />
             <button
               type="button"
-              className="mng-btn mng-btn--primary"
+              className="btn btn--primary"
               disabled={!aliasChanged}
               onClick={saveAlias}
             >
@@ -106,14 +106,14 @@ export function ManageDialog({ group, onClose }: { group: CharacterGroup; onClos
                       <span>Delete for good?</span>
                       <button
                         type="button"
-                        className="mng-btn mng-btn--danger"
+                        className="btn btn--danger"
                         onClick={() => remove(record)}
                       >
                         Delete
                       </button>
                       <button
                         type="button"
-                        className="mng-btn mng-btn--ghost"
+                        className="btn btn--ghost"
                         onClick={() => setConfirmKey(null)}
                       >
                         Keep
@@ -122,7 +122,7 @@ export function ManageDialog({ group, onClose }: { group: CharacterGroup; onClos
                   ) : (
                     <button
                       type="button"
-                      className="mng-btn mng-btn--ghost mng-variant__delete"
+                      className="btn btn--ghost mng-variant__delete"
                       onClick={() => setConfirmKey(record.key)}
                     >
                       Delete

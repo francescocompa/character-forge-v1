@@ -109,7 +109,7 @@ export function AddDialog({ editing, initialKind = 'item', onClose }: AddDialogP
           <h2 id={titleId} className="add-sheet__title">
             {editing ? 'Edit addition' : 'Add to sheet'}
           </h2>
-          <button type="button" className="add-sheet__close" aria-label="Close" onClick={onClose}>
+          <button type="button" className="btn-icon" aria-label="Close" onClick={onClose}>
             ✕
           </button>
         </div>
@@ -246,12 +246,12 @@ export function AddDialog({ editing, initialKind = 'item', onClose }: AddDialogP
         </div>
 
         <div className="add-actions">
-          <button type="button" className="add-btn add-btn--ghost" onClick={onClose}>
+          <button type="button" className="add-btn btn btn--ghost" onClick={onClose}>
             Cancel
           </button>
           <button
             type="button"
-            className="add-btn add-btn--primary"
+            className="add-btn btn btn--primary"
             disabled={!canSave}
             onClick={save}
           >

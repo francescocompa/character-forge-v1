@@ -134,22 +134,10 @@
 }
 .add-sheet__title {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: var(--font-size-xl);
 }
-.add-sheet__close {
-  border: none;
-  background: transparent;
-  color: var(--ink-muted);
-  cursor: pointer;
-  font-size: 1rem;
-  min-width: 2.5rem;
-  min-height: 2.5rem;
-  border-radius: var(--radius-sm);
-}
-.add-sheet__close:hover {
-  color: var(--ink-primary);
-  background: var(--surface-overlay);
-}
+/* Close button is `.btn-icon` (components/primitives.css) — same primitive
+   as the Manage-dialog close, no local reimplementation (D19). */
 
 .add-kinds {
   display: flex;
@@ -292,29 +280,11 @@
   background: var(--surface-raised);
   padding-top: var(--space-2);
 }
-.add-btn {
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-input);
-  color: var(--ink-secondary);
-  border-radius: var(--radius-md);
-  padding: var(--space-2) var(--space-5);
-  min-height: 2.75rem;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 700;
-}
-.add-btn--primary {
-  background: var(--accent);
-  border-color: transparent;
-  color: var(--ink-on-accent);
-}
-.add-btn--primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.add-btn--primary:not(:disabled):hover {
-  background: var(--accent-hover);
-}
+/* Dialog action buttons are `.btn`/`.btn--primary`/`.btn--ghost`
+   (components/primitives.css) — same primitive the Manage dialog uses, no
+   local reimplementation (D19). Previously `.add-btn--ghost` was referenced
+   in AddDialog.tsx with no matching CSS rule at all (a silent no-op); `.btn`'s
+   base style now actually renders for it. */
 
 /* Bottom-sheet on phones: full-width, docked to the bottom, thumb-reachable. */
 @media (max-width: 768px) {
@@ -328,6 +298,9 @@
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
   }
+  /* Layout-only on mobile: split Cancel/Save evenly across the footer width.
+     `.add-btn` no longer carries its own button skin — see the D19 note
+     above — just this flex behavior, kept alongside `.btn` in AddDialog.tsx. */
   .add-btn {
     flex: 1;
   }

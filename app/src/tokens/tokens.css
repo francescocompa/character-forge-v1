@@ -190,5 +190,14 @@
 
   --font-size-sm: 0.8125rem;
   --font-size-md: 0.875rem;
+  /* Extended scale (T25 #15) — headings/stat-numbers/glyphs previously
+     hardcoded per-view with no shared step. Four rem steps cover every
+     call site found in the audit; --font-size-inline is the one relative
+     (em) exception, for inline <code> that must scale with its parent. */
+  --font-size-lg: 1rem;
+  --font-size-xl: 1.125rem;
+  --font-size-2xl: 1.25rem;
+  --font-size-3xl: 1.5rem;
+  --font-size-inline: 0.85em;
   --weight-content: 400;
 }

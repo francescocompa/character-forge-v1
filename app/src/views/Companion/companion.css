@@ -64,7 +64,7 @@
 }
 .companion-identity__name {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: var(--font-size-2xl);
   font-weight: 700;
 }
 .companion-identity__type {

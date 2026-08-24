@@ -35,7 +35,7 @@
 }
 .cf-library__title {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: var(--font-size-2xl);
   font-weight: 700;
 }
 
@@ -97,7 +97,7 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 1.25rem;
+  font-size: var(--font-size-2xl);
   overflow: hidden;
 }
 .cf-card__img {
@@ -163,7 +163,7 @@
 .cf-empty__lead {
   margin: 0;
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: var(--font-size-xl);
 }
 .cf-empty__body {
   margin: 0;
@@ -171,7 +171,7 @@
   line-height: 1.5;
 }
 .cf-empty code {
-  font-size: 0.85em;
+  font-size: var(--font-size-inline);
   color: var(--ink-primary);
 }
 
@@ -187,7 +187,7 @@
   border: 2px dashed var(--accent);
   color: var(--ink-primary);
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: var(--font-size-xl);
   pointer-events: none;
 }
 .cf-library.is-dragging .cf-dropveil {
@@ -230,22 +230,10 @@
 }
 .mng-dialog__title {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: var(--font-size-xl);
 }
-.mng-dialog__close {
-  border: none;
-  background: transparent;
-  color: var(--ink-muted);
-  cursor: pointer;
-  font-size: 1rem;
-  min-width: 2.5rem;
-  min-height: 2.5rem;
-  border-radius: var(--radius-sm);
-}
-.mng-dialog__close:hover {
-  color: var(--ink-primary);
-  background: var(--surface-overlay);
-}
+/* Close button is `.btn-icon` (components/primitives.css) — same primitive
+   as the Add-dialog close, no local reimplementation (D19). */
 .mng-dialog__lede {
   margin: 0;
   color: var(--ink-secondary);
@@ -332,41 +320,9 @@
   gap: var(--space-2);
   margin-top: var(--space-1);
 }
-.mng-btn {
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-raised);
-  color: var(--ink-secondary);
-  border-radius: var(--radius-pill);
-  padding: var(--space-1) var(--space-4);
-  min-height: 2.25rem;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 600;
-}
-.mng-btn:hover {
-  color: var(--ink-primary);
-}
-.mng-btn--primary {
-  background: var(--accent);
-  border-color: transparent;
-  color: var(--ink-on-accent);
-}
-.mng-btn--primary:not(:disabled):hover {
-  background: var(--accent-hover);
-  color: var(--ink-on-accent);
-}
-.mng-btn--danger {
-  background: var(--bad);
-  border-color: transparent;
-  color: var(--ink-on-accent);
-}
-.mng-btn--ghost {
-  background: transparent;
-}
-.mng-btn:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
+/* Dialog action buttons are `.btn`/`.btn--primary`/`.btn--ghost`/`.btn--danger`
+   (components/primitives.css) — same primitive the Add-dialog uses, no local
+   reimplementation (D19). */
 
 /* --- manage: rename + variants ------------------------------------------ */
 .mng-field {
@@ -454,9 +410,5 @@
   flex: 0 0 auto;
 }
 
-@media (max-width: 768px) {
-  .mng-btn,
-  .mng-dialog__close {
-    min-height: 44px;
-  }
-}
+/* .btn/.btn-icon's own 44px mobile bump (primitives.css) covers dialog
+   actions and the close button — nothing view-specific needed here. */

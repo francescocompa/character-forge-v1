@@ -37,7 +37,7 @@ body {
   min-width: 0;
 }
 .app-shell__title {
-  font-size: 1.1rem;
+  font-size: var(--font-size-xl);
   font-weight: 700;
 }
 .app-shell__back {

@@ -259,3 +259,67 @@ items; #3 needs a Francesco call before scoping (data vs. UI fix).
 Affects: `planning/tasks/T25-ux-skeleton.md` (data folder, expanded),
 `app/src/app/appShell.css`, `app/src/views/Equipment/equipment.css` (both
 fixed today).
+
+### D24 — Second Wind non-tappable (T25 #3/#8): data fix, not a UI change · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round
+Raw note: (selected) "Data fix only"
+Options: A both — UI degrades gracefully when `ref` is missing, and the
+fixture's missing ref is separately flagged as a data gap / B UI fix only —
+every feature tappable regardless of `ref` / C data fix only — `ProgressionRow`'s
+ref-gated tappability is correct as-is; Second Wind should simply have a `ref`
+Chosen: C — `ProgressionRow.tsx`'s current behavior (tappable only when
+`item.ref` is set) is correct and stays unchanged. Second Wind's missing ref
+is a compile-pipeline/data-completeness gap, not a T25 UI deliverable.
+Rejected A and B — no UI change wanted; this is entirely a data-side fix.
+Enforced by: prose only. Not a code change in this repo — the fix is adding
+`item.ref` to Second Wind wherever it's compiled (fixture and/or real
+character data in the local data folder), owned by compile/kb-audit, not T25.
+Affects: removes item #8/#3 from T25's open engineering scope (acceptance
+box satisfied by this scoping call, no code change here); the actual data
+fix belongs to a future compile/kb-audit pass in
+`~/Documents/D&D/D&D Character Builder`, not this repo.
+
+### D25 — Button taxonomy scope: unify dialog actions + rest-btn radius, leave segmented controls alone · 2026-08-24 · DECIDED
+
+Mechanism: engineering judgment call while executing T25 #6 (D23 finding #1),
+not an AskUserQuestion round — scoped narrow enough to fall inside T25's
+existing mandate, not a new design direction.
+Chosen: added `.btn`/`.btn--primary`/`.btn--ghost`/`.btn--danger` +
+`.btn-icon` to `components/primitives.css` (radius always pill for `.btn`,
+always sm for `.btn-icon` — never a coin flip again). Migrated the two
+dialog-action-button families onto it: `.mng-btn*` (Manage/Import dialogs)
+and `.add-btn*` (Add dialog) were near-duplicate CSS already (confirmed by
+the T25 survey) with one real inconsistency — `.add-btn` used
+`--radius-md` while `.mng-btn` used `--radius-pill` for the identical role,
+and `.add-btn` was sized larger (2.75rem/700-weight) than `.mng-btn`
+(2.25rem/600-weight) for no stated reason. Standardized both on `.btn`'s
+default (smaller, matching `.mng-btn`'s prior size) rather than the larger
+`.add-btn` size — Francesco's own audit note was "buttons... too big
+sometimes," so the fix goes toward the smaller size, not the larger one.
+Also fixed: `.add-btn--ghost` was referenced in `AddDialog.tsx` with **no
+matching CSS rule at all** (a silent no-op — the Cancel button rendered as
+plain `.add-btn`, never actually "ghost") — now genuinely styled via
+`.btn--ghost`. Also re-radiused `.rest-btn` (sm → pill) as the one other
+clear "standalone labeled action button" outlier found in the survey.
+Left alone (not migrated): `shell-btn`, `view-toggle__btn`, `variant-chip`,
+`app-shell__back`, `companion-switcher__btn`, `app-tab`, `add-kind`,
+`add-recover__btn`, `addition-btn` — these are segmented-group members (a
+tab strip, a Level/Build toggle, an Item/Boon/Note picker) or compact inline
+row controls, a genuinely different component role from a standalone
+action button, and all already use pill or sm consistently with the stated
+rule. The chip/badge sm-vs-pill mix (`ability-chip`/`level-badge` = sm,
+`save-badge`/`condition-chip` = pill) is a **separate** system (§5's
+anti-sprawl checklist, D23 item #5) — explicitly deferred there, not
+touched here.
+Rejected: migrating every pill-radius control onto `.btn` regardless of
+role — would blur tabs/toggles into looking like action buttons, which
+D16's own framing ("guidelines + quick wins, not a full redo") argues
+against, and no mockup/sign-off exists for changing tab/toggle appearance.
+Enforced by: `.btn`/`.btn-icon` in `components/primitives.css`; `verify`
+green (220 tests), screenshot-verified live (Manage dialog Save/Delete/Keep,
+Add dialog Cancel/Add, both dialog close buttons).
+Affects: `app/src/components/primitives.css` (new), `app/src/manage/
+manage.css`, `app/src/manage/{CharacterList,ManageDialog,ImportDialog}.tsx`,
+`app/src/session/additions/additions.css`, `app/src/session/additions/
+AddDialog.tsx`, `app/src/views/MainSheet/mainSheet.css` (`.rest-btn` only).

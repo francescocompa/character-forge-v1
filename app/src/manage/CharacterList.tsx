@@ -65,7 +65,7 @@ export function CharacterList() {
         <h1 className="cf-library__title">Your characters</h1>
         <button
           type="button"
-          className="mng-btn mng-btn--primary"
+          className="btn btn--primary"
           onClick={() => inputRef.current?.click()}
         >
           Import character
@@ -80,11 +80,7 @@ export function CharacterList() {
             tap <strong>Import character</strong> and pick it from Files, or drag it onto this
             window. On iPhone, the file lives in your Google Drive folder in the Files app.
           </p>
-          <button
-            type="button"
-            className="mng-btn mng-btn--ghost"
-            onClick={() => void loadSample()}
-          >
+          <button type="button" className="btn btn--ghost" onClick={() => void loadSample()}>
             Load a sample character
           </button>
         </div>

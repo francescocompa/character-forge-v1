@@ -40,16 +40,11 @@ export function ImportDialog({ state, onConfirm, onDismiss, busy }: ImportDialog
         {state.kind === 'refresh' && <RefreshBody titleId={titleId} state={state} />}
 
         <div className="mng-actions">
-          <button type="button" className="mng-btn mng-btn--ghost" onClick={onDismiss}>
+          <button type="button" className="btn btn--ghost" onClick={onDismiss}>
             {state.kind === 'refresh' ? 'Cancel' : 'Close'}
           </button>
           {state.kind === 'refresh' && (
-            <button
-              type="button"
-              className="mng-btn mng-btn--primary"
-              disabled={busy}
-              onClick={onConfirm}
-            >
+            <button type="button" className="btn btn--primary" disabled={busy} onClick={onConfirm}>
               {busy ? 'Updating…' : 'Update character'}
             </button>
           )}
