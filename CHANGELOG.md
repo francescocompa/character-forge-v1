@@ -4,6 +4,62 @@ Newest batch first. One entry per task/batch; reference the planning task ids
 (T01–T22) where applicable. T01–T16 batches archived 2026-08-24 —
 [`docs/ARCHIVE.md`](docs/ARCHIVE.md).
 
+## 2026-08-24 — feat: T25 UX/UI skeleton pass executed (D24–D28)
+
+Everything D23's post-interview audit filed to `T25` is done except the one
+item Francesco deferred. Seven commits, `verify` green throughout,
+screenshot-verified at 1280px and 375px after each one:
+
+- **Type scale.** `--font-size-lg/xl/2xl/3xl/inline` added to `tokens.css`;
+  all 19 rem/em hardcoded call sites (10 files) migrated. The 20th
+  (`global.css`'s 16px iOS zoom-prevention fix) is intentionally untouched.
+- **Button taxonomy.** `.btn`/`--primary`/`--ghost`/`--danger` + `.btn-icon`
+  added to `components/primitives.css`. Manage/Import and Add dialogs'
+  near-duplicate button families unified onto it — fixed a real
+  radius/size drift (`.add-btn` was `--radius-md` at a larger size than
+  `.mng-btn`'s `--radius-pill` for the identical role) and a silent no-op
+  (`.add-btn--ghost` had no CSS at all). `.rest-btn`'s stray radius aligned
+  to pill (D25).
+- **`FieldLabel`.** `.field-label` added to `primitives.css`; 6 independent
+  copies of the dim-uppercase micro-label recipe (one genuinely wrong,
+  non-uppercase voice) consolidated onto it — sheet stat labels and dialog
+  field labels are the same role, D20. Phone legibility re-check done.
+- **Shared modal base.** `.modal-overlay`/`.modal-surface`/`--wide` added;
+  Manage/Import + Add dialogs (byte-identical CSS in two files) converged
+  onto it, and Manage/Import picked up bottom-sheet-on-mobile behavior the
+  Add dialog already had. The library's own popover stays a deliberate,
+  documented exception — different component role (D26).
+- **Icon library + mobile bottom tab bar + rest icons.** `lucide-react`
+  added as a real dependency (confirmed bundled via `npm run build`, no CDN
+  request). New `.bottom-tab-bar` swaps in for the top tab bar at 768px,
+  fixed to the viewport bottom, safe-area-correct (D18/D21).
+  `RecoverIcon` redone with `Sun`/`Moon`/`Sunrise`; `DiceStateIcon`
+  deliberately left bespoke — no library icon matches its d20+chevron glyph.
+- **Saves + Skills adjacent.** `SavesBlock` moved next to `SkillsBlock` in
+  `.main-sheet__col--detail` — minimum bar per the task; the full
+  combined-table merge (monster-forge's precedent) is a future pass with
+  its own mockup, not guessed here (D23 #9).
+- **Gear section layout.** Each card split into an identity row
+  (name/qty/attuned) and a controls/stats row (toggles left, weight/cost
+  right, now consistently aligned across a section) — tokens were already
+  correct, this was purely grouping/alignment (D23 #14).
+- **Top-bar consolidation.** Francesco picked the overflow-menu shape
+  directly; a `ShellMenu` settings dropdown collapses Export session,
+  Level/Build, and the variant switcher into one "⚙" — topbar down to one
+  row on desktop. A real mobile-overflow bug (panel anchored to the
+  trigger instead of the full topbar) was found and fixed during
+  verification (D27).
+- **D19 acceptance spot-check.** Found and fixed two more `.panel`-recipe
+  duplicates beyond the ones already caught: `.identity` and
+  `.casting-header`.
+- **Scoped, not built:** #3/#8 (Second Wind tappability) is a compile-
+  pipeline data gap, not a UI fix (D24). #11 (macro character-list ↔ sheet
+  nav) is deferred at Francesco's own request (D28) — not broken enough to
+  prioritize right now.
+
+Full rationale, rejected options, and verification notes for every item:
+`docs/DECISIONS.md` D24–D28.
+
 ## 2026-08-24 — docs + fix: D23, Francesco's own UX audit filed to T25
 
 After the interview batch below, Francesco reviewed the live app himself and
