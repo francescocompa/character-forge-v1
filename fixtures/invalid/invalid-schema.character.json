@@ -71,7 +71,7 @@
     "proficiencies": {
       "armor": ["light", "medium", "shields"],
       "weapons": ["simple", "martial"],
-      "tools": ["cartographer's tools"]
+      "tools": [{ "name": "cartographer's tools" }]
     }
   },
   "currentLevel": 3,

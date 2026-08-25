@@ -168,7 +168,7 @@
 .cf-empty__body {
   margin: 0;
   color: var(--ink-secondary);
-  line-height: 1.5;
+  line-height: var(--line-height-prose);
 }
 .cf-empty code {
   font-size: var(--font-size-inline);
@@ -212,7 +212,7 @@
 .mng-dialog__lede {
   margin: 0;
   color: var(--ink-secondary);
-  line-height: 1.5;
+  line-height: var(--line-height-prose);
 }
 .mng-dialog__note {
   margin: 0;
@@ -358,7 +358,7 @@
 .mng-variant__about {
   font-size: var(--font-size-chrome);
   color: var(--ink-muted);
-  line-height: 1.4;
+  line-height: var(--line-height-prose);
 }
 .mng-variant__confirm {
   display: flex;

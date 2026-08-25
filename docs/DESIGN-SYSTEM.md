@@ -11,7 +11,8 @@
 
 **character-forge and monster-forge are siblings, not clones.** They share a
 token layer (dark scale, radius steps, Inter, the uppercase-micro-label
-_pattern_) because Francesco wants them to read as built by the same hand.
+_pattern_ — uppercase, weight, color; **no tracking**, see §2) because
+Francesco wants them to read as built by the same hand.
 They deliberately diverge on accent color, nav shape, and touch-target size
 because they solve different problems on different devices — monster-forge is
 a DM's desktop combat tracker; character-forge is a player's phone at the
@@ -57,12 +58,22 @@ there, not behind.
   centered confirmation dialog), matching monster-forge's own
   `.popover`-vs-`.modal` split, not one undifferentiated class.
 - **Micro-label _pattern_, not its un-tokenized values.** Monster-forge's
-  section-header voice (uppercase, 600–700 weight, wide letter-spacing, dim
-  or amber) is a real, 55-times-repeated rule in its source — but the exact
-  numbers (9–12px, .04–.16em) were never tokenized, reinvented per component.
-  character-forge already tokenizes this correctly
-  (`--font-size-chrome`/`--letter-spacing-title`/`--weight-chrome`) — the gap
+  section-header voice (uppercase, 600–700 weight, dim or amber) is a real,
+  55-times-repeated rule in its source — but the exact numbers (9–12px) were
+  never tokenized, reinvented per component. character-forge already
+  tokenizes this correctly (`--font-size-chrome`/`--weight-chrome`) — the gap
   isn't the token system, it's that not every component consumes it (§3).
+- **No tracking, anywhere — default `letter-spacing` only.** Fixed
+  2026-08-25, following monster-forge's own B310 pass (its `DECISIONS.md`
+  D-053): "any tracking that isn't the default one" reads as an AI tell,
+  Francesco's words, overruling the typographic-convention counter-argument.
+  `--letter-spacing-chrome`/`--letter-spacing-title` are both `normal` now
+  (kept as tokens rather than deleted outright — deleting them, so nothing
+  can set tracking without adding a token back, is the deliberate follow-up
+  step, done once Francesco has seen the first pass on a real phone; see
+  `docs/DECISIONS.md` D57). Don't reintroduce a tracking value anywhere
+  without a decision from Francesco first — same discipline as §1's locked
+  table.
 - **`:focus-visible` as one global rule**, not a per-component ring.
   Monster-forge: `:focus-visible{outline:2px solid var(--accent-soft);
 outline-offset:2px}` — one selector, whole app. character-forge had drifted
@@ -100,9 +111,9 @@ Current shared primitives (`app/src/components/primitives.css`):
 **Confirmed violations, fixed 2026-08-24:**
 
 - `views/Features/features.css` had its own `.feature-section` (duplicating
-  `.panel`'s exact recipe) and `.feature-section__title` (bold, no uppercase/
-  letter-spacing/color — skipped the micro-label voice entirely). Now
-  consumes `.panel`/`.panel__title`.
+  `.panel`'s exact recipe) and `.feature-section__title` (bold, no
+  uppercase/color — skipped the micro-label voice entirely). Now consumes
+  `.panel`/`.panel__title`.
 - `views/Companion/companion.css` had its own `.companion-identity`
   (duplicating `.panel`'s exact recipe). Now consumes `.panel`.
 - `manage/manage.css`'s `.mng-btn*`/`.mng-dialog__close` and `session/
@@ -137,8 +148,8 @@ not a full redo" (D16).
 
 ## 4. Micro-label voice — the two roles
 
-Both roles share the shape (uppercase, wide letter-spacing, small); they
-differ only in color, which encodes hierarchy:
+Both roles share the shape (uppercase, small, default tracking — no
+letter-spacing, see §2); they differ only in color, which encodes hierarchy:
 
 | Role                | Color                | Token                        | Use                                                 |
 | ------------------- | -------------------- | ---------------------------- | --------------------------------------------------- |

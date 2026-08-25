@@ -140,6 +140,10 @@
           "description": "Optional data-URI, budget <= 200 KB.",
           "type": "string"
         },
+        "concept": {
+          "description": "One or two sentences, compiler-compressed from the chassis doc's Concept section (T27 D42) — flavor, may be non-English.",
+          "$ref": "#/$defs/Markup"
+        },
         "createdAt": { "type": "string", "format": "date-time" },
         "updatedAt": { "type": "string", "format": "date-time" }
       }
@@ -338,7 +342,7 @@
           "properties": {
             "armor": { "type": "array", "items": { "type": "string" } },
             "weapons": { "type": "array", "items": { "type": "string" } },
-            "tools": { "type": "array", "items": { "type": "string" } }
+            "tools": { "type": "array", "items": { "$ref": "#/$defs/ToolProficiency" } }
           }
         }
       }
@@ -401,6 +405,18 @@
         "modifier": { "type": "integer" },
         "edge": { "$ref": "#/$defs/EdgeState" },
         "bonusDice": { "type": "string" },
+        "note": { "$ref": "#/$defs/Markup" }
+      }
+    },
+
+    "ToolProficiency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "bonusDice": { "type": "string" },
+        "edge": { "$ref": "#/$defs/EdgeState" },
         "note": { "$ref": "#/$defs/Markup" }
       }
     },

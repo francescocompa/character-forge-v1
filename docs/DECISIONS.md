@@ -691,3 +691,686 @@ render an empty Senses & Proficiencies panel.
 Enforced by: `verify` green; screenshot-verified live — "Tools" now
 appears exactly once.
 Affects: `app/src/views/MainSheet/Defenses.tsx`.
+
+### D36 — 2014 entries with no 2024 reprint are allowed, per entry · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion during the T22 Shigen cold run, plus a standing
+policy Francesco volunteered in the same answer.
+Raw note: "In general, I may want to use 2014 spells that haven't been
+reprinted." (selected alongside) "Approve Borrowed Knowledge as 2014
+cross-edition."
+Chosen: a 2024 build may draw on a **2014 entry that was never reprinted for
+2024**, as a per-entry, explicitly-recorded decision — the entry names its
+edition and the chassis doc's `sources` must list it. This does not loosen
+the edition rule (`pipeline/interview.md` §2, scope §2.7): entries that exist
+in _both_ editions still take the build's default edition, and mixing is never
+silent. It narrows the common case — "no 2024 version exists" — from a
+question that must be asked every time into a policy that only needs
+recording.
+First application: **Borrowed Knowledge** (`2014/SCC`) in Shigen's prepared
+pool, listed in his frontmatter `sources`.
+Rejected: dropping the spell for a 2024 replacement — would lose build intent
+to a bookkeeping rule, when the 2024 corpus simply has no equivalent.
+Enforced by: the chassis doc's `sources` allow-list + the compiler's edition
+filter; recorded per character in `*.compile-notes.md`.
+Affects: `Characters/shigen.chassis.md`, `Characters/shigen.compile-notes.md`;
+future interview sessions.
+
+### D37 — Where the paper sheet contradicts itself, the compiled value wins · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 2 rounds, during the T22 Shigen cold run —
+Francesco chose "compile correct, but ask me per discrepancy", then confirmed
+each of the five individually.
+Raw note: (round 1) "Compile correct, but ask me per discrepancy." (round 2,
+all five confirmed stale) "CHA save +3 → +4 / Deception +3 → +4, Performance
++3 → +4 / Spell attack +5 → +7 / Save DC 13 → 15."
+Chosen: the compiler emits the **correct** derived value and records the
+paper's value as evidence, rather than reproducing a stale field for fidelity's
+sake. Shigen's sheet had five fields left over from before Potent Dragonmark
+raised CHA 17 → 18; the sheet also contradicts _itself_ (p.1's save-DC badge
+reads 15, p.4's casting bar reads 13). **The confirmation is per discrepancy,
+not a blanket rule** — a difference could be a house rule, and only Francesco
+can tell staleness from intent.
+This is the concrete evidence for scope §14.1 (single source of truth): the
+app's whole value over paper is that a derived number cannot go stale in one
+place while staying right in another.
+Rejected: compiling the paper values verbatim — would import the exact defect
+the project exists to remove. Rejected a blanket "always silently correct"
+rule — it would quietly overwrite deliberate house rules.
+Enforced by: `Characters/shigen.compile-notes.md` (the discrepancy table +
+evidence); the chassis doc's own Discrepancies section.
+Affects: `pipeline/compile.md` §13/§15 practice; future compile sessions.
+
+### D38 — Monster-forge typography/link audit: base size, link color, underline · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round, after a source-verified audit (same
+discipline as D30) rather than guessing at the complaint.
+Raw note: "the font use, size and overall UI isn't aligned with monster-
+forge... everything doesn't seem to follow the correct sizes... the blue
+highlight should be removed from links like in monster-forge... everything
+seems blue and underlined, it's visually oppressive." Root causes found, not
+assumed: `body` never sets a base `font-size` (falls back to the browser's
+16px instead of the token system's own `--font-size-md`, 14px — also
+monster-forge's exact base, so the whole rem-scale was silently inflated);
+`.ref-link` hardcodes `color: var(--ability-dex)` (DEX's blue) for every
+`{ref:}` link regardless of what it links to — the only place that variable
+leaks outside the ability system, and since refs appear on nearly every
+spell/feature/item name, the sole source of "everything is blue"; underline
+is always-on (`underline dotted`) vs. monster-forge's no-underline-default +
+hover-only.
+Chosen: `body { font-size: var(--font-size-md) }`. `.ref-link` color
+follow-up in D39-adjacent round: "make it base text color by default, we'll
+later map certain terms and type of rules to colors like we did for example
+with spells and conditions in monster-forge" — resolved to `color: inherit`
+(not a fixed `--ink-primary`, since the actual surrounding summary text is
+`--ink-secondary` in every container checked — `inherit` matches exactly,
+in every context, without hardcoding a value that only happens to be right
+in one place). Underline: "Keep some always-on affordance" — explicitly
+rejected hover-only once color stopped being the tap signal; kept the
+existing `underline dotted` treatment unchanged (no redesign requested
+beyond removing the color).
+Rejected: literally copying monster-forge's link color (terracotta,
+`--accent`) — stays off-limits per the existing "never terracotta" rule
+(planning/tasks/README.md Rev. 3). Hover-only underline — rejected directly.
+Per-ref-type semantic coloring (spell school, damage type, etc. on ref
+links themselves) — explicitly named as **future** scope, not this task;
+today's color removal is a prerequisite for it, not a substitute.
+Enforced by: `app/src/app/appShell.css` (`body` font-size),
+`app/src/components/chips/chips.css` (`.ref-link` color). Not yet built —
+filed to T27.
+Affects: `app/src/app/appShell.css`, `app/src/components/chips/chips.css`.
+
+### D39 — Check-row density: dividers removed, tap target 44px → 36px · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 2 rounds.
+Raw note: "remove the dividers between skills and saves in their section,
+everything could be more compact."
+Chosen: remove `.check-row`'s `border-bottom` outright (zero-cost — pure
+declutter, doesn't touch spacing or tap targets). Row height is set by
+`.check-row__main`'s `min-height: 44px` (the iOS touch-target minimum, not
+padding — padding is already `--space-1`, 4px) — flagged as a real
+trade-off, not a free compaction, before Francesco chose it: "Yes — shrink
+it, e.g. to 36px."
+Rejected: lightening the divider instead of removing it — superseded by the
+direct "remove them" answer. Keeping 44px — offered as the safe default,
+not chosen; density won over the touch-target margin.
+Enforced by: `app/src/views/MainSheet/mainSheet.css` (`.check-row`,
+`.check-row__main`). Not yet built — filed to T27.
+Affects: `app/src/views/MainSheet/mainSheet.css`.
+Note: **needs a real on-device tap-accuracy check before this is considered
+done** — 36px is below Apple's HIG minimum; verify it doesn't cause mis-taps
+at the table, not just a visual pass at 375px in the browser preview.
+
+### D40 — Passive scores: compact tile, inline expand, moved to a new Senses card · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion + in-chat mockup, 4 rounds (two rounds just on
+tile style, iterated live).
+Raw note: "the passive scores should be displayed differently, perhaps
+boxes, and by default should only be perception (the other skills could
+still be added through some nested setting)." Style narrowed across
+mockups: rejected the ability-card-bordered style ("issue with this tile
+style is figuring out how it looks as a lone tile... draft a mockup with
+how it would look" → shown next to the ability rail → "compact tinted
+tile, but it shouldn't be with the ability scores but either with skills or
+senses. The + button should be a ghost tile in size and the + centered").
+Placement resolved in the same round: "Senses, separate proficiencies in
+its own card."
+Chosen: **B** — the compact tinted tile (background wash of the ability
+color, no border), matching the bonus-dice-pill's visual weight rather than
+the ability card's. The expand control is a ghost tile the same size as the
+passive tile itself, dashed border, centered "+" — not a small separate
+icon button. Default: Perception only; Investigation/Insight sit behind the
+ghost tile, inline (no settings-menu round-trip — rejected explicitly by
+choosing "inline" over the ShellMenu option in the prior round). **Senses &
+Proficiencies splits into two cards** — a new "Senses" card (Darkvision
+etc. + the passive tiles) and a separate "Proficiencies" card (armor/
+weapons/languages) — a bigger structural change than originally scoped,
+volunteered directly rather than asked for.
+Rejected: style A (ability-card bordered) — confirmed orphaned/mismatched
+once shown in context next to the heavier-bordered ability row. Settings-
+menu location for the expand toggle — inline won on discoverability.
+Keeping the combined Senses & Proficiencies panel — split explicitly
+requested.
+Enforced by: not yet built — filed to T27. Will touch
+`app/src/views/MainSheet/Abilities.tsx` (`SkillsBlock`'s passives block
+moves out), `app/src/views/MainSheet/Defenses.tsx` (splits into two
+components).
+Affects: `app/src/views/MainSheet/Abilities.tsx`,
+`app/src/views/MainSheet/Defenses.tsx`, `mainSheet.css`.
+
+### D41 — Tools stay PB-only (matching monster-forge), but show bonusDice/edge · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round, after checking monster-forge's actual
+source (same discipline as D30/D38).
+Raw note: "tools should have the same treatment of skills, with their +x
+explicit and in this case the character also has 1d4." Monster-forge's
+actual convention, found on inspection: tool rolls are **PB-only** (`engine.js`
+"tool = 1d20 + PB (ability is DM's choice, so PB only)"), and it carries an
+official 2024 XPHB ch.6 ability-per-tool table (`data.js` `TOOL_ABIL` — e.g.
+Woodcarver's Tools → DEX) for reference, not for computing a baked-in
+modifier. Surfaced to Francesco as a real divergence from his literal ask
+before proceeding.
+Chosen: "ignore the bonus modifier, but make sure to indicate any bonuses
+such as +1d4 or adv" — tools render PB-only (no ability folded in, matching
+monster-forge exactly), but the row must still surface `bonusDice`/`edge`
+when the character has them (Shigen's Woodcarver's Tools: PB +3, with a
++1d4 badge from Mark of Making's Artisan's Intuition, which the current
+compile — wrongly — only applied to Arcana). Tool-ability source: "Adopt
+the same XPHB table" — the same rules-accurate source monster-forge already
+uses, kept for future reference/inspect-tool use, not for the displayed
+number.
+Rejected: full ability+PB modifier (Francesco's literal original phrasing)
+— once the monster-forge divergence was surfaced, he chose consistency with
+the sibling app over the literal "like skills" framing. Compiler-decided
+per-build ability overrides — no case for it yet; the XPHB table is
+authoritative unless a future build gives a concrete reason otherwise.
+Enforced by: schema needs a structured tool-proficiency type (today
+`proficiencies.tools` is a flat `string[]`, carries no `bonusDice`/`edge`) —
+not yet built, filed to T27. Also a **compile bug to fix**: Shigen's
+Woodcarver's Tools should carry Mark of Making's +1d4 (Artisan's Intuition
+applies to "an ability check using Artisan's Tools" generally, not just
+Arcana) — currently missing from `Characters/shigen.character.json`.
+Affects: `schema/types.ts`, `schema/character.schema.json`,
+`app/src/views/MainSheet/Abilities.tsx` (tool-chip rendering),
+`Characters/shigen.character.json` (compile fix, separate from the schema
+change).
+
+### D42 — Identity header: responsive name/class line + meta.concept field · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion + in-chat mockup, 3 rounds, iterated live.
+Raw note: "the main character info in main should be attached to the
+character name on the very top, partly inline and partly that appear on
+tooltip clicking the name." Refined across mockups to: "if enough space,
+put it inline with the name, otherwise move it one row below; the chip
+should have rounded corners square shape, not pill; the tooltip should
+include a very short summary of the character build concept and backstory."
+Chosen: name stays the header's headline. A single subtle chip beneath (or,
+space permitting, inline beside) it reads "`<species> · <class 1> <level>
+/ <class 2> <level>`" (e.g. "Human · Fighter 1 / Warlock 5") — square
+corners (`--radius-sm`/`--radius-md`, not a pill), not multiple separate
+badges. Clicking it opens a tooltip: species, background, each class's
+subclass + unlock level, **and a short build-concept/backstory summary**.
+The concept summary needs a **new schema field** (`meta.concept` or
+similar) — nothing today carries chassis-doc Concept prose past compile
+time (`Meta` only has name/player/characterId/variantLabel/portrait/
+timestamps). Per this project's own convention (mechanics English,
+roleplay/backstory may be Italian — CLAUDE.md), the field can be non-
+English. Compiled as "one or two sentences, compiler-compressed" — same
+compression discipline as feature summaries, applied to flavor instead of
+mechanics, not the chassis doc's full prose verbatim.
+Rejected: keeping all identity info always inline (three stacked rows, the
+status quo) — explicitly being replaced. A pill-shaped chip — square
+corners requested directly. Verbatim full concept prose in the tooltip —
+"one or two sentences" chosen over the full-paragraph option.
+Enforced by: not yet built — filed to T27. New schema field needs
+`schema/types.ts` + `character.schema.json` + a `pipeline/compile.md`
+addition (how the compiler condenses Concept prose) + backfill for Vice and
+Shigen (both currently compiled without it) and the two repo fixtures.
+Affects: `app/src/views/MainSheet/IdentityStrip.tsx`, `schema/types.ts`,
+`schema/character.schema.json`, `pipeline/compile.md`,
+`Characters/vice.character.json`, `Characters/shigen.character.json`,
+`fixtures/synthetic.character.json`, `fixtures/synthetic-variant.character.json`.
+
+### D43 — Spellcasting: shared ability/DC/Atk tiles + collapsible source list · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion + in-chat mockup, 3 rounds, iterated live.
+Raw note: "spellcasting should only show different save/attack rows if
+actually different, multiple lines from different sources only add
+clutter. In the spells section, there should be a part dedicated to
+spellcasting ability, save and attack and not repeat it everywhere." Shigen
+has 5 casting sources, all sharing CHA/DC 15/Atk +7 — `CastingHeaders.tsx`
+currently repeats all three on every one of the 5 rows; Vice's 2 sources
+also fully coincide, so this is the common case, not an edge case, in both
+real builds compiled so far.
+Chosen, after two style iterations: ability/DC/attack render as **tiles**
+matching the existing AC/HP/Init/PB `.stat` treatment exactly (not a
+horizontal chip row) — one shared header regardless of source count. Below
+it, a collapsed row reading "N sources" expands to list each source as
+**`kind · name`** only (e.g. "Class · Warlock", "Feat · Spellfire Spark",
+"Subclass · Celestial Patron") — `kind` derived from the referenced
+`library` entry's `type`, not a new field. Clicking a source row opens a
+tooltip with that source's full prepare-rule paragraph, any other relevant
+info, and the spells it grants (filtered from `spellcasting.spells[]` by
+`origins[]`).
+Rejected: repeating each source's DC/Atk inline even once collapsed to a
+list — first draft did this and was corrected ("the right column in the
+sources section is inconsistent: instead, each row only has a label and
+name"). A flat header without tiles — superseded once shown next to the
+existing AC/HP tiles for comparison.
+Enforced by: not yet built — filed to T27. The "genuinely different DC"
+case (an item-granted caster, the scenario the schema was built for but
+neither Vice nor Shigen currently exercises) needs its own inline DC/Atk
+chip on that one source row rather than inheriting the shared tiles —
+noted for whoever builds this, not yet needed by real data.
+Affects: `app/src/views/Spells/CastingHeaders.tsx`,
+`app/src/views/Spells/spells.css`.
+
+### D44 — Roll-chip arm system + inspect mode (monster-forge rule-finder pattern) · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 3 rounds (one per sub-question — arm lifecycle,
+coexistence with the existing Shift/Ctrl-click convention, inspect-mode
+trigger + scope).
+Raw note: "by clicking on the +1dx or ADV/DISADV notes next to skills/
+saves, I should be able to set the chip 'on' and apply it to the roll when
+clicking on the row and generating a roll." A desktop-only placeholder
+already exists (`dice/index.ts` `rollModeFromEvent` — Shift-click = adv,
+Alt/Ctrl-click = dis — its own comment calls it "a lightweight ... until
+per-surface adv/dis lands"); this is that landing, and it also fixes a real
+gap the placeholder has: no Shift-key equivalent exists on a touch tap, so
+the interim mechanism was never usable on the phone this is a PWA for.
+Chosen: tapping a `-situational` edge badge or a `bonusDice` pill arms it;
+**armed state persists until manually toggled off** (not auto-consumed
+after one roll — "Stays armed until toggled off", against my own
+recommendation, a real risk of a forgotten-on chip silently buffing a later
+unrelated roll, worth building a very visible armed indicator to mitigate).
+The existing Shift/Ctrl-click convention **stays, coexisting**: chip-arm
+covers the build's own compiled situational bonuses, Shift/Ctrl-click stays
+for ad hoc DM-granted advantage the sheet doesn't know about.
+**Inspect mode**: not a per-row gesture (long-press) as I proposed, but a
+**dedicated top-right toggle button**, explicitly modeled on monster-forge's
+actual Rule Finder (`engine.js` — `#ruleFinderBtn`, a "?"/"✕" icon toggle,
+`body.rule-finder` class, rolls suppressed while active, Escape exits):
+"it works like the rule finder of monster forge, a dedicated general button
+that activates it in the top right." While active, tapping any stat/check
+row shows its breakdown instead of rolling it. Scope: **full** — any
+stat/check row (ability scores, AC, HP, saves, skills, tools), not just
+today's hidden-provenance cases — "building the trigger + a minimal popover
+once ... then rebuilding it later for skills is wasted work."
+Rejected: auto-consume-after-roll for armed chips — offered as the safer
+default, Francesco chose persistence instead. Long-press as the inspect
+trigger — superseded by the explicit rule-finder-button ask. Chip-arm
+replacing Shift/Ctrl-click outright — rejected, they serve different cases.
+Scoping inspect to just ability/AC/HP first — rejected in favor of full
+scope up front.
+Enforced by: not yet built — filed to T27, the largest item in it
+(touches roll state in `dice/index.ts`/`engine.js`, a new app-wide mode
+analogous to `body.rule-finder`, and a content template per field type).
+Affects: `app/src/dice/index.ts`, `app/src/dice/engine.js`,
+`app/src/views/MainSheet/CheckRow.tsx`, `app/src/app/AppShell.tsx` (new
+top-right toggle, alongside the existing Settings gear).
+
+---
+
+## T27 review — D45–D56
+
+Reviewing T27 live (rendered, uncommitted) in the browser the same session it
+shipped produced another feedback batch — same pattern as D23→T25 and the
+Shigen review→T27. Scoped via `/interview` (11 topics, ~10 rounds, several
+with `visualize`-widget mockups iterated live) into **T28**.
+
+### D45 — Typography: full-app audit of unsized text, not just body base · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round, then a direct source comparison against
+monster-forge's `styles.css` (not guessed).
+Raw note: "the typography check didn't fully get it right. Monster forge
+texts mostly feel smaller than this" → "Re-verify not only body base but
+also labels and other titles, chips etc - all font sizes present and
+comparable."
+Diagnosis (found this session): T27's `body { font-size: var(--font-size-md) }`
+fix (D38) was correct but incomplete. Comparing character-forge's token
+usage against monster-forge's actual `styles.css` values: most sized text
+already matches closely (`--font-size-chrome` 11px = monster-forge's
+`.fs-title`/`.fs-sub` exactly; `--font-size-sm` 13px ≈ monster-forge's
+12–13.5px row/detail text). The real gap is narrower and structural: **any
+character-forge element with no explicit `font-size` rule silently inherits
+the full 14px body base**, where monster-forge explicitly sizes almost every
+component down instead of letting anything inherit body. Confirmed one
+instance directly: `.check-row__mod` (the modifier number on every save/
+skill/tool row) has no font-size rule at all. Others likely exist unaudited.
+Chosen: full-app audit — grep every CSS file for text-rendering selectors
+with no `font-size`, size each explicitly against its monster-forge analog
+category (chrome/label ≈ 11px, secondary/detail ≈ 12–13px, primary numbers
+vary by role), not a blanket token-value drop.
+Rejected: just lowering `--font-size-md` further (e.g. 14px→13px) — would
+"fix" the symptom everywhere text happens to inherit it, but leaves the
+actual bug (unaudited components with no explicit size) unaddressed, and
+would also incorrectly shrink the handful of elements that legitimately
+want 14px.
+Enforced by: not yet built — filed to T28.
+Affects: every view's CSS file (audit scope is app-wide by design).
+
+### D46 — Tools: drop the bonus number entirely, back to plain capitalized chips · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round. Supersedes part of **D41** (T27,
+same-day) — surfaced explicitly as a reversal before accepting, not silently
+overwritten.
+Raw note: "capitalize tools, remove the bonus from them."
+Options offered: keep `bonusDice`/`edge` badges and drop only the flat PB
+number (my recommendation) / drop all numeric info, back to pre-T27 plain
+reference chips.
+Chosen: the latter — tools render as plain capitalized name chips again, no
+PB, no `bonusDice`/`edge` badges, no roll affordance. The `ToolProficiency`
+schema type (D41: `name`/`bonusDice`/`edge`/`note`) stays as-is — this is a
+rendering change, not a schema reversal; the fields just aren't displayed.
+Rejected: keeping bonusDice/edge visible while dropping PB — Francesco
+picked the simpler full reversal instead of the middle option.
+Enforced by: not yet built — filed to T28.
+Affects: `app/src/views/MainSheet/Abilities.tsx` (`SkillsBlock`'s tool
+rendering), `app/src/views/MainSheet/CheckRow.tsx` (`ToolRow` — likely
+retired back to a plain chip, no longer a `check-row`).
+
+### D47 — Save/skill row spacing: 36px → 28px · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round.
+Raw note: "reduce distance between rows."
+Options offered: 32px (modest, my recommendation) / 28px (tight, closer to
+monster-forge's own density).
+Chosen: 28px. ⚑ Same on-device tap-accuracy caveat as T27's D39 36px→28px
+move already carried (this compounds it) — still owed, needs Francesco on a
+phone before calling either value final.
+Enforced by: not yet built — filed to T28.
+Affects: `app/src/views/MainSheet/mainSheet.css` (`.check-row__main`
+`min-height`).
+
+### D48 — Proficiency indicator: merged dot + binary chip-fill system · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion + `visualize`-widget mockups, 5 iterated rounds
+(dot-in-chip vs chip-state-only → both extended to cover expertise → two
+expertise-glyph variants → a merge of the two approaches → final polish on
+the merge).
+Raw note: "the proficiency indicator feels wrong (feels like a clickable
+check), try two options, one with an indicator inside the tag and one
+without the indicator but with a different name chip state" → (after seeing
+all 4 proficiency states mocked) "A - dot style, however expertise could use
+some work: try a version with double slightly overlapped prof. dots and one
+like the current one, but with the indicator smaller..." → "Merge this
+treatment with the chip state (only two states, border for non prof. fill
+for all other states)" → "Ring around the dot. However, for the filled
+state use the lower opacity version you used in earlier mockups."
+Chosen (final): the external `ProficiencyDot` circle is retired. Chip fill
+is now binary: **not proficient** = outline-only chip (transparent
+background, 1px ability-tinted border, tinted text — same treatment
+mocked as "option B" for the not-proficient case); **half/proficient/
+expertise** = today's existing soft-tint chip look (unchanged —
+`rgba(ability, .22)` background, tinted text), not the bold solid-fill
+variant tried mid-interview. A small dot leads the chip label for the three
+non-none states: half = hollow ring, proficient = solid dot, expertise =
+solid dot + a thin ring around it (today's actual `.prof-dot--expertise`
+treatment — box-shadow gap-ring + outer ring — carried over, just scaled
+down to match the new ~6px in-chip dot instead of the current standalone
+0.7rem dot).
+Rejected: a fully solid/opaque filled chip (dark text on full ability
+color) for all non-none states — tried mid-interview, reverted in favor of
+keeping today's existing soft-tint look. An "overlapped double dot" glyph
+for expertise — tried, ring-around-dot (closer to today's actual treatment)
+chosen instead.
+Enforced by: not yet built — filed to T28. `ProficiencyDot` component
+(`Abilities.tsx`) removed; its 4-state logic merges into `CheckChip`
+(`CheckRow.tsx`).
+Affects: `app/src/views/MainSheet/CheckRow.tsx` (`CheckChip`,
+`ProficiencyDot` retired), `app/src/views/MainSheet/mainSheet.css`
+(`.prof-dot*` rules retired/replaced), `app/src/views/MainSheet/Abilities.tsx`.
+
+### D49 — Notes: asterisk-triggered tooltip replaces the chevron, content separates prose from source · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 2 rounds.
+Raw note: "move the notes under skills and saves to tooltips instead
+(replace dropdown icon with asterisk), in the tooltip tidy up the content
+referencing the source feature."
+Chosen: the chip's chevron-toggle-inline-note mechanism (T26) is replaced
+by a small asterisk (*) trigger that opens a proper tooltip/popover (same
+anchored-`.panel` recipe as `IdentityChip`) rather than an inline
+expand-in-place block. Trigger is **hover on desktop, tap on touch** — a
+device-adaptive interaction (mirrors the existing `useIsMobile` pattern in
+`library/LibrarySurface.tsx`), chosen over "click/tap everywhere" (which
+was the recommendation, for cross-device consistency) because Francesco
+wanted the faster desktop hover. Content: the note's descriptive prose
+renders as the main line; when the note references a source feature (a
+`{ref:...}` tag, whether bare or embedded in prose), a small dim "via
+<Feature Name>" byline renders underneath instead of leaving the ref as a
+second nested tappable link inside the tooltip.
+Rejected: click/tap-only trigger (the recommended, single-interaction-model
+option) — Francesco chose hover-on-desktop instead. Just stripping the
+ref-link's tappable styling without restructuring the content — rejected in
+favor of the structured prose/byline split.
+Enforced by: not yet built — filed to T28.
+Affects: `app/src/views/MainSheet/CheckRow.tsx` (`CheckChip`'s note
+handling), `app/src/views/MainSheet/mainSheet.css`.
+
+### D50 — Hover/click-to-roll convention: whole-row/tile highlight, nested children override · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 2 rounds.
+Raw note: "on hover, the modifiers of skills and saves should show a
+rounded square bg, on click. it rolls, do it for other bonuses around the
+app; show regular cursor over +1dx or ADV in this section" → (after a
+narrow-to-modifier-only option was offered) "Instead of highlighting the
+modifier, let's highlight the whole row (unless hovering other clickable
+elements such as ADV)" → (scoping which other surfaces) "If the number is
+in a tile, the whole tile highlights" + all 4 offered surfaces confirmed.
+Chosen: `.rollable` (today has `cursor:pointer` only, no hover feedback at
+all — confirmed by reading `dice/dice.css`) gets a rounded-square hover
+background app-wide. The roll click-target stays exactly where it is today
+(the whole check-row, the whole ability tile, etc.) — not narrowed to just
+the number — so the highlight covers the same area as the click target.
+Nested interactive children (the arm-toggle edge/bonus-dice badges, the new
+asterisk tooltip trigger) get their own distinct hover state that overrides
+the parent row's highlight while directly hovered — confirmed those badges
+already show a plain pointer cursor today (no `.rollable`/`.inspectable`
+class on them), matching the "regular cursor over +1dx/ADV" ask with no
+further change needed. Scope confirmed for the same treatment: ability
+score modifiers, initiative, attack to-hit numbers, inline damage/dice in
+feature & spell summaries (`DamageText`) — all already click-to-roll today,
+just missing the hover cue.
+Rejected: narrowing the click target to just the modifier number — offered,
+Francesco chose to keep the existing whole-row/whole-tile target and just
+add the missing hover feedback to match it.
+Enforced by: not yet built — filed to T28.
+Affects: `app/src/dice/dice.css` (`.rollable:hover`), and by extension
+every consumer of `rollableProps`/`.rollable` app-wide.
+
+### D51 — Passives: session-state, computed from any skill, managed via a checkbox picker · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion + `visualize`-widget mockup, 3 rounds.
+Raw note: "move passives under tools labeled 'passives', adding passives
+should let me choose which passive, more than one at a time could be added
+and i should choose which to remove" → (after a per-tile ✕ mockup) "Passives
+approved, but remove the 'remove' button. Instead, the modal to select the
+passives with checkboxes, also shows the already present ones, that can be
+deselected hence removed from the list."
+Chosen: passives move from the Senses card (T27 D40) to a new "Passives"
+label under Tools. Which passives are pinned is **session state** (like HP/
+resource ticks — the app already never writes the character file's content,
+scope §4), not a schema change: any of the 18 skills can be pinned, not
+just Perception/Investigation/Insight, computed live as `10 + that skill's
+modifier` from data the app already has — so a pinned passive is never
+stale after a level-up recompiles skills. The compiled `passives` object
+(perception/investigation/insight, if present) seeds the default pinned set
+on first load. Management is one modal: tapping "+" opens a single list of
+all 18 skills as checkboxes, already-pinned ones pre-checked; checking adds,
+unchecking removes. No per-tile ✕ button.
+Rejected: keeping passives schema-only (limited to the 3 compiled fields) —
+offered as the simpler option, rejected since the data to compute any
+skill's passive already exists and the ask was explicitly "choose which
+passive," not just "choose among these three." Per-tile ✕ remove button —
+tried in the first mockup, replaced by the single checkbox-picker modal.
+Enforced by: not yet built — filed to T28. New session-state field for
+pinned passive skill keys (default-seeded from compiled `passives`).
+Affects: `app/src/views/MainSheet/Defenses.tsx` (`PassivesRow` moves/
+rebuilds under a `ToolsBlock`-adjacent location), `app/src/state/`
+(session state shape + `sessionEngine.ts` reconciliation), a new picker
+modal component.
+
+### D52 — Defenses: damage-typed chips, one line per category, moved under Saves · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion + `visualize`-widget mockups, 4 iterated rounds
+(icon+row concept → a unified multiplier-prefixed chip field → back to
+per-category lines with the multiplier prefix → final: multiplier prefix
+dropped, condition icon consistency fixed).
+Raw note: "move and redesign defenses with more visual ui, move them under
+saves" → (after the first mockup) "Try defenses resistances/immunities/
+vulnerabilities as a chipfield with three chip states and 0x - 1/2x - 2x
+written in different font and size as if icon before the text" → (after
+the unified-field version) "Go back to lines for each type of damage
+modifiers. As for conditions, there should either be the Adv. icon or
+immunity icon depending on what's the benefit" → (final polish) "remove
+1/2x, 0x etc, leave only damage type; adv mark should be consistent
+everywhere."
+Chosen (final): one line per category (Resist / Immune / Vulnerable /
+Cond.), same structure as today. Damage-type chips reuse the app's
+existing damage-type color language (`colorMaps.ts` `DAMAGE_COLOR` /
+`--dmg-*` tokens — the same colors `{dtype:}` markup already renders
+inline elsewhere) instead of today's plain gray text chips — no multiplier
+glyph, just the colored chip. Condition-advantage chips show an icon
+matching whichever benefit the entry's own compiled markup actually states:
+the app's **existing** `AdvBadge` component (`components/chips/AdvBadge.tsx`
+— already used everywhere else `{adv}` renders, reused here rather than a
+new invented glyph) when the entry contains an `{adv}` tag, a new
+shield-check icon when it's phrased as outright condition immunity —
+detected from the compiled markup's own tags, not guessed from prose.
+Rejected: a 0×/½×/2× monospace multiplier prefix on damage chips — built
+and shown twice, dropped both times in favor of just the colored type name.
+A single unified chip field mixing all categories — reverted back to
+per-category lines. A newly-invented up-chevron icon for advantage
+conditions — replaced with the app's real, already-existing `AdvBadge`.
+Enforced by: not yet built — filed to T28. Needs a way to detect
+immunity-vs-advantage phrasing in a `conditionAdvantages` entry's compiled
+markup (parse for an `{adv}` tag) and a new shield-check icon component.
+Affects: `app/src/views/MainSheet/Defenses.tsx` (`DefensesBlock`), new
+condition-icon detection logic, `app/src/components/chips/` (new
+immunity-icon component alongside the existing `AdvBadge`).
+
+### D53 — Senses card: drop the duplicate "Senses" label · 2026-08-24 · DECIDED
+
+Mechanism: direct visual confirmation (no AskUserQuestion needed — a bug,
+not a design choice), found while grounding the interview in the live app.
+Raw note: "do not repeat senses twice in senses."
+Diagnosis: `SensesBlock`'s `.panel__title` reads "Senses" and its own
+`senses__group`'s `.field-label` (for the darkvision list) also reads
+"Senses" directly underneath — the same word twice, one above the other.
+Chosen: drop the inner field-label (the panel title alone already says
+what the card is; the list itself needs no second label) — or rename it to
+something more specific if a label is still wanted structurally. Exact
+resolution left to implementation, since this is a bug fix not a design
+decision.
+Enforced by: not yet built — filed to T28.
+Affects: `app/src/views/MainSheet/Defenses.tsx` (`SensesBlock`).
+
+### D54 — Identity: chip moves to the topbar, MainSheet's own header removed · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion + `visualize`-widget mockup, 2 rounds.
+Raw note: "the identity header with character info should be moved to the
+top instance of the name (next to characters button)" → (mockup shown)
+"Remove it entirely" (MainSheet's own name/chip block).
+Chosen: the `IdentityChip` (T27 D42 — species/class line + tooltip) moves
+from `MainSheet`'s `IdentityStrip` up into the app-level topbar, next to
+the existing name display and the "‹ Characters" back button — the same
+row that already exists in `AppShell`'s `.app-shell__topbar`. `MainSheet`
+drops its own name/chip header block entirely; the sheet's first visible
+content becomes the ability rail. The `variantLabel` badge ("Battle Mage")
+and the identity tooltip both move up with the chip.
+Rejected: keeping a smaller header/divider on MainSheet as a landmark —
+Francesco chose full removal, no residual header.
+Enforced by: not yet built — filed to T28.
+Affects: `app/src/app/AppShell.tsx` (topbar gains the chip + tooltip),
+`app/src/views/MainSheet/IdentityStrip.tsx` (retired or emptied),
+`app/src/app/appShell.css`, `app/src/views/MainSheet/mainSheet.css`
+(`.identity*` rules move/retire).
+
+### D55 — Spellcasting on Main tab: shared tiles, no source list, Atk rolls · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round.
+Raw note: "spellcasting should feature its tile design also in main tab,
+atk tile should be clickable to roll."
+Chosen: `Defense.tsx`'s `SpellcastingSummary` (today: a per-source-row list
+with repeated Save/Atk chips) is replaced by the same shared `.stat`-tile
+treatment T27 D43 built for the Spells tab (ability/DC/Atk tiles from the
+first source) — **tiles only, no collapsible "N sources" list** on Main
+(that stays a Spells-tab-only feature, one tap away via the tab bar; Main
+stays the dense at-a-glance view). The Atk tile becomes clickable — rolls
+an attack roll using the casting source's `attackMod`, matching the
+existing `rollCheck`/`rollableProps` convention.
+Rejected: bringing the full Spells-tab treatment (tiles + source list) to
+Main too — offered, rejected as duplicating content that's already one tap
+away and adding height to the dense Main view.
+Enforced by: not yet built — filed to T28.
+Affects: `app/src/views/MainSheet/Defense.tsx` (`SpellcastingSummary`
+rebuilt on `.stat-row`/`.stat` from `components/primitives.css`).
+
+### D56 — Hover-state consistency: full app-wide inventory · 2026-08-24 · DECIDED
+
+Mechanism: AskUserQuestion, 1 round.
+Raw note: "make sure hover states are used more and are consistent."
+Chosen: beyond the specific surfaces already scoped in D50 (check rows,
+tiles, the identity chip), do a full inventory of every interactive element
+app-wide (buttons, tabs, cards, menu items, library refs, dialog controls)
+against the app's own hover conventions, fixing whatever's missing or
+inconsistent — same audit discipline as D45's typography pass, not a
+spot-fix-as-noticed approach.
+Rejected: fixing only surfaces Francesco calls out explicitly as he notices
+them — offered as the lighter option, full inventory chosen instead.
+Enforced by: not yet built — filed to T28.
+Affects: app-wide (audit scope, not a single file).
+
+### D57 — No tracking anywhere; prose leading matched to monster-forge's 1.5 · 2026-08-25 · DECIDED
+
+Mechanism: direct handoff document (`docs/HANDOFF-monster-forge-B310.md`,
+written from inside monster-forge immediately after its own B310 pass, not
+a secondhand summary) + one AskUserQuestion round for the one call the
+handoff explicitly flagged as not its author's to make.
+Source of truth on the other side: monster-forge `DECISIONS.md` **D-053**,
+its `DEVELOPMENT.md` § "The design system in `styles.css`", `AUDIT.md`,
+CHANGELOG batch **B310**.
+Raw note (Francesco, in the monster-forge session that produced B310, per
+the handoff): "Remove extra tracking and make it standard across all.
+Useless extra tracking is to be avoided as it as AI tell" — then,
+clarifying: "when I said extra tracking I meant any tracking that isn't the
+default one." The handoff's author flagged the counter-argument (tracking
+small uppercase type is a typographic convention, not an AI tell) at the
+time; Francesco overruled it. Settled taste, not a misunderstanding — carries
+over here as the same rule, not re-litigated.
+Chosen (tracking): `--letter-spacing-chrome` and `--letter-spacing-title`
+(`app/src/tokens/tokens.css`) both set to `normal` — the handoff's
+"cheapest, most reversible" recommended step, one edit moves the whole app,
+trivially revertible if it reads wrong on a phone. The two stray
+non-tokenized literals found alongside them (`edge-badge`'s `0.05em`,
+`ability-chip__value`'s explicit `letter-spacing: normal` reset) are also
+resolved — the former routed through `var(--letter-spacing-chrome)`, the
+latter deleted outright since it's now fully redundant (the parent it
+overrode no longer sets any tracking to override). Verified: `grep` for
+`letter-spacing` across `app/src` now returns only the two token
+definitions themselves — nothing else in the codebase sets tracking.
+Tokens are **kept, not deleted** in this pass; monster-forge's own second
+step (deleting the tokens entirely, so nothing can silently reintroduce
+tracking) is the deliberate follow-up, done after Francesco has seen this
+first pass live on a phone — not bundled into the same commit.
+Chosen (line-height): asked directly rather than assumed, per the
+handoff's own flag — monster-forge separately standardized its prose
+leading on `1.5` (absorbing several drifted values); character-forge's
+`--line-height-prose` was `1.4`, chosen deliberately in T26 (D29) and
+verified live against real wrapped text with an inline chip present.
+Offered "keep 1.4" as the recommendation (same category as the other locked
+per-device divergences in `docs/DESIGN-SYSTEM.md` §1) against "match
+monster-forge's 1.5." Francesco chose to match: `--line-height-prose` is
+now `1.5`. The five stray non-tokenized `line-height` literals found
+alongside it (four `1.5`, one `1.4` — `library.css`'s `.md-p`/`.md-list`,
+`manage.css`'s `.cf-empty__body`/`.mng-dialog__lede`/`.mng-variant__about`)
+are all routed through `var(--line-height-prose)` now too; `.md-h`'s
+`line-height: 1.25` is a different role (tight heading leading, not
+wrapping prose) and correctly left alone.
+Rejected: keeping `--line-height-prose` at 1.4 (the recommended option) —
+Francesco chose sibling-app consistency over the phone-density argument.
+Checked and found clean, no action needed: the handoff's "a weight the font
+never loaded is not a weight" finding (monster-forge had declared 800/900
+with only 400–700 loaded) — character-forge only ever declares 400/600/700
+in its CSS, and loads 400/500/600/700 via `@fontsource/inter`
+(`main.tsx`), so no phantom-weight bug exists here.
+Not done in this pass (informational findings from the handoff, not part
+of its "Done when" checklist): a full duplicate-rule-block sweep or a
+dead-selector sweep (the handoff's findings #2/#3) — worth a future pass,
+not undertaken here since neither was flagged as required and the
+resolved-declaration diff tool (`monster-forge`'s `scripts/diff-css.mjs`)
+wasn't ported. This was a small, mechanical, two-value token edit plus
+seven literal-to-token routings — verified by direct `grep` (every
+`letter-spacing`/stray-`line-height` call site found and accounted for)
+rather than a resolved-declaration diff, which the handoff's own "trap"
+section warns screenshots/DOM measurement can't substitute for; `grep`
+verification here is exhaustive enough for a change this size, but the diff
+tool remains the right method for a larger refactor.
+Enforced by: `npm run verify` green (220/41/50 tests) after the change.
+`docs/HANDOFF-monster-forge-B310.md` deleted per its own "Done when" —
+this entry plus the `DESIGN-SYSTEM.md` §2 edits are where its content now
+lives.
+Affects: `app/src/tokens/tokens.css`, `app/src/components/chips/chips.css`,
+`app/src/views/MainSheet/mainSheet.css`, `app/src/library/library.css`,
+`app/src/manage/manage.css`, `docs/DESIGN-SYSTEM.md` (§0 intro, §2, §3
+"Confirmed violations," §4).

@@ -25,8 +25,8 @@ export function CompanionDefense({ companion }: { companion: CompanionSheet }) {
 
   return (
     <section className="panel defense" aria-label={`${companion.name} defense`}>
-      <div className="defense__stats">
-        <div className="stat stat--ac">
+      <div className="stat-row">
+        <div className="stat">
           <span className="field-label">AC</span>
           <span className="stat__value">{companion.ac.value}</span>
         </div>

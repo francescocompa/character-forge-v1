@@ -41,7 +41,8 @@ export function BackgroundSection({ backgroundFeat }: { backgroundFeat: Progress
     >
       {tools.length > 0 && (
         <p className="chassis-section__tools">
-          <span className="chassis-section__label">Tools</span> {tools.join(', ')}
+          <span className="chassis-section__label">Tools</span>{' '}
+          {tools.map((t) => t.name).join(', ')}
         </p>
       )}
       {background.modifications && background.modifications.length > 0 && (

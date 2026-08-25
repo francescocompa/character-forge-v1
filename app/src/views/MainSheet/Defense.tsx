@@ -1,9 +1,12 @@
+import type { ReactNode } from 'react'
 import type { StatValue } from '@character-forge/schema/types.ts'
 import { ABILITY_COLOR } from '../../components/chips/colorMaps'
 import type { CSSVarStyle } from '../../components/chips/css-vars'
 import { MarkupText } from '../../library'
 import { useCharacter } from '../../character/CharacterProvider'
 import { useSession, useSessionState } from '../../session/SessionProvider'
+import { useInspectMode } from '../../app/InspectModeProvider'
+import { useInspectPopover, InspectPopoverPanel } from '../../components/InspectPopover'
 import { rollCheck, rollableProps } from '../../dice'
 import { NumberStepper, TickBoxes } from './Ticks'
 import { signed } from './format'
@@ -12,6 +15,57 @@ import { signed } from './format'
 function statText(stat: StatValue, sign = false): string {
   if (typeof stat.value === 'number') return sign ? signed(stat.value) : String(stat.value)
   return stat.value
+}
+
+/**
+ * Wraps a field so that in inspect mode (T27 D44) it becomes a click target
+ * for a breakdown popover instead of whatever it'd otherwise do (nothing, for
+ * AC/HP's label — they aren't rollable). Outside inspect mode it renders
+ * `children` completely inert, so it never intrudes on normal play.
+ */
+function InspectTrigger({
+  label,
+  className,
+  children,
+  panel,
+}: {
+  label: string
+  className?: string
+  children: ReactNode
+  panel: ReactNode
+}) {
+  const { active: inspecting } = useInspectMode()
+  const { open, setOpen, ref } = useInspectPopover<HTMLDivElement>()
+  if (!inspecting) return <div className={className}>{children}</div>
+  return (
+    <div
+      className={`${className ?? ''} inspectable`}
+      ref={ref}
+      role="button"
+      tabIndex={0}
+      aria-label={`Inspect ${label}`}
+      onClick={() => setOpen((o) => !o)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          setOpen((o) => !o)
+        }
+      }}
+    >
+      {children}
+      {open && <InspectPopoverPanel label={`${label} breakdown`}>{panel}</InspectPopoverPanel>}
+    </div>
+  )
+}
+
+function inspectNotePanel(note: StatValue['note']): ReactNode {
+  return note ? (
+    <div className="inspect-popover__note">
+      <MarkupText source={note} />
+    </div>
+  ) : (
+    <div className="inspect-popover__note">No additional detail.</div>
+  )
 }
 
 /**
@@ -72,7 +126,9 @@ function HpBlock() {
     <div className="hp-block">
       <div className="hp-block__main">
         <div className="hp-current">
-          <span className="field-label">Hit points</span>
+          <InspectTrigger label="Hit points" panel={inspectNotePanel(maxHp.note)}>
+            <span className="field-label">Hit points</span>
+          </InspectTrigger>
           <div className="hp-current__row">
             <NumberStepper
               value={current}
@@ -83,11 +139,6 @@ function HpBlock() {
             />
             <span className="hp-current__max">/ {override ?? statText(maxHp)}</span>
           </div>
-          {maxHp.note && (
-            <span className="stat__note">
-              <MarkupText source={maxHp.note} />
-            </span>
-          )}
           <MaxHpOverrideControl compiled={maxNumeric} />
         </div>
         <div className="hp-temp">
@@ -206,16 +257,11 @@ export function DefenseBlock() {
   const { stats } = character
   return (
     <section className="panel defense" aria-label="Defense and tempo">
-      <div className="defense__stats">
-        <div className="stat stat--ac">
+      <div className="stat-row">
+        <InspectTrigger label="AC" className="stat" panel={inspectNotePanel(stats.ac.note)}>
           <span className="field-label">AC</span>
           <span className="stat__value">{statText(stats.ac)}</span>
-          {stats.ac.note && (
-            <span className="stat__note">
-              <MarkupText source={stats.ac.note} />
-            </span>
-          )}
-        </div>
+        </InspectTrigger>
         {typeof stats.initiative.value === 'number' ? (
           <div
             {...rollableProps(

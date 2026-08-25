@@ -15,6 +15,10 @@ body {
   /* Stop the whole page rubber-banding past its edges in standalone mode. */
   overscroll-behavior-y: none;
   min-height: 100dvh;
+  /* Base size for the rem scale (T27 #1) — nothing set this before, so every
+     rem-based token silently inflated off the 16px browser default instead
+     of monster-forge's actual 14px base. */
+  font-size: var(--font-size-md);
 }
 
 /*

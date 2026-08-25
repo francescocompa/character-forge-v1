@@ -38,11 +38,13 @@ function renderManageMode(): string {
 describe('Spells — synthetic multiclass fixture (Level view, default)', () => {
   const html = render()
 
-  it('renders a casting header per source with distinct origin dots and DCs', () => {
-    expect(html).toContain('Wizard')
-    expect(html).toContain('DC 13')
-    expect(html).toContain('Ember Cartographer&#x27;s Compass')
-    expect(html).toContain('DC 14')
+  it('renders the shared ability/DC/Atk tiles once (from the first source) plus a collapsed source-count toggle', () => {
+    expect(html).toContain('INT')
+    expect(html).toContain('13')
+    expect(html).toContain('2 sources')
+    // The per-source list (and its divergent-DC chip for the second source,
+    // whose own DC is 14) is collapsed by default — static markup can't
+    // exercise the click-to-expand interaction, so it isn't asserted here.
   })
 
   it('renders both slot pools at 1st level with their recovery icons', () => {

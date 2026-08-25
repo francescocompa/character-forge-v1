@@ -182,10 +182,17 @@
   --font-family:
     'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
+  /* Below chrome — the check-row chevron/edge-badge micro-glyphs (T27 #1
+     audit; previously hardcoded 11px/9px with no token at all). */
+  --font-size-xs: 0.5625rem;
   --font-size-chrome: 0.6875rem;
-  --letter-spacing-chrome: 0.06em;
-  /* Wider tracking for section titles (monster-forge .fs-title = .12em). */
-  --letter-spacing-title: 0.12em;
+  /* No tracking, anywhere (2026-08-25, monster-forge B310/D-053 handoff —
+     see docs/DECISIONS.md). Both tokens kept (not deleted) so the app-wide
+     rule stays enforced through one place rather than 25 call sites each
+     independently forgetting to add tracking back; the follow-up that
+     deletes them outright is a deliberate second step, not done yet. */
+  --letter-spacing-chrome: normal;
+  --letter-spacing-title: normal;
   --weight-chrome: 600;
 
   --font-size-sm: 0.8125rem;
@@ -206,6 +213,8 @@
      that render wrapping secondary prose (feature/spell/gear summaries,
      attack riders, notes) — single-line labels are untouched, so the
      sheet's dense feel elsewhere doesn't change. Value confirmed against
-     real wrapped text with an inline chip present (T26 D29). */
-  --line-height-prose: 1.4;
+     real wrapped text with an inline chip present (T26 D29). Bumped 1.4 →
+     1.5 (2026-08-25) to match monster-forge's own B310 standardization —
+     confirmed a deliberate match, not a quiet copy (see docs/DECISIONS.md). */
+  --line-height-prose: 1.5;
 }

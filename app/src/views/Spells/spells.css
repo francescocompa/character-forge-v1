@@ -47,49 +47,107 @@
   color: var(--ink-secondary);
 }
 
-/* --- casting headers ----------------------------------------------------- */
+/* --- casting headers (T27 D43) --------------------------------------------
+ * Ability/DC/Atk render once as shared `.stat` tiles (components/
+ * primitives.css) regardless of source count — Shigen's 5 sources all share
+ * one set. A collapsed "N sources" row expands into a `kind · name` list;
+ * each row's own anchored popover mirrors the `IdentityChip`/`ShellMenu`
+ * recipe (`.panel` surface, click-outside/Escape to close).
+ * ------------------------------------------------------------------------- */
 .casting-headers {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
 
-/* Surface (background/border/radius) is shared with `.panel` via
-   components/primitives.css (D19 spot-check, T25) — was an independent
-   copy of the exact same recipe. */
-.casting-header {
+.cast-stats__ability.cast-stats__ability {
+  color: var(--chip-fg);
+}
+
+.cast-sources-toggle {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--ink-secondary);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+.cast-sources-toggle:hover,
+.cast-sources-toggle:focus-visible {
+  color: var(--ink-primary);
+}
+
+.cast-sources-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.cast-source-row {
+  position: relative;
+}
+.cast-source-row__trigger {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  background: var(--surface-overlay);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.cast-source-row__trigger:disabled {
+  cursor: default;
+}
+.cast-source-row__trigger:not(:disabled):hover,
+.cast-source-row__trigger:not(:disabled):focus-visible {
+  background: var(--surface-panel3);
+}
+.cast-source-row__name {
+  font-weight: 600;
+}
+.cast-source-row__override {
+  margin-left: auto;
+  font-size: var(--font-size-sm);
+  color: var(--ink-secondary);
+  white-space: nowrap;
+}
+.cast-source-row__panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: var(--space-1);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.cast-source-row__rule {
+  font-size: var(--font-size-sm);
+  color: var(--ink-secondary);
+  line-height: var(--line-height-prose);
+}
+.cast-source-row__spells {
+  margin: 0;
+  padding: 0;
+  list-style: none;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3);
-}
-
-.casting-header__name {
-  font-weight: 700;
-  margin-right: var(--space-1);
-}
-
-.casting-header__atk {
+  gap: var(--space-1) var(--space-2);
   font-size: var(--font-size-sm);
-  color: var(--ink-secondary);
-}
-
-.casting-header__rule {
-  font-size: var(--font-size-sm);
-  color: var(--ink-secondary);
-  line-height: var(--line-height-prose);
-}
-
-.casting-header__note {
-  flex-basis: 100%;
-  margin: 0;
-  font-size: var(--font-size-sm);
-  color: var(--ink-secondary);
-  line-height: var(--line-height-prose);
 }
 
 /* --- slot pools ------------------------------------------------------------ */

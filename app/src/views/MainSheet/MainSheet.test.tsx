@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { CharacterFile } from '@character-forge/schema/types.ts'
 import fixture from '../../../../fixtures/synthetic.character.json'
 import { AppShell } from '../../app/AppShell'
+import { InspectModeProvider } from '../../app/InspectModeProvider'
 import { LibraryProvider } from '../../library'
 import { CharacterProvider } from '../../character/CharacterProvider'
 import { SessionProvider } from '../../session/SessionProvider'
@@ -24,13 +25,15 @@ function render(char: CharacterFile = character): string {
 /** Renders just the MainSheet under a given view mode (bypasses the shell/tabs). */
 function renderMainSheet(viewMode: ViewMode): string {
   return renderToStaticMarkup(
-    <LibraryProvider library={character.library}>
-      <CharacterProvider character={character} initialViewMode={viewMode}>
-        <SessionProvider character={character}>
-          <MainSheet />
-        </SessionProvider>
-      </CharacterProvider>
-    </LibraryProvider>,
+    <InspectModeProvider>
+      <LibraryProvider library={character.library}>
+        <CharacterProvider character={character} initialViewMode={viewMode}>
+          <SessionProvider character={character}>
+            <MainSheet />
+          </SessionProvider>
+        </CharacterProvider>
+      </LibraryProvider>
+    </InspectModeProvider>,
   )
 }
 

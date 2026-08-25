@@ -1,7 +1,7 @@
 import { IdentityStrip } from './IdentityStrip'
 import { AbilityRail, SavesBlock, SkillsBlock } from './Abilities'
 import { DefenseBlock } from './Defense'
-import { DefensesBlock, SensesBlock } from './Defenses'
+import { DefensesBlock, SensesBlock, ProficienciesBlock } from './Defenses'
 import { ResourcesPanel } from './Resources'
 import { AttacksPanel } from './Attacks'
 import { ActionsSlot } from './ActionsSlot'
@@ -38,6 +38,7 @@ export function MainSheet() {
           <SkillsBlock />
           <DefensesBlock />
           <SensesBlock />
+          <ProficienciesBlock />
           <SessionNotesCard />
         </div>
       </div>

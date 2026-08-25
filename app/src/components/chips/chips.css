@@ -55,7 +55,6 @@
   color: var(--ink-primary);
   font-size: var(--font-size-sm);
   font-weight: var(--weight-content);
-  letter-spacing: normal;
 }
 
 /* Save DC badge: solid accent pill, dark ink (all accent tokens are
@@ -164,9 +163,12 @@
   text-transform: uppercase;
 }
 
-/* Ref link — tappable term, styled distinctly from plain content text. */
+/* Ref link — tappable term. Reads as body text in whatever color its
+   container already uses (T27 #1) — a fixed accent color was wrong in every
+   real container (e.g. summary text is --ink-secondary, not DEX blue); only
+   the dotted underline marks it as a term. */
 .ref-link {
-  color: var(--ability-dex);
+  color: inherit;
   text-decoration: underline dotted;
   text-underline-offset: 2px;
 }

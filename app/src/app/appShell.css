@@ -116,6 +116,14 @@ body {
   color: var(--ink-on-accent);
 }
 
+/* Inspect mode toggle (T27 D44) — monster-forge's Rule Finder button, ported:
+   a plain icon button until active, then a filled accent state so it reads
+   as a mode that's "on" the same way `.is-active` does elsewhere in the shell. */
+.inspect-toggle.is-active {
+  background: var(--accent);
+  color: var(--ink-on-accent);
+}
+
 /* --- view-mode toggle ---------------------------------------------------- */
 .view-toggle {
   display: inline-flex;

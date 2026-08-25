@@ -4,6 +4,170 @@ Newest batch first. One entry per task/batch; reference the planning task ids
 (T01–T22) where applicable. T01–T16 batches archived 2026-08-24 —
 [`docs/ARCHIVE.md`](docs/ARCHIVE.md).
 
+## 2026-08-25 — style: monster-forge B310 tracking/leading alignment (D57)
+
+Not a planning-task batch — a direct handoff from a monster-forge session
+(`docs/HANDOFF-monster-forge-B310.md`, now deleted per its own checklist),
+executed and folded into `docs/DESIGN-SYSTEM.md`/`DECISIONS.md` per its
+instructions.
+
+- **No tracking anywhere.** `--letter-spacing-chrome`/`--letter-spacing-title`
+  (`tokens.css`) both set to `normal`, matching monster-forge's own B310
+  rule (its D-053: "any tracking that isn't the default one" reads as an AI
+  tell). Tokens kept, not deleted — the follow-up removal is a deliberate
+  second step, not bundled here. Two stray non-tokenized literals found and
+  resolved alongside: `.edge-badge`'s hardcoded `0.05em` now routes through
+  the token; `.ability-chip__value`'s explicit `letter-spacing: normal`
+  reset deleted outright (redundant once its parent chip also resolves to
+  `normal`).
+- **Prose leading matched to 1.5.** Asked directly rather than assumed (the
+  handoff flagged this one as not its call) — `--line-height-prose` was
+  `1.4` (a deliberate T26 choice); Francesco chose to match monster-forge's
+  own newly-standardized `1.5` over keeping the phone-density divergence.
+  Five stray literals (four `1.5`, one `1.4` in `library.css`/`manage.css`)
+  now route through the token too.
+- Checked and found clean: the handoff's "phantom weight" finding
+  (monster-forge declared 800/900 with only 400–700 loaded) doesn't apply
+  here — character-forge only declares 400/600/700 and loads exactly
+  400/500/600/700 via `@fontsource/inter`.
+- Verified by direct `grep` (every `letter-spacing` call site outside the
+  two token definitions confirmed gone) rather than the handoff's suggested
+  resolved-declaration diff tool — appropriate for a change this size per
+  `docs/DECISIONS.md` D57, which also names what a larger refactor would
+  still need the diff tool for.
+
+`verify` green throughout (220/41/50 tests); screenshot-verified live
+(micro-labels read tight/untracked, nothing else visibly moved).
+
+## 2026-08-24 — feat: T27 UX declutter + inspect mode (D38–D44)
+
+All seven items from the T27 interview built in one session, `verify` green
+throughout (220/41/50 tests), screenshot-verified at 1280px and 375px.
+
+- **Typography/link audit (D38).** `body { font-size: var(--font-size-md) }`
+  (14px, matching monster-forge's base — nothing set this before, so the
+  whole rem scale was silently inflated). `.ref-link` → `color: inherit`
+  (was hardcoded DEX blue in every container). Two stray hardcoded
+  `font-size: 11px/9px` in `mainSheet.css` folded into the scale — 11px maps
+  exactly to the existing `--font-size-chrome`; 9px got a new
+  `--font-size-xs` token (below chrome, nothing existed there).
+- **Check-row density (D39).** `.check-row`'s `border-bottom` removed;
+  `.check-row__main`'s `min-height` 44px → 36px. Real on-device tap-accuracy
+  check still owed — not verifiable from this session.
+- **Passive scores: compact tiles, new Senses card (D40).** `Defenses.tsx`'s
+  old combined "Senses & proficiencies" panel split into **Senses**
+  (darkvision list + new passive tiles) and **Proficiencies**
+  (languages/armor/weapons, unchanged). Passives moved out of `SkillsBlock`
+  into a `PassivesRow`: Perception always shown as a small ability-tinted
+  tile; a dashed ghost "+"/"−" tile toggles Investigation/Insight inline, no
+  settings round-trip.
+- **Tools: PB-only, structured type (D41).** New `ToolProficiency` type
+  (`schema/types.ts` + `character.schema.json`) — `name`, optional
+  `bonusDice`/`edge`/`note`, no ability/modifier field (tools render
+  PB-only, matching monster-forge). `proficiencies.tools` changed from
+  `string[]` to `ToolProficiency[]` — a breaking schema change, backfilled
+  into both repo fixtures, `fixtures/invalid/*`, and all four data-folder
+  character files (Vice ×3, Shigen). New shared `ToolRow` (`CheckRow.tsx`)
+  gives tools the same check-row anatomy as saves/skills, minus the ability
+  tint. **Compile bug fixed alongside**: Shigen's Woodcarver's Tools now
+  carries Mark of Making's +1d4 (Artisan's Intuition applies to any
+  Artisan's-Tools check, not just the Arcana row it was wrongly limited to).
+- **Identity header (D42).** `IdentityStrip.tsx`'s three stacked rows
+  replaced by one square-cornered `IdentityChip` reading "`<species> ·
+<class 1> <level> / <class 2> <level>`", inline beside the name when width
+  allows and wrapping to its own row otherwise (pure flex-wrap, no JS).
+  Clicking it opens a small anchored panel (`AppShell`'s `ShellMenu` recipe)
+  with species/background, each class's subclass + unlock level, and a new
+  `meta.concept` field — one or two sentences, compiler-compressed from the
+  chassis doc's Concept section, may be non-English per the project's own
+  convention. Backfilled into both repo fixtures, Vice, and Shigen (Vice's
+  and Shigen's concept text pulled from their actual chassis docs, Italian,
+  compressed per the new `pipeline/compile.md` §6 rule).
+- **Spellcasting collapse (D43).** `CastingHeaders.tsx` no longer repeats a
+  full header per source — ability/DC/Atk render once as shared `.stat`
+  tiles (promoted to `components/primitives.css` so Spells and MainSheet
+  use the identical recipe instead of two copies) from the first source.
+  Below, a collapsed "N sources" row expands to `kind · name` (kind read
+  from the referenced library entry's `type`); a source whose own DC/Atk
+  genuinely diverges (the synthetic fixture's own dual-source spell setup
+  exercises this — Ember Cartographer's Compass is DC 14 vs Wizard's DC 13)
+  gets an inline override chip instead of silently inheriting the shared
+  tiles. Clicking a source shows its prepare rule + the spells it grants
+  (`spellcasting.spells[]` filtered by `origins[]`).
+- **Roll-chip arming + inspect mode (D44) — the largest item.** A
+  `-situational` edge badge or `bonusDice` pill is now a real arm/disarm
+  toggle (`is-armed` fills it solid) wired into `dice/index.ts`'s
+  `rollCheck` (`bonusDice` appends to the roll expression, additive on the
+  existing multi-term parser); stays armed until tapped off, independent
+  per row. A plain (non-situational) `adv`/`dis` edge stays a static badge —
+  nothing conditional to opt into. The existing Shift/Ctrl-click
+  adv/dis convention is untouched and takes precedence when used.
+  **Inspect mode**: a new top-right toggle (`InspectModeProvider`,
+  `AppShell`'s `InspectModeToggle`) modeled on monster-forge's Rule Finder —
+  icon swap (`CircleHelp`/`X`), `body.inspect-mode` class, Escape exits.
+  Full scope as specified: ability scores, AC, HP, saves, skills, tools —
+  each now shows a breakdown popover (composed from real ability/PB/
+  proficiency data, plus the compiled `note`) instead of rolling while
+  active. This is also where the AC/HP/ability-score provenance notes that
+  used to always render inline (`.stat__note`/`.ability__note`) finally
+  move to — exactly the clutter fix named in
+  `character-forge-sheet-notes` memory.
+
+Affects: `schema/types.ts`, `schema/character.schema.json`, `app/src/app/`
+(new `InspectModeProvider.tsx`, `AppShell.tsx`), `app/src/components/`
+(new `InspectPopover.tsx`, `primitives.css`), `app/src/dice/index.ts`,
+`app/src/views/MainSheet/*`, `app/src/views/Spells/CastingHeaders.tsx`,
+`app/src/views/Companion/CompanionDefense.tsx`, `pipeline/compile.md`,
+`fixtures/*`, and the data-folder character files.
+
+## 2026-08-24 — T22 step 1: Shigen cold-run pipeline proof; docs-only T27 scoping
+
+**T22 (end-to-end acceptance), step 1** — the multiclass pipeline proof, run
+cold following only `pipeline/` docs: interview → `Characters/shigen.chassis.md`
+→ compile → `Characters/shigen.character.json` → validate (0 errors, 0
+warnings) → imported into the live app via the real drop path and
+screenshot-verified at 1280px and 375px. ~40 min interview (incl. decoding
+the hand-written source PDF at 300 dpi), ~25 min compile+validate.
+
+- **Found a real bug in the compile recipe itself.** `pipeline/compile.md`
+  §5 says to-hit excludes a separable magic bonus; `schema/types.ts`'s
+  `ToHit.modifier` is documented as the total _including_ `magicBonus`. The
+  two disagree; the schema wins per the recipe's own precedence rule. All
+  three of Shigen's weapon attacks were off by 1 until corrected. Doc fix
+  still owed — see `docs/DECISIONS.md`.
+- **T22's own premise was stale.** The task file names Shigen's "Spellfire
+  Spark" and "Mark of Making" feats as homebrew; both are now official 2024
+  KB entries (FRHoF p.38, EFA p.40/45), matching the source sheet's
+  shorthand line for line. Only Archer Priest (background) is genuinely
+  homebrew. The KB was refreshed between T22's authoring (2026-07-04) and
+  this run.
+- **Independent parity check**: 32 values compared against the source PDF
+  directly — 29 match exactly; the 3 that differ are precisely the ones
+  confirmed stale (a CHA save/Deception/Performance/spell-attack/DC set that
+  predates the sheet's own Potent Dragonmark CHA bump), each confirmed
+  individually rather than silently "corrected."
+- Full detail, every `FLAG`/`UNCONFIRMED`, and five pipeline-doc friction
+  points found along the way: `Characters/shigen.compile-notes.md`.
+  `docs/DECISIONS.md` D36–D37 (the 2014-spell-with-no-2024-reprint policy;
+  the stale-sheet-value handling rule).
+
+**Docs-only: T27 scoped, not built.** Reviewing the rendered Shigen sheet
+surfaced a large UX feedback batch (same pattern as D23→T25/T26). Francesco
+chose to pause T22 and scope it properly rather than fold it into T22's
+punch list — a 7-topic interview (mockups + AskUserQuestion) produced
+`planning/tasks/T27-ux-declutter-and-inspect.md` and `docs/DECISIONS.md`
+D38–D44: a monster-forge typography/link audit (root-caused, not guessed —
+`body` had no base `font-size`, and `.ref-link` hardcoded DEX's blue for
+every ref regardless of target), check-row density, passive scores as
+compact tiles in a new Senses card, tools going PB-only like monster-forge,
+a collapsed identity header needing a new `meta.concept` schema field,
+spellcasting source collapse, and a persistent roll-chip arm system paired
+with an inspect mode modeled directly on monster-forge's Rule Finder. No
+app code changed for T27 this session — it's the next task, not built yet.
+
+`verify` green throughout (220/41/50 tests); `character-forge-validate`
+passes both fixtures.
+
 ## 2026-08-24 — feat: T26 check-row redesign, line spacing, macro nav direction
 
 A real back-and-forth design interview (in-chat mockups + AskUserQuestion,

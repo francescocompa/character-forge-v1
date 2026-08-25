@@ -193,15 +193,20 @@ export function roll(spec: RollSpec): number {
   return total
 }
 
-/** An ability check / save / skill / attack-to-hit: a d20 plus the sheet's modifier. */
+/** An ability check / save / skill / attack-to-hit: a d20 plus the sheet's modifier.
+ *  `bonusDice` (T27 D44) is an armed situational bonus (e.g. "1d4") added on top —
+ *  the underlying `roll()`/`buildRoll()` already parses arbitrary multi-term
+ *  expressions (used today for damage like `1d8+1d6+8`), so this is additive,
+ *  not a new capability. */
 export function rollCheck(
   label: string,
   modifier: number,
-  opts?: { mode?: RollMode; isAttack?: boolean },
+  opts?: { mode?: RollMode; isAttack?: boolean; bonusDice?: string },
 ): number {
+  const expr = opts?.bonusDice ? `1d20+${opts.bonusDice}` : '1d20'
   return roll({
     label,
-    expr: '1d20',
+    expr,
     modifier,
     mode: opts?.mode,
     critFromD20: opts?.isAttack ?? true,

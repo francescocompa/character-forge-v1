@@ -4,6 +4,7 @@ import type { CharacterFile } from '@character-forge/schema/types.ts'
 import fixture from '../../../../fixtures/synthetic.character.json'
 import variantFixture from '../../../../fixtures/synthetic-variant.character.json'
 import { AppShell } from '../../app/AppShell'
+import { InspectModeProvider } from '../../app/InspectModeProvider'
 import { LibraryProvider } from '../../library'
 import { CharacterProvider } from '../../character/CharacterProvider'
 import { SessionProvider } from '../../session/SessionProvider'
@@ -15,13 +16,15 @@ const character = fixture as unknown as CharacterFile
 
 function renderView(store?: SessionStore): string {
   return renderToStaticMarkup(
-    <LibraryProvider library={character.library}>
-      <CharacterProvider character={character}>
-        <SessionProvider character={character} store={store}>
-          <Companion />
-        </SessionProvider>
-      </CharacterProvider>
-    </LibraryProvider>,
+    <InspectModeProvider>
+      <LibraryProvider library={character.library}>
+        <CharacterProvider character={character}>
+          <SessionProvider character={character} store={store}>
+            <Companion />
+          </SessionProvider>
+        </CharacterProvider>
+      </LibraryProvider>
+    </InspectModeProvider>,
   )
 }
 
@@ -87,13 +90,15 @@ describe('Companion — variant fixture also carries the companion (CI path)', (
   it('renders Ember Sprite from the variant fixture too', () => {
     const variant = variantFixture as unknown as CharacterFile
     const html = renderToStaticMarkup(
-      <LibraryProvider library={variant.library}>
-        <CharacterProvider character={variant}>
-          <SessionProvider character={variant}>
-            <Companion />
-          </SessionProvider>
-        </CharacterProvider>
-      </LibraryProvider>,
+      <InspectModeProvider>
+        <LibraryProvider library={variant.library}>
+          <CharacterProvider character={variant}>
+            <SessionProvider character={variant}>
+              <Companion />
+            </SessionProvider>
+          </CharacterProvider>
+        </LibraryProvider>
+      </InspectModeProvider>,
     )
     expect(html).toContain('Ember Sprite')
   })

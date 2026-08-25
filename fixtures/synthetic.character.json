@@ -4,6 +4,7 @@
     "name": "Fenn Larkspur",
     "characterId": "fenn-larkspur",
     "variantLabel": "Battle Mage",
+    "concept": "A wandering cartographer who mapped the ash-choked wilds alone until a war college recruited her blade — now she charts battlefields as readily as coastlines.",
     "createdAt": "2026-07-04T00:00:00Z",
     "updatedAt": "2026-07-04T00:00:00Z"
   },
@@ -283,7 +284,7 @@
     "proficiencies": {
       "armor": ["light", "medium", "shields"],
       "weapons": ["simple", "martial"],
-      "tools": ["cartographer's tools"]
+      "tools": [{ "name": "cartographer's tools" }]
     }
   },
   "currentLevel": 3,

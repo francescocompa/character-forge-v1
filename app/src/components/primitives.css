@@ -61,8 +61,7 @@ textarea {
 .panel,
 .feature-section,
 .companion-identity,
-.identity,
-.casting-header {
+.identity {
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -103,6 +102,42 @@ textarea {
   border: none;
   border-top: 1px solid var(--border-subtle);
   margin: var(--space-4) 0 var(--space-3);
+}
+
+/* Stat tile — the AC/HP/Init/PB recipe (originally MainSheet-only; promoted
+   here T27 D43 so Spells' casting ability/DC/Atk tiles use the identical
+   skin rather than forking it). `.stat-row` is the auto-fit grid that lays
+   a row of these out. */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+  gap: var(--space-2);
+}
+.stat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2);
+  background: var(--surface-overlay);
+  border-radius: var(--radius-sm);
+}
+.stat__value {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--ink-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Disclosure chevron — a toggle button's expand/collapse indicator (check
+   rows, casting-source rows). Promoted here (T27 D43) once a second view
+   needed it. */
+.check-chip__chevron {
+  font-size: var(--font-size-chrome);
+  transition: transform 0.12s ease;
+}
+.check-chip__chevron.is-expanded {
+  transform: rotate(180deg);
 }
 
 /* ---------------------------------------------------------------------------
@@ -337,6 +372,68 @@ input[type='checkbox']:checked::after {
 .is-selected {
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 9%, var(--surface-raised));
+}
+
+/* ---------------------------------------------------------------------------
+ * Inspect mode (T27 D44) — global affordances. `body.inspect-mode` is set by
+ * `InspectModeProvider`; individual components (AbilityRail, Defense's AC/HP
+ * tiles, CheckRow, ToolRow) branch their own click handler between "roll" and
+ * "show breakdown", but the visual cue (cursor, subtle ring) is one rule here
+ * rather than N per-component copies.
+ * ------------------------------------------------------------------------- */
+body.inspect-mode .rollable,
+body.inspect-mode .inspectable {
+  cursor: help;
+}
+body.inspect-mode .rollable:hover,
+body.inspect-mode .inspectable:hover {
+  outline: 1px dashed var(--accent);
+  outline-offset: 2px;
+}
+
+/* The breakdown popover itself — same anchored-`.panel` recipe as
+   `IdentityChip`/`ShellMenu`, reused by every inspect trigger. */
+.inspect-popover {
+  position: absolute;
+  z-index: 60;
+  width: 16rem;
+  max-width: calc(100vw - 2 * var(--space-3));
+}
+.inspect-popover__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.inspect-popover__total {
+  font-weight: 700;
+  color: var(--ink-primary);
+}
+.inspect-popover__note {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-subtle);
+  color: var(--ink-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-prose);
+}
+
+/* Armed roll-chip state (T27 D44) — a `-situational` edge badge or
+   bonus-dice pill, tapped to apply on the row's next roll and stay applied
+   until tapped off. Filled solid (vs. the badge's default bordered-only
+   look / the pill's flat neutral fill) so an armed chip reads unmistakably
+   different — the risk with "stays armed" is a forgotten-on chip silently
+   affecting a later roll. */
+.edge-badge--adv.is-armed {
+  background: var(--adv);
+  color: var(--surface-bg);
+}
+.edge-badge--dis.is-armed {
+  background: var(--dis);
+  color: var(--surface-bg);
+}
+.bonus-dice-pill.is-armed {
+  background: var(--accent);
+  color: var(--ink-on-accent);
 }
 
 /* ---------------------------------------------------------------------------

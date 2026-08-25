@@ -1,10 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
-import { Backpack, BookOpen, LayoutDashboard, PawPrint, Settings, Sparkles } from 'lucide-react'
+import {
+  Backpack,
+  BookOpen,
+  CircleHelp,
+  LayoutDashboard,
+  PawPrint,
+  Settings,
+  Sparkles,
+  X,
+} from 'lucide-react'
 import type { CharacterFile } from '@character-forge/schema/types.ts'
 import { LibraryProvider } from '../library'
 import { CharacterProvider, useCharacter } from '../character/CharacterProvider'
 import { SessionProvider, useSession } from '../session/SessionProvider'
 import { AdditionsProvider, useAdditions, downloadSession } from '../session/additions'
+import { InspectModeProvider, useInspectMode } from './InspectModeProvider'
 import { MainSheet } from '../views/MainSheet'
 import { Features } from '../views/Features'
 import { Spells } from '../views/Spells'
@@ -44,6 +54,27 @@ function ViewModeToggle() {
         Build
       </button>
     </div>
+  )
+}
+
+/**
+ * Inspect mode toggle (T27 D44) — a dedicated top-right button, explicitly
+ * modeled on monster-forge's Rule Finder (`engine.js` `#ruleFinderBtn`: a
+ * "?"/"✕" icon swap, `body`-level mode class, Escape exits). While active,
+ * tapping a stat/check row shows its breakdown instead of rolling it.
+ */
+function InspectModeToggle() {
+  const { active, toggle } = useInspectMode()
+  return (
+    <button
+      type="button"
+      className={`btn-icon inspect-toggle ${active ? 'is-active' : ''}`}
+      aria-label={active ? 'Exit inspect mode' : 'Inspect mode'}
+      aria-pressed={active}
+      onClick={toggle}
+    >
+      {active ? <X aria-hidden="true" /> : <CircleHelp aria-hidden="true" />}
+    </button>
   )
 }
 
@@ -187,6 +218,7 @@ function Shell({
           >
             + Add
           </button>
+          <InspectModeToggle />
           <ShellMenu
             variants={variants}
             activeVariantKey={activeVariantKey}
@@ -270,14 +302,16 @@ export interface AppShellProps extends ShellChromeProps {
  */
 export function AppShell({ character, ...chrome }: AppShellProps) {
   return (
-    <LibraryProvider library={character.library}>
-      <CharacterProvider character={character}>
-        <SessionProvider character={character}>
-          <AdditionsProvider>
-            <Shell {...chrome} />
-          </AdditionsProvider>
-        </SessionProvider>
-      </CharacterProvider>
-    </LibraryProvider>
+    <InspectModeProvider>
+      <LibraryProvider library={character.library}>
+        <CharacterProvider character={character}>
+          <SessionProvider character={character}>
+            <AdditionsProvider>
+              <Shell {...chrome} />
+            </AdditionsProvider>
+          </SessionProvider>
+        </CharacterProvider>
+      </LibraryProvider>
+    </InspectModeProvider>
   )
 }

@@ -82,6 +82,10 @@ export interface Meta {
   variantLabel?: string
   /** Data-URI, budget <= 200 KB. */
   portrait?: string
+  /** One or two sentences, compiler-compressed from the chassis doc's Concept
+   *  section (T27 D42) — flavor, not mechanics, so may be non-English per this
+   *  project's own convention. Shown in the identity chip's tooltip. */
+  concept?: Markup
   createdAt: string
   updatedAt: string
 }
@@ -171,7 +175,7 @@ export interface Stats {
   proficiencies?: {
     armor?: string[]
     weapons?: string[]
-    tools?: string[]
+    tools?: ToolProficiency[]
   }
 }
 
@@ -220,6 +224,17 @@ export interface Skill {
   /** Extra dice on top of `modifier`, e.g. "1d4" — always shown, never folded
    *  into `modifier` since it doesn't collapse to one static number (T26). */
   bonusDice?: string
+  note?: Markup
+}
+
+/** A proficient tool (T27 D41). PB-only, no ability/modifier field — matching
+ *  monster-forge's own convention (tool checks are 1d20 + PB, ability is the
+ *  DM's contextual call, so no flat modifier is ever baked in). */
+export interface ToolProficiency {
+  name: string
+  /** Extra dice on top of PB, e.g. "1d4" (same convention as Save/Skill). */
+  bonusDice?: string
+  edge?: EdgeState
   note?: Markup
 }
 

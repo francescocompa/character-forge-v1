@@ -20,9 +20,11 @@
 /* Field labels (AC, Hit points, Species, Senses…) are `.field-label`
    (components/primitives.css) — one declaration, not a view-local copy. */
 
-.stat__note,
-.resource__note,
-.ability__note {
+/* AC/HP/ability-score provenance notes moved to the inspect-mode popover
+   (T27 D44) — they used to render inline via `.stat__note`/`.ability__note`,
+   which is exactly the always-on clutter D44 was written to remove. Only
+   `.resource__note` (Resources.tsx) still renders inline; out of D44's scope. */
+.resource__note {
   font-size: var(--font-size-sm);
   color: var(--ink-secondary);
   line-height: var(--line-height-prose);
@@ -60,41 +62,60 @@
   padding: 0 var(--space-2);
 }
 
-.identity__classes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
+/* Identity chip (T27 D42): "<species> · <class 1> <level> / <class 2>
+   <level>" — square corners (not the pill treatment `.identity__variant`
+   uses), inline with the name when width allows, wraps to its own row
+   otherwise (`.identity__name-row`'s existing flex-wrap handles this, no JS
+   needed). Popover recipe mirrors `AppShell`'s `.shell-menu`. */
+.identity-chip {
+  position: relative;
 }
-
-.class-badge {
-  display: inline-flex;
-  align-items: center;
+.identity-chip__trigger {
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--ink-secondary);
+  background: var(--surface-overlay);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+  cursor: pointer;
+}
+.identity-chip__trigger:hover,
+.identity-chip__trigger:focus-visible {
+  color: var(--ink-primary);
+}
+.identity-chip__panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: var(--space-2);
+  z-index: 60;
+  /* Fixed (not max-content) so the concept sentence wraps to a few lines
+     instead of stretching the panel to its own single-line width, which
+     could overflow the viewport's right edge from a left-anchored trigger. */
+  width: 20rem;
+  max-width: calc(100vw - 2 * var(--space-3));
+  display: flex;
+  flex-direction: column;
   gap: var(--space-2);
 }
-
-.class-badge__text {
-  display: inline-flex;
+.identity-chip__row {
+  display: flex;
   align-items: baseline;
   gap: var(--space-2);
-  font-weight: 600;
+  flex-wrap: wrap;
 }
-
-.class-badge__sub {
-  font-weight: 400;
-  color: var(--ink-secondary);
+.identity-chip__none {
+  color: var(--ink-muted);
   font-size: var(--font-size-sm);
 }
-
-.identity__chassis {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-}
-
-.chassis-item {
-  display: inline-flex;
-  align-items: baseline;
-  gap: var(--space-2);
+.identity-chip__concept {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-subtle);
+  color: var(--ink-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-prose);
 }
 
 /* --- responsive dashboard grid ------------------------------------------ */
@@ -132,6 +153,12 @@
    codename, dim secondary line. The big value here stays the MODIFIER
    (play-sheet hierarchy) where monster-forge's editor leads with the
    editable score. */
+/* Wrapper for the inspect-mode breakdown popover's anchor (T27 D44) — `.ability`
+   keeps all its own visual styling; this is purely a position:relative shell. */
+.ability-tile {
+  position: relative;
+}
+
 .ability {
   display: flex;
   flex-direction: column;
@@ -161,10 +188,6 @@
   font-size: var(--font-size-sm);
   color: var(--ink-secondary);
   font-variant-numeric: tabular-nums;
-}
-
-.ability__note {
-  text-align: center;
 }
 
 /* --- proficiency dots ---------------------------------------------------- */
@@ -209,19 +232,12 @@
   flex-direction: column;
 }
 
-.check-row {
-  border-bottom: 1px solid var(--border-subtle);
-}
-.check-row:last-child {
-  border-bottom: none;
-}
-
 .check-row__main {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-1);
-  min-height: 44px;
+  min-height: 36px;
   cursor: pointer;
   border-radius: var(--radius-sm);
 }
@@ -243,24 +259,23 @@
   font: inherit;
   cursor: pointer;
 }
-.check-chip__chevron {
-  font-size: 11px;
-  transition: transform 0.12s ease;
-}
-.check-chip__chevron.is-expanded {
-  transform: rotate(180deg);
-}
-
 /* Monster-forge's literal roll-log badge (rl-advlbl) — bordered text, never
    filled; --adv/--dis are the same tokens the {adv}/{dis} markup icons use. */
 .edge-badge {
   flex: none;
-  font-size: 9px;
+  font: inherit;
+  background: none;
+  font-size: var(--font-size-xs);
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--letter-spacing-chrome);
   border-radius: 3px;
   padding: 1px 4px;
   border: 1px solid;
+}
+/* Only the armable (`-situational`) variant renders as a `<button>` (T27
+   D44) — the plain-`<span>` case inherits this with no cursor change. */
+button.edge-badge {
+  cursor: pointer;
 }
 .edge-badge--adv {
   color: var(--adv);
@@ -273,6 +288,9 @@
 
 .bonus-dice-pill {
   flex: none;
+  font: inherit;
+  border: none;
+  cursor: pointer;
   background: var(--surface-panel3);
   color: var(--ink-secondary);
   border-radius: var(--radius-sm);
@@ -296,69 +314,61 @@
   line-height: var(--line-height-prose);
 }
 
-/* --- tools (T26): plain chips, no fixed ability/modifier in the schema --- */
-.tool-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-  margin-top: var(--space-1);
-}
-.tool-chip {
+/* --- tools (T27 D41): same check-row anatomy as saves/skills, PB-only — no
+   ability tint since tools have no fixed ability in the schema. --- */
+.check-chip.check-chip--neutral {
   background: var(--surface-overlay);
   color: var(--ink-secondary);
-  border-radius: var(--radius-sm);
-  padding: 2px 8px;
-  font-size: var(--font-size-sm);
-  font-weight: 600;
 }
 
-/* --- passives ------------------------------------------------------------ */
-.passives {
-  list-style: none;
-  margin: var(--space-1) 0 0;
-  padding: var(--space-2) 0 0;
-  border-top: 1px solid var(--border-subtle);
+/* --- passives (T27 D40): compact tinted tiles in the Senses card, not the
+   flat label/value list they used to be in Skills. --- */
+.passives-row {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+.passive-tile {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-}
-.passives li {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-2);
-}
-.passives__label {
-  color: var(--ink-secondary);
-  font-size: var(--font-size-sm);
-}
-.passives__value {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-/* --- defense / tempo ----------------------------------------------------- */
-.defense__stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
-  gap: var(--space-2);
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: var(--space-2);
-  background: var(--surface-overlay);
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  min-width: 3.25rem;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-bg);
   border-radius: var(--radius-sm);
 }
-.stat__value {
-  font-size: var(--font-size-2xl);
+.passive-tile__label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: var(--letter-spacing-chrome);
+  text-transform: uppercase;
+  color: var(--chip-fg);
+}
+.passive-tile__value {
+  font-size: var(--font-size-lg);
   font-weight: 700;
+  color: var(--ink-primary);
   font-variant-numeric: tabular-nums;
 }
-.stat--ac .stat__value {
-  color: var(--ink-primary);
+.passive-tile--ghost {
+  background: transparent;
+  border: 1px dashed var(--border-subtle);
+  color: var(--ink-muted);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  cursor: pointer;
 }
+.passive-tile--ghost:hover,
+.passive-tile--ghost:focus-visible {
+  color: var(--ink-primary);
+  border-color: var(--ink-secondary);
+}
+
+/* --- defense / tempo -------------------------------------------------------
+ * `.stat`/`.stat__value`/`.stat-row` moved to components/primitives.css
+ * (T27 D43) — Spells' casting-ability tiles now share the exact recipe. */
 .speed {
   display: inline-block;
   margin-right: var(--space-2);
@@ -876,7 +886,7 @@
   .abilities {
     grid-template-columns: repeat(3, 1fr);
   }
-  .defense__stats {
+  .stat-row {
     grid-template-columns: repeat(2, 1fr);
   }
   .death-saves {
