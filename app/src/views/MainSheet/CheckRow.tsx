@@ -1,4 +1,10 @@
-import { useState, type KeyboardEvent } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+} from 'react'
 import type { Ability, EdgeState, Markup } from '@character-forge/schema/types.ts'
 import { ABILITY_COLOR, ABILITY_SOFT } from '../../components/chips/colorMaps'
 import type { CSSVarStyle } from '../../components/chips/css-vars'
@@ -8,8 +14,103 @@ import { useInspectMode } from '../../app/InspectModeProvider'
 import { useInspectPopover, InspectPopoverPanel } from '../../components/InspectPopover'
 import { rollCheck, rollableProps } from '../../dice'
 import type { RollMode } from '../../dice'
-import { ProficiencyDot, PROF_LABEL } from './Abilities'
+import { PROF_LABEL } from './Abilities'
 import { signed } from './format'
+
+/** Mirrors `library/LibrarySurface.tsx`'s device-adaptive check (T28 D49):
+ *  hover on desktop, tap on touch. */
+const MOBILE_QUERY = '(max-width: 767.98px)'
+function useIsMobile(): boolean {
+  const [mobile, setMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(MOBILE_QUERY).matches,
+  )
+  useEffect(() => {
+    const mql = window.matchMedia(MOBILE_QUERY)
+    const onChange = () => setMobile(mql.matches)
+    onChange()
+    mql.addEventListener('change', onChange)
+    return () => mql.removeEventListener('change', onChange)
+  }, [])
+  return mobile
+}
+
+/** A `{ref:KEY}`/`{ref:KEY|LABEL}` tag anywhere in the note (grammar §3). */
+const REF_TAG = /\{ref:([a-z0-9]+(?:-[a-z0-9]+)*)(?:\|((?:[^{}|\\]|\\.)*))?\}/
+
+/** Splits a note into its prose (the ref tag removed — T28 D49 drops the
+ *  second nested tappable link) and, if the note names a source feature, a
+ *  "via <Feature Name>" byline resolved from the ref's label or the library. */
+function splitNoteSource(
+  note: Markup,
+  nameOf: (ref: string | undefined, displayName?: string) => string,
+): { prose?: Markup; viaLabel?: string } {
+  const match = REF_TAG.exec(note)
+  if (!match) return { prose: note }
+  const [full, key, label] = match
+  const prose = note.replace(full, '').trim()
+  return { prose: prose || undefined, viaLabel: nameOf(key, label) }
+}
+
+/** Asterisk-triggered note tooltip (T28 D49) — replaces the old chevron/
+ *  inline-expand mechanism. Same anchored-`.panel` recipe as `IdentityChip`. */
+function NoteTrigger({ note, label }: { note: Markup; label: string }) {
+  const { nameOf } = useCharacter()
+  const isMobile = useIsMobile()
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLSpanElement>(null)
+  const { prose, viaLabel } = splitNoteSource(note, nameOf)
+
+  useEffect(() => {
+    if (!open) return
+    const onPointerDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    const onKeyDown = (e: globalThis.KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
+
+  const stop = (e: ReactMouseEvent) => e.stopPropagation()
+  const touchProps = {
+    onClick: (e: ReactMouseEvent) => {
+      stop(e)
+      setOpen((o) => !o)
+    },
+  }
+  const hoverProps = {
+    onMouseEnter: () => setOpen(true),
+    onMouseLeave: () => setOpen(false),
+    onFocus: () => setOpen(true),
+    onBlur: () => setOpen(false),
+    onClick: stop,
+  }
+
+  return (
+    <span className="note-trigger" ref={ref}>
+      <button
+        type="button"
+        className="note-trigger__asterisk"
+        aria-label={`${label} note`}
+        aria-expanded={open}
+        {...(isMobile ? touchProps : hoverProps)}
+      >
+        *
+      </button>
+      {open && (
+        <div className="panel note-trigger__panel" role="tooltip">
+          {prose && <MarkupText source={prose} />}
+          {viaLabel && <div className="note-trigger__via">via {viaLabel}</div>}
+        </div>
+      )}
+    </span>
+  )
+}
 
 /** Only a `-situational` edge is armable (T27 D44) — a plain `adv`/`dis` is
  *  unconditional and already folded into how the build plays, nothing to
@@ -84,167 +185,60 @@ function BonusDicePill({
   )
 }
 
-/** Ability-tinted name chip; becomes a toggle button (chevron inside) when a
- *  note exists and inspect mode isn't active (inspect mode's row-level
- *  breakdown already includes the note, so the chip stays static then). */
+/** Leading dot for the three non-none proficiency states (T28 D48) — half a
+ *  hollow ring, proficient a solid dot, expertise a solid dot with a thin
+ *  ring around it (scaled down from the old standalone `ProficiencyDot`). */
+function ProficiencyLeadDot({ level }: { level: 'half' | 'proficient' | 'expertise' }) {
+  return <span className={`check-chip__dot check-chip__dot--${level}`} aria-hidden="true" />
+}
+
+/** Ability-tinted name chip (T28 D48/D49). Proficiency is now the chip's own
+ *  fill: not-proficient is outline-only, half/proficient/expertise keep the
+ *  existing soft-tint look with a small leading dot. A note (when present)
+ *  gets its own asterisk tooltip trigger instead of making the whole chip
+ *  a toggle. */
 function CheckChip({
   label,
   ability,
   neutral,
-  hasNote,
-  expanded,
-  onToggle,
+  proficiency,
+  note,
 }: {
   label: string
   ability?: Ability
   neutral?: boolean
-  hasNote: boolean
-  expanded: boolean
-  onToggle: () => void
+  proficiency?: keyof typeof PROF_LABEL
+  note?: Markup
 }) {
   const style: CSSVarStyle | undefined = ability
     ? { '--chip-fg': ABILITY_COLOR[ability], '--chip-bg': ABILITY_SOFT[ability] }
     : undefined
-  const cls = `check-chip ${neutral ? 'check-chip--neutral' : ''}`
-  if (!hasNote) {
-    return (
-      <span className={cls} style={style}>
-        {label}
-      </span>
-    )
-  }
+  const profClass = proficiency ? `check-chip--${proficiency}` : ''
+  const cls = `check-chip ${neutral ? 'check-chip--neutral' : ''} ${profClass}`.trim()
   return (
-    <button
-      type="button"
-      className={`${cls} check-chip--toggle`}
-      style={style}
-      aria-expanded={expanded}
-      onClick={(e) => {
-        e.stopPropagation()
-        onToggle()
-      }}
-    >
+    <span className={cls} style={style} title={proficiency ? PROF_LABEL[proficiency] : undefined}>
+      {proficiency && proficiency !== 'none' && <ProficiencyLeadDot level={proficiency} />}
       {label}
-      <span className={`check-chip__chevron ${expanded ? 'is-expanded' : ''}`} aria-hidden="true">
-        ▾
-      </span>
-    </button>
+      {note !== undefined && <NoteTrigger note={note} label={label} />}
+    </span>
   )
 }
 
 export interface ToolRowProps {
   name: string
-  /** Tools are PB-only (T27 D41) — matching monster-forge's own convention;
-   *  ability is a DM's contextual call, never baked into a modifier. */
-  proficiencyBonus: number
-  edge?: EdgeState
-  bonusDice?: string
   note?: Markup
 }
 
-/** One proficient-tool row — same anatomy as `CheckRow` (proficiency implied
- *  by presence in the list, so no dot; no ability tint since tools are
- *  PB-only) but its own component since it has no `ability`. */
-export function ToolRow({ name, proficiencyBonus, edge, bonusDice, note }: ToolRowProps) {
-  const [expanded, setExpanded] = useState(false)
-  const [armedEdge, setArmedEdge] = useState(false)
-  const [armedDice, setArmedDice] = useState(false)
-  const { active: inspecting } = useInspectMode()
-  const { open: inspectOpen, setOpen: setInspectOpen, ref } = useInspectPopover<HTMLLIElement>()
-  const hasNote = note !== undefined
-  const armableEdge = edge && isArmableEdge(edge)
-
-  const runRoll = (mode: RollMode) => {
-    const effectiveMode: RollMode =
-      mode !== 'normal'
-        ? mode
-        : armedEdge && edge
-          ? edge.startsWith('adv')
-            ? 'adv'
-            : 'dis'
-          : 'normal'
-    rollCheck(name, proficiencyBonus, {
-      mode: effectiveMode,
-      isAttack: false,
-      bonusDice: armedDice ? bonusDice : undefined,
-    })
-  }
-
-  const mainProps = inspecting
-    ? {
-        className: 'check-row__main',
-        role: 'button' as const,
-        tabIndex: 0,
-        'aria-label': `Inspect ${name}`,
-        onClick: () => setInspectOpen((o) => !o),
-        onKeyDown: (e: KeyboardEvent) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault()
-            setInspectOpen((o) => !o)
-          }
-        },
-      }
-    : rollableProps(runRoll, { className: 'check-row__main', label: `Roll ${name}` })
-
+/** One proficient-tool row (T28 D46): a plain capitalized name chip — no PB,
+ *  no edge/bonus-dice badges, no roll affordance (supersedes T27 D41).
+ *  Proficiency is implied by presence in the list, so no dot; no ability
+ *  tint since tools have no fixed ability in the schema. */
+export function ToolRow({ name, note }: ToolRowProps) {
   return (
-    <li className="check-row" ref={ref}>
-      <div {...mainProps}>
-        {hasNote && !inspecting ? (
-          <CheckChip
-            label={name}
-            neutral
-            hasNote
-            expanded={expanded}
-            onToggle={() => setExpanded((v) => !v)}
-          />
-        ) : (
-          <CheckChip label={name} neutral hasNote={false} expanded={false} onToggle={() => {}} />
-        )}
-        {edge &&
-          (armableEdge ? (
-            <EdgeBadge edge={edge} armed={armedEdge} onToggle={() => setArmedEdge((a) => !a)} />
-          ) : (
-            <EdgeBadge edge={edge} armed={false} />
-          ))}
-        {bonusDice && (
-          <BonusDicePill
-            dice={bonusDice}
-            armed={armedDice}
-            onToggle={() => setArmedDice((a) => !a)}
-          />
-        )}
-        <span className="check-row__mod">{signed(proficiencyBonus)}</span>
+    <li className="check-row">
+      <div className="check-row__main check-row__main--static">
+        <CheckChip label={name} neutral note={note} />
       </div>
-      {hasNote && expanded && !inspecting && (
-        <div className="check-row__note">
-          <MarkupText source={note!} />
-        </div>
-      )}
-      {inspecting && inspectOpen && (
-        <InspectPopoverPanel label={`${name} breakdown`}>
-          <div className="inspect-popover__row">
-            <span className="field-label">Proficiency bonus</span>
-            <span>{signed(proficiencyBonus)}</span>
-          </div>
-          {edge && (
-            <div className="inspect-popover__row">
-              <span className="field-label">Edge</span>
-              <span>{edge.startsWith('adv') ? 'Advantage' : 'Disadvantage'}</span>
-            </div>
-          )}
-          {bonusDice && (
-            <div className="inspect-popover__row">
-              <span className="field-label">Bonus dice</span>
-              <span>+{bonusDice}</span>
-            </div>
-          )}
-          {note && (
-            <div className="inspect-popover__note">
-              <MarkupText source={note} />
-            </div>
-          )}
-        </InspectPopoverPanel>
-      )}
     </li>
   )
 }
@@ -276,13 +270,11 @@ export function CheckRow({
   note,
   rollLabel,
 }: CheckRowProps) {
-  const [expanded, setExpanded] = useState(false)
   const [armedEdge, setArmedEdge] = useState(false)
   const [armedDice, setArmedDice] = useState(false)
   const { character } = useCharacter()
   const { active: inspecting } = useInspectMode()
   const { open: inspectOpen, setOpen: setInspectOpen, ref } = useInspectPopover<HTMLLIElement>()
-  const hasNote = note !== undefined
   const armableEdge = edge && isArmableEdge(edge)
 
   const runRoll = (mode: RollMode) => {
@@ -331,13 +323,11 @@ export function CheckRow({
   return (
     <li className="check-row" ref={ref}>
       <div {...mainProps}>
-        <ProficiencyDot level={proficiency} />
         <CheckChip
           label={label}
           ability={ability}
-          hasNote={hasNote && !inspecting}
-          expanded={expanded}
-          onToggle={() => setExpanded((e) => !e)}
+          proficiency={proficiency}
+          note={!inspecting ? note : undefined}
         />
         {edge &&
           (armableEdge ? (
@@ -354,11 +344,6 @@ export function CheckRow({
         )}
         <span className="check-row__mod">{signed(modifier)}</span>
       </div>
-      {hasNote && expanded && !inspecting && (
-        <div className="check-row__note">
-          <MarkupText source={note!} />
-        </div>
-      )}
       {inspecting && inspectOpen && (
         <InspectPopoverPanel label={`${rollLabel} breakdown`}>
           <div className="inspect-popover__row">

@@ -39,11 +39,72 @@ body {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  flex-wrap: wrap;
   min-width: 0;
 }
 .app-shell__title {
   font-size: var(--font-size-xl);
   font-weight: 700;
+}
+
+/* Variant badge (D12) + identity chip (T27 D42, moved here T28 D54): sit
+   next to the character name and the back button, same brand row. */
+.identity__variant {
+  font-size: var(--font-size-sm);
+  color: var(--ink-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  padding: 0 var(--space-2);
+}
+.identity-chip {
+  position: relative;
+}
+.identity-chip__trigger {
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--ink-secondary);
+  background: var(--surface-overlay);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+  cursor: pointer;
+}
+.identity-chip__trigger:hover,
+.identity-chip__trigger:focus-visible {
+  color: var(--ink-primary);
+}
+.identity-chip__panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: var(--space-2);
+  z-index: 60;
+  /* Fixed (not max-content) so the concept sentence wraps to a few lines
+     instead of stretching the panel to its own single-line width, which
+     could overflow the viewport's right edge from a left-anchored trigger. */
+  width: 20rem;
+  max-width: calc(100vw - 2 * var(--space-3));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.identity-chip__row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.identity-chip__none {
+  color: var(--ink-muted);
+  font-size: var(--font-size-sm);
+}
+.identity-chip__concept {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-subtle);
+  color: var(--ink-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-prose);
 }
 .app-shell__back {
   border: 1px solid var(--border-subtle);
@@ -83,6 +144,10 @@ body {
   background: var(--accent-soft);
   border-color: transparent;
   color: var(--ink-on-accent);
+}
+.variant-chip:not(.is-active):hover {
+  color: var(--ink-primary);
+  border-color: var(--ink-muted);
 }
 
 /* --- topbar tools: + Add, and the settings menu (D27) -------------------- */
@@ -147,6 +212,9 @@ body {
   background: var(--surface-overlay);
   color: var(--ink-primary);
   box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+.view-toggle__btn:not(.is-active):hover {
+  color: var(--ink-primary);
 }
 
 /* --- settings menu (D23 #10, D27) ----------------------------------------
@@ -226,6 +294,9 @@ body {
   color: var(--ink-primary);
   border-bottom-color: var(--focus-ring-color);
 }
+.app-tab:not(.is-active):hover {
+  color: var(--ink-primary);
+}
 
 /* --- mobile bottom tab bar (D18) -----------------------------------------
  * Fixed to the viewport bottom, always visible — the primary nav for a
@@ -275,6 +346,9 @@ body {
   }
   .bottom-tab.is-active {
     color: var(--accent-soft);
+  }
+  .bottom-tab:not(.is-active):hover {
+    color: var(--ink-secondary);
   }
   .bottom-tab svg {
     width: 22px;

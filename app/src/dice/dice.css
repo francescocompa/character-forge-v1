@@ -175,9 +175,21 @@ body.dicing * {
   transform: translateX(-50%) translateY(0);
 }
 
-/* Rollable surfaces — a subtle affordance. Kept low-key so the sheet doesn't read as a form of buttons. */
+/* Rollable surfaces — a subtle affordance. Kept low-key so the sheet doesn't read as a form of buttons.
+   Hover feedback (T28 D50): a rounded-square background over the same area as the click target (the whole
+   check-row/tile, not narrowed to the number). Nested interactive children (arm-toggle badges, the note
+   asterisk) carry no `.rollable`/`data-roll` of their own, so they keep a plain cursor and their own hover
+   paints over this one — no extra override rule needed. */
 .rollable {
   cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background 0.1s ease;
+}
+.rollable:hover {
+  /* One step lighter than --surface-overlay (several rollable surfaces — the
+     initiative/casting stat tiles — already rest at --surface-overlay, so
+     that color alone wouldn't read as a hover change there). */
+  background: var(--surface-panel3);
 }
 .rollable:focus-visible {
   border-radius: var(--radius-sm);

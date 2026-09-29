@@ -16,6 +16,7 @@ import { SessionProvider, useSession } from '../session/SessionProvider'
 import { AdditionsProvider, useAdditions, downloadSession } from '../session/additions'
 import { InspectModeProvider, useInspectMode } from './InspectModeProvider'
 import { MainSheet } from '../views/MainSheet'
+import { IdentityChip } from '../views/MainSheet/IdentityStrip'
 import { Features } from '../views/Features'
 import { Spells } from '../views/Spells'
 import { Equipment } from '../views/Equipment'
@@ -208,6 +209,10 @@ function Shell({
             </button>
           )}
           <span className="app-shell__title">{displayName ?? character.meta.name}</span>
+          {character.meta.variantLabel && (
+            <span className="identity__variant">{character.meta.variantLabel}</span>
+          )}
+          <IdentityChip />
         </div>
         <div className="app-shell__topbar-tools">
           <button

@@ -12,6 +12,7 @@
   gap: var(--space-3);
   color: var(--ink-primary);
   font-family: var(--font-family);
+  font-size: var(--font-size-md);
 }
 
 /* --- gear / components / magic items ------------------------------------- */
@@ -92,6 +93,9 @@
   color: var(--ink-secondary);
   cursor: pointer;
 }
+.gear-item__toggle:hover {
+  color: var(--ink-primary);
+}
 
 .gear-item__toggle input {
   width: 1.15rem;
@@ -99,6 +103,7 @@
 }
 
 .gear-item__name {
+  font-size: var(--font-size-md);
   font-weight: 600;
 }
 
@@ -167,6 +172,9 @@
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
   background: var(--surface-overlay);
+}
+.mastery-option:not(.mastery-option--selected):hover {
+  border-color: var(--border-hover);
 }
 
 /* Selected = colored border + faint accent tint, no glow (--sel-accent). */

@@ -122,6 +122,16 @@
   color: var(--chip-fg);
 }
 
+/* Outright condition-immunity icon (T28 D52) — same lucide-inline recipe. */
+.immunity-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  flex: none;
+  color: var(--chip-fg);
+}
+
 /* Unlock-level badge. */
 .level-badge {
   display: inline-flex;

@@ -11,6 +11,7 @@
   gap: var(--space-3);
   color: var(--ink-primary);
   font-family: var(--font-family);
+  font-size: var(--font-size-md);
 }
 
 .spells-view__toolbar {
@@ -41,6 +42,9 @@
   background: var(--focus-ring-color);
   color: var(--ink-on-accent);
   border-color: transparent;
+}
+.manage-toggle:not(.is-active):hover {
+  border-color: var(--border-hover);
 }
 
 .spells-empty {
@@ -116,6 +120,7 @@
   background: var(--surface-panel3);
 }
 .cast-source-row__name {
+  font-size: var(--font-size-md);
   font-weight: 600;
 }
 .cast-source-row__override {
@@ -192,6 +197,7 @@
 }
 
 .slot-pool__name {
+  font-size: var(--font-size-md);
   font-weight: 600;
 }
 
@@ -247,6 +253,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
+  font-size: var(--font-size-md);
   font-weight: 600;
 }
 
@@ -362,6 +369,9 @@
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
   background: var(--surface-overlay);
+}
+.manage-option:not(.manage-option--selected):hover {
+  border-color: var(--border-hover);
 }
 
 /* Selected = colored border + faint accent tint, no glow (--sel-accent). */

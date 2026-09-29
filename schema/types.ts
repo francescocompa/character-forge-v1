@@ -540,6 +540,12 @@ export interface Trackers {
   /** Player override for max HP (rolled/hand-edited), takes precedence over the
    *  compiled `stats.maxHp` (T03 review item F2). Absent = use the compiled value. */
   maxHpOverride?: number
+  /** Pinned passive-score skill names (T28 D51) — session state, like any other
+   *  tracker: any of the 18 `Stats.skills[].name` values, not just Perception/
+   *  Investigation/Insight. Each is computed live as `10 + that skill's
+   *  modifier`, so it's never stale after a level-up recompiles skills.
+   *  Seeded from the compiled `Stats.passives` on first load. */
+  pinnedPassives?: string[]
 }
 
 export interface Loadout {
@@ -619,6 +625,10 @@ export interface SessionStore {
   setCurrency(currency: Currency): void
   setConditions(conditions: string[], scope?: TrackerScope): void
   setInspiration(value: boolean): void
+
+  // -- passives (T28 D51) --------------------------------------------------
+  /** Replace the whole pinned-passives set (skill names). */
+  setPinnedPassives(skillNames: string[]): void
 
   // -- loadout (D13) ------------------------------------------------------
   getSelection(poolId: string): string[]

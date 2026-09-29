@@ -114,6 +114,11 @@
           "type": "integer",
           "minimum": 1
         },
+        "pinnedPassives": {
+          "description": "Pinned passive-score skill names (T28 D51), matching Stats.skills[].name. Session state, seeded from the compiled Stats.passives on first load; each is computed live as 10 + that skill's modifier.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
         "conditions": {
           "description": "Active condition names or library refs.",
           "type": "array",

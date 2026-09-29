@@ -10,6 +10,7 @@
   margin: 0 auto;
   padding: var(--space-6) var(--space-3);
   color: var(--ink-secondary);
+  font-size: var(--font-size-md);
 }
 
 /* --- library screen ------------------------------------------------------ */
@@ -112,6 +113,7 @@
   min-width: 0;
 }
 .cf-card__name {
+  font-size: var(--font-size-lg);
   font-weight: 700;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -169,6 +171,7 @@
   margin: 0;
   color: var(--ink-secondary);
   line-height: var(--line-height-prose);
+  font-size: var(--font-size-sm);
 }
 .cf-empty code {
   font-size: var(--font-size-inline);
@@ -213,6 +216,7 @@
   margin: 0;
   color: var(--ink-secondary);
   line-height: var(--line-height-prose);
+  font-size: var(--font-size-sm);
 }
 .mng-dialog__note {
   margin: 0;
@@ -223,6 +227,7 @@
   color: var(--ink-primary);
   font-weight: 600;
   word-break: break-all;
+  font-size: var(--font-size-sm);
 }
 
 /* validation issues */
@@ -273,13 +278,16 @@
 /* Field label is `.field-label` (components/primitives.css). */
 .mng-change__from {
   color: var(--ink-secondary);
+  font-size: var(--font-size-sm);
 }
 .mng-change__arrow {
   color: var(--ink-muted);
+  font-size: var(--font-size-sm);
 }
 .mng-change__to {
   color: var(--ink-primary);
   font-weight: 600;
+  font-size: var(--font-size-sm);
 }
 
 /* --- dialog actions / buttons ------------------------------------------- */
@@ -350,6 +358,7 @@
 }
 .mng-variant__label {
   font-weight: 700;
+  font-size: var(--font-size-md);
 }
 .mng-variant__class {
   font-size: var(--font-size-sm);

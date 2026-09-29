@@ -11,6 +11,7 @@
   gap: var(--space-3);
   color: var(--ink-primary);
   font-family: var(--font-family);
+  font-size: var(--font-size-md);
 }
 
 /* --- section chrome (shared by class/species/background/feats) ----------
@@ -35,6 +36,9 @@
   padding: var(--space-3);
   cursor: pointer;
   min-height: 44px;
+}
+.feature-section__header:hover {
+  background: var(--surface-overlay);
 }
 
 .feature-section__title {
@@ -158,6 +162,7 @@
 }
 
 .feature-row__name {
+  font-size: var(--font-size-md);
   font-weight: 600;
 }
 

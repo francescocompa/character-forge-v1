@@ -46,6 +46,22 @@ function clamp(value: number, min: number, max: number | undefined): number {
   return max === undefined ? lower : Math.min(lower, max)
 }
 
+/** Compiled `Stats.passives` (perception/investigation/insight, if present)
+ *  as skill names — the default pinned set (T28 D51). */
+const PASSIVE_SKILL_NAME = {
+  perception: 'Perception',
+  investigation: 'Investigation',
+  insight: 'Insight',
+} as const
+
+function defaultPinnedPassives(character: CharacterFile): string[] {
+  const passives = character.stats.passives
+  if (!passives) return []
+  return (Object.keys(PASSIVE_SKILL_NAME) as (keyof typeof PASSIVE_SKILL_NAME)[])
+    .filter((kind) => passives[kind] !== undefined)
+    .map((kind) => PASSIVE_SKILL_NAME[kind])
+}
+
 /** Fresh session state seeded from a character file's compiled defaults (first import). */
 export function seedSessionState(character: CharacterFile): SessionFile {
   const maxHp = typeof character.stats.maxHp.value === 'number' ? character.stats.maxHp.value : 0
@@ -76,6 +92,7 @@ export function seedSessionState(character: CharacterFile): SessionFile {
       currency: { ...character.equipment?.currency },
       conditions: [],
       inspiration: false,
+      pinnedPassives: defaultPinnedPassives(character),
     },
     loadout: { pools, equipped: {} },
     additions: [],
@@ -160,6 +177,22 @@ export function reconcileSessionState(saved: SessionFile, character: CharacterFi
       delete next.companions![id]
       dropped.push(`companion:${id}`)
     }
+  }
+
+  // Pinned passives (T28 D51): absent entirely = a session saved before this
+  // feature existed, seed the default. Otherwise just prune skills a
+  // recompile dropped — an empty result after pruning is a valid, deliberate
+  // "no passives pinned" state, not re-seeded.
+  const skillNames = new Set(character.stats.skills.map((s) => s.name))
+  if (next.trackers.pinnedPassives === undefined) {
+    next.trackers.pinnedPassives = defaultPinnedPassives(character)
+  } else {
+    const pruned = next.trackers.pinnedPassives.filter((name) => {
+      const ok = skillNames.has(name)
+      if (!ok) dropped.push(`pinnedPassive:${name}`)
+      return ok
+    })
+    next.trackers.pinnedPassives = pruned
   }
 
   next.characterFormatVersion = character.formatVersion
@@ -412,6 +445,11 @@ export function createSessionEngine(
     setInspiration(value) {
       mutate(() => {
         state.trackers.inspiration = value
+      })
+    },
+    setPinnedPassives(skillNames) {
+      mutate(() => {
+        state.trackers.pinnedPassives = [...skillNames]
       })
     },
 

@@ -5,9 +5,12 @@
  * two node kinds that have no dedicated chip component.
  */
 
-/* {note:TEXT} — the gray parenthetical the paper sheet leans on. */
+/* {note:TEXT} — the gray parenthetical the paper sheet leans on. Relative
+   (em) size (T28 D45) since a note renders inline within prose of varying
+   sizes (row notes, popover tooltips, feature summaries). */
 .markup-note {
   color: var(--ink-muted);
+  font-size: var(--font-size-inline);
 }
 
 /* Dev-only: a known tag whose args don't form a valid chip (bad ability, stray

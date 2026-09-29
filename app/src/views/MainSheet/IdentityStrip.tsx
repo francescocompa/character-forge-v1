@@ -11,17 +11,23 @@ function RefTerm({ refKey, label }: { refKey?: string; label: string }) {
 }
 
 /**
- * Identity chip (T27 D42): a single square-cornered chip reading
- * "<species> · <class 1> <level> / <class 2> <level>" — replaces the old
- * three stacked rows (name / class badges / species+background). Clicking it
- * opens a small anchored panel (same recipe as `AppShell`'s `ShellMenu`: a
- * `.panel` surface, click-outside/Escape to close) with species, background,
- * each class's subclass + unlock level, and the build-concept summary.
+ * Identity chip (T27 D42; moved to the app-level topbar T28 D54): a single
+ * square-cornered chip reading "<species> · <class 1> <level> / <class 2>
+ * <level>" next to the character name and "‹ Characters" back button.
+ * Clicking it opens a small anchored panel (same recipe as `AppShell`'s
+ * `ShellMenu`: a `.panel` surface, click-outside/Escape to close) with
+ * species, background, each class's subclass + unlock level, and the
+ * build-concept summary.
  */
-function IdentityChip({ label }: { label: string }) {
+export function IdentityChip() {
   const { character, nameOf, viewMode, isVisible, isFuture } = useCharacter()
   const { chassis, meta } = character
   const classes = [...chassis.classes].sort((a, b) => a.classOrder - b.classOrder)
+  const speciesName = nameOf(chassis.species.ref, chassis.species.displayName)
+  const classLabel = classes
+    .map((cls) => `${nameOf(cls.ref, cls.displayName)} ${cls.levels}`)
+    .join(' / ')
+  const label = `${speciesName} · ${classLabel}`
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -100,26 +106,5 @@ function IdentityChip({ label }: { label: string }) {
         </div>
       )}
     </div>
-  )
-}
-
-/** Identity strip: name headline + the responsive identity chip (T27 D42). */
-export function IdentityStrip() {
-  const { character, nameOf } = useCharacter()
-  const { chassis, meta } = character
-  const classes = [...chassis.classes].sort((a, b) => a.classOrder - b.classOrder)
-  const speciesName = nameOf(chassis.species.ref, chassis.species.displayName)
-  const classLabel = classes
-    .map((cls) => `${nameOf(cls.ref, cls.displayName)} ${cls.levels}`)
-    .join(' / ')
-
-  return (
-    <header className="identity">
-      <div className="identity__name-row">
-        <h1 className="identity__name">{meta.name}</h1>
-        {meta.variantLabel && <span className="identity__variant">{meta.variantLabel}</span>}
-        <IdentityChip label={`${speciesName} · ${classLabel}`} />
-      </div>
-    </header>
   )
 }

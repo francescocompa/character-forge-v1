@@ -141,6 +141,7 @@
 }
 
 .lib-missing {
+  font-size: var(--font-size-sm);
   color: var(--ink-muted);
   font-style: italic;
 }
@@ -171,6 +172,7 @@
 
 .md-p {
   margin: 0 0 var(--space-2);
+  font-size: var(--font-size-sm);
   line-height: var(--line-height-prose);
 }
 .md-p:last-child {
@@ -180,6 +182,7 @@
 .md-list {
   margin: 0 0 var(--space-2);
   padding-left: var(--space-4);
+  font-size: var(--font-size-sm);
   line-height: var(--line-height-prose);
 }
 .md-list li {

@@ -4,6 +4,111 @@ Newest batch first. One entry per task/batch; reference the planning task ids
 (T01–T22) where applicable. T01–T16 batches archived 2026-08-24 —
 [`docs/ARCHIVE.md`](docs/ARCHIVE.md).
 
+## 2026-08-25 — feat: T28 post-T27 polish (D45–D56)
+
+All twelve items from the T27-review interview built in one session, `verify`
+green throughout (220/41/50 tests), screenshot-verified at 1280px and 375px
+against a richer sample character (temporary local fixture edits, reverted
+before commit — resistances/immunities/vulnerabilities/conditionAdvantages
+aren't exercised by the checked-in synthetic fixture).
+
+- **Typography: full-app unsized-text audit (D45).** Grepped every CSS file
+  for text-rendering selectors with no explicit `font-size`, cross-referenced
+  against BEM-combined sibling classes and ancestor cascades to filter false
+  positives (icon-only rules, `:hover`/`.is-active` color-only state
+  modifiers, children already sized by an immediate parent), then sized ~35
+  genuine gaps explicitly — `.check-row__mod` (confirmed inheriting the 14px
+  body base, per D45's own finding) plus row/item name labels app-wide
+  (`.attack__name`, `.resource__name`, `.gear-item__name`, `.boon__name`,
+  `.cast-source-row__name`, etc. → `--font-size-md`), popover/prose text
+  (`.inspect-popover`, `.md-p`, `.mng-dialog__lede`, `.session-note__body`,
+  etc. → `--font-size-sm`), and the five view-root wrappers
+  (`.main-sheet`/`.features-view`/`.spells-view`/`.equipment-view`/
+  `.companion-view`) that relied on bare inheritance instead of declaring
+  their own size the way monster-forge's components always do.
+- **Tools: drop the bonus entirely (D46).** `ToolRow` (`CheckRow.tsx`)
+  retired back to a plain capitalized (`text-transform: capitalize`, since
+  compiled tool names are lowercase) name chip — no PB, no bonusDice/edge
+  badges, no roll affordance. Supersedes T27 D41's bonusDice/edge display;
+  `ToolProficiency` schema stays as-is (rendering-only change).
+- **Save/skill row spacing: 36px → 28px (D47).** `.check-row__main`
+  `min-height`. ⚑ Same on-device tap-accuracy check T27 D39 already owed,
+  still outstanding — not blocking this task's Done.
+- **Proficiency indicator redesign (D48).** `ProficiencyDot` removed;
+  4-state logic merges into `CheckChip`. Chip fill is now binary:
+  not-proficient = outline-only (transparent bg, ability-tinted border);
+  half/proficient/expertise = the existing soft-tint fill. A small leading
+  dot marks the three non-none states (half = hollow ring, proficient =
+  solid, expertise = solid + thin ring, scaled down from the old standalone
+  dot).
+- **Notes → asterisk tooltip (D49).** `CheckChip`'s chevron/inline-expand
+  note replaced by a `NoteTrigger` asterisk (hover on desktop, tap on touch —
+  mirrors `library/LibrarySurface.tsx`'s `useIsMobile` pattern) opening a
+  `.panel` tooltip anchored the same way as `IdentityChip`. A `{ref:...}` tag
+  in the note is stripped from the prose and resolved to a dim "via <Feature
+  Name>" byline instead of a second nested tappable link.
+- **Hover/click-to-roll convention (D50).** One rule, `.rollable:hover`
+  (`dice/dice.css`) — a rounded-square `--surface-panel3` background over the
+  existing click target, app-wide via `rollableProps`/`.rollable`. Nested
+  arm-toggle badges and the note asterisk carry no `.rollable`/`data-roll` of
+  their own, so they already kept a plain cursor with no further change
+  needed.
+- **Passives: session-state, any skill, checkbox-picker modal (D51).** New
+  `Passives.tsx` under Tools (moved out of the Senses card). Pinned passives
+  are session state (`trackers.pinnedPassives`, schema + types + engine +
+  `setPinnedPassives`), computed live as `10 + skill.modifier` for any of the
+  18 skills — never stale after a recompile. Seeded from compiled `passives`
+  on first load and on reconcile for pre-T28 sessions; pruned against current
+  skill names on every reconcile after that. One picker modal (all 18 skills
+  as checkboxes, already-pinned pre-checked) manages the whole set.
+- **Defenses redesign + reposition (D52).** `DefensesBlock` rewritten: one
+  line per category (Resist/Immune/Vulnerable/Cond.), each entry's compiled
+  markup parsed for `{dtype:}`/`{dmg:}` tags and rendered as a colored chip
+  (`colorMaps.ts` `damageColor()`) — no multiplier prefix, prose-only entries
+  fall back to plain text so nothing the compiler wrote is silently dropped.
+  Condition entries parsed for `{cond:}`/`{adv:}`: the existing `AdvBadge`
+  when `{adv}` is present, a new `ImmunityIcon` (lucide `ShieldCheck`,
+  `components/chips/ImmunityIcon.tsx`) when it's phrased as outright
+  immunity. Card moved from the detail column to `main-sheet__rail`, directly
+  under Saves.
+- **Senses: drop the duplicate label (D53).** `SensesBlock`'s inner
+  field-label removed — the panel title already says "Senses."
+- **Identity: move to the topbar (D54).** `IdentityChip` (T27 D42) moved out
+  of `MainSheet`'s retired `IdentityStrip` header into `AppShell`'s topbar,
+  next to the name and "‹ Characters" back button; `variantLabel` badge moved
+  with it. `MainSheet`'s first visible content is now the ability rail.
+  `.identity-chip*`/`.identity__variant` CSS moved from `mainSheet.css` to
+  `appShell.css`; the now-fully-dead `.identity`/`.identity__name-row`/
+  `.identity__name` rules deleted, `.identity` dropped from the shared
+  `.panel` surface selector in `primitives.css`.
+- **Spellcasting on Main tab (D55).** `Defense.tsx`'s `SpellcastingSummary`
+  rebuilt on the shared `.stat`/`.stat-row` tiles (T27 D43, same recipe the
+  Spells tab's `CastingHeaders` uses) — tiles only, no source list. The Atk
+  tile rolls via the existing `rollCheck`/`rollableProps` convention. Dead
+  `.cast-summary__list/__row/__name/__stat/__k/__abil` CSS removed.
+- **Hover-state consistency: full inventory (D56).** Cross-referenced every
+  CSS rule with `cursor: pointer` against existing `:hover` coverage
+  (accounting for BEM-combined base classes and `font: inherit` deliberate
+  sizing) to find real gaps, then fixed each: `.variant-chip`,
+  `.view-toggle__btn`, `.app-tab`, `.bottom-tab`, `.add-kind`,
+  `.add-recover__btn`, `.companion-switcher__btn`, `.manage-toggle` (all
+  color-lift on the inactive state); `.gear-item__toggle`,
+  `.feature-section__header`, `.passive-picker__item` (background/color
+  lift); `.mastery-option`/`.manage-option` selectable cards (border lift on
+  the unselected state); `.tick` (background tint, chosen over a
+  border-color change so it layers safely under the death-save pips' own
+  success/fail border colors); `button.edge-badge`/`.bonus-dice-pill` arm
+  toggles (color-mix tint keyed off `currentColor`, so it follows whichever
+  of `--adv`/`--dis` the badge resolved to).
+
+Verified: fixtures (`synthetic.character.json`,
+`synthetic-variant.character.json`) and both real characters
+(`vice.character.json`, `shigen.character.json`) pass
+`character-forge-validate` with only the pre-existing unreferenced-library
+warnings. `git diff` on `fixtures/` is empty — the richer-defenses/`{ref:}`
+fixture edits used for D49/D52 screenshot verification were reverted, not
+committed.
+
 ## 2026-08-25 — style: monster-forge B310 tracking/leading alignment (D57)
 
 Not a planning-task batch — a direct handoff from a monster-forge session

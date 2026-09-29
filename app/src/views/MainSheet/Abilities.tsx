@@ -9,6 +9,7 @@ import { useInspectPopover, InspectPopoverPanel } from '../../components/Inspect
 import { rollCheck, rollableProps } from '../../dice'
 import { ABILITY_ORDER, signed } from './format'
 import { CheckRow, ToolRow } from './CheckRow'
+import { PassivesBlock } from './Passives'
 
 function abilityStyle(ability: Ability): CSSVarStyle {
   return { '--chip-fg': ABILITY_COLOR[ability], '--chip-bg': ABILITY_SOFT[ability] }
@@ -88,18 +89,13 @@ export function AbilityRail() {
   )
 }
 
-export const PROF_LABEL: Record<string, string> = {
+export type ProficiencyLevel = 'none' | 'half' | 'proficient' | 'expertise'
+
+export const PROF_LABEL: Record<ProficiencyLevel, string> = {
   none: 'Not proficient',
   half: 'Half proficiency',
   proficient: 'Proficient',
   expertise: 'Expertise',
-}
-
-/** Proficiency/expertise marker dot, shared with the Companion view (T12). */
-export function ProficiencyDot({ level }: { level: keyof typeof PROF_LABEL }) {
-  return (
-    <span className={`prof-dot prof-dot--${level}`} role="img" aria-label={PROF_LABEL[level]} />
-  )
 }
 
 /** Saving throws (T26): its own compact list next to the ability rail, same row
@@ -138,12 +134,12 @@ export function SavesBlock() {
 
 /** Skills (T26): uniform rows — ability-tinted name chip (monster-forge's
  *  cc-skill/cc-ab convention), optional edge badge + bonus dice, modifier
- *  right-aligned, note collapsed behind the chip's own chevron. Tools with
- *  proficiency follow as plain chips (no fixed ability/modifier in the
- *  schema — a DM picks the ability contextually, same as monster-forge). */
+ *  right-aligned, note behind the chip's own asterisk tooltip (T28 D49).
+ *  Tools with proficiency follow as plain capitalized chips, no numbers
+ *  (T28 D46 — no fixed ability/modifier in the schema either way). */
 export function SkillsBlock() {
   const { character } = useCharacter()
-  const { skills, proficiencies, proficiencyBonus } = character.stats
+  const { skills, proficiencies } = character.stats
   const tools = proficiencies?.tools ?? []
   return (
     <section className="panel skills" aria-label="Skills">
@@ -169,18 +165,13 @@ export function SkillsBlock() {
           <span className="field-label">Tools</span>
           <ul className="check-list">
             {tools.map((tool) => (
-              <ToolRow
-                key={tool.name}
-                name={tool.name}
-                proficiencyBonus={proficiencyBonus}
-                edge={tool.edge}
-                bonusDice={tool.bonusDice}
-                note={tool.note}
-              />
+              <ToolRow key={tool.name} name={tool.name} note={tool.note} />
             ))}
           </ul>
         </>
       )}
+      <hr className="section-div" />
+      <PassivesBlock />
     </section>
   )
 }

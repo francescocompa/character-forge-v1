@@ -58,10 +58,12 @@
   flex-wrap: wrap;
 }
 .boon__name {
+  font-size: var(--font-size-md);
   font-weight: 700;
 }
 .boon__summary {
   margin-top: var(--space-1);
+  font-size: var(--font-size-sm);
   color: var(--ink-secondary);
 }
 .boon__track {
@@ -97,6 +99,7 @@
 }
 .session-note__body {
   flex: 1;
+  font-size: var(--font-size-sm);
   color: var(--ink-secondary);
   white-space: pre-wrap;
   line-height: var(--line-height-prose);
@@ -142,6 +145,9 @@
   background: var(--surface-overlay);
   color: var(--ink-primary);
   box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+.add-kind:not(.is-active):hover {
+  color: var(--ink-primary);
 }
 
 .add-fields {
@@ -194,6 +200,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--ink-secondary);
 }
@@ -221,6 +228,10 @@
   color: var(--ink-primary);
   box-shadow: inset 0 0 0 1px var(--accent-soft);
 }
+.add-recover__btn:not(.is-active):hover {
+  color: var(--ink-primary);
+  border-color: var(--border-hover);
+}
 
 .add-preview {
   display: flex;
@@ -232,6 +243,7 @@
   border-radius: var(--radius-sm);
 }
 .add-preview__body {
+  font-size: var(--font-size-sm);
   color: var(--ink-primary);
   white-space: pre-wrap;
   line-height: var(--line-height-prose);

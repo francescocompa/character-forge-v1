@@ -221,32 +221,41 @@ function HitDiceBlock() {
   )
 }
 
-/** Save DC + spell attack per casting source (single source of truth, §14 #1). */
+/**
+ * Save DC + spell attack, from the (near-always shared) first casting source
+ * (T28 D55) — the same shared `.stat`-tile treatment T27 D43 built for the
+ * Spells tab (`CastingHeaders`), tiles only, no "N sources" list (that stays
+ * a Spells-tab-only feature, one tap away). The Atk tile rolls, matching the
+ * existing `rollCheck`/`rollableProps` convention.
+ */
 function SpellcastingSummary() {
   const { character } = useCharacter()
   const sources = character.spellcasting?.sources ?? []
   if (sources.length === 0) return null
+  const shared = sources[0]
   return (
     <div className="cast-summary">
       <span className="field-label">Spellcasting</span>
-      <ul className="cast-summary__list">
-        {sources.map((src) => (
-          <li
-            key={src.id}
-            className="cast-summary__row"
-            style={{ '--chip-fg': ABILITY_COLOR[src.ability] } as CSSVarStyle}
-          >
-            <span className="cast-summary__name">{src.name}</span>
-            <span className="cast-summary__stat">
-              <span className="cast-summary__k">Save</span> {src.saveDc}
-            </span>
-            <span className="cast-summary__stat">
-              <span className="cast-summary__k">Atk</span> {signed(src.attackMod)}
-            </span>
-            <span className="cast-summary__abil">{src.ability}</span>
-          </li>
-        ))}
-      </ul>
+      <div className="stat-row">
+        <div className="stat" style={{ '--chip-fg': ABILITY_COLOR[shared.ability] } as CSSVarStyle}>
+          <span className="field-label">Ability</span>
+          <span className="stat__value cast-stats__ability">{shared.ability}</span>
+        </div>
+        <div className="stat">
+          <span className="field-label">Save DC</span>
+          <span className="stat__value">{shared.saveDc}</span>
+        </div>
+        <div
+          {...rollableProps(
+            (mode) =>
+              rollCheck(`${shared.name} attack`, shared.attackMod, { mode, isAttack: true }),
+            { className: 'stat', label: `Roll ${shared.name} attack` },
+          )}
+        >
+          <span className="field-label">Attack</span>
+          <span className="stat__value">{signed(shared.attackMod)}</span>
+        </div>
+      </div>
     </div>
   )
 }
