@@ -1026,7 +1026,7 @@ Rejected: just lowering `--font-size-md` further (e.g. 14px→13px) — would
 actual bug (unaudited components with no explicit size) unaddressed, and
 would also incorrectly shrink the handful of elements that legitimately
 want 14px.
-Enforced by: not yet built — filed to T28.
+Enforced by: Built in T28 — `npm run verify` green (220/41/50 tests).
 Affects: every view's CSS file (audit scope is app-wide by design).
 
 ### D46 — Tools: drop the bonus number entirely, back to plain capitalized chips · 2026-08-24 · DECIDED
@@ -1044,7 +1044,7 @@ schema type (D41: `name`/`bonusDice`/`edge`/`note`) stays as-is — this is a
 rendering change, not a schema reversal; the fields just aren't displayed.
 Rejected: keeping bonusDice/edge visible while dropping PB — Francesco
 picked the simpler full reversal instead of the middle option.
-Enforced by: not yet built — filed to T28.
+Enforced by: Built in T28 — `npm run verify` green (220/41/50 tests).
 Affects: `app/src/views/MainSheet/Abilities.tsx` (`SkillsBlock`'s tool
 rendering), `app/src/views/MainSheet/CheckRow.tsx` (`ToolRow` — likely
 retired back to a plain chip, no longer a `check-row`).
@@ -1058,7 +1058,7 @@ monster-forge's own density).
 Chosen: 28px. ⚑ Same on-device tap-accuracy caveat as T27's D39 36px→28px
 move already carried (this compounds it) — still owed, needs Francesco on a
 phone before calling either value final.
-Enforced by: not yet built — filed to T28.
+Enforced by: Built in T28 — `npm run verify` green (220/41/50 tests).
 Affects: `app/src/views/MainSheet/mainSheet.css` (`.check-row__main`
 `min-height`).
 
@@ -1094,8 +1094,8 @@ color) for all non-none states — tried mid-interview, reverted in favor of
 keeping today's existing soft-tint look. An "overlapped double dot" glyph
 for expertise — tried, ring-around-dot (closer to today's actual treatment)
 chosen instead.
-Enforced by: not yet built — filed to T28. `ProficiencyDot` component
-(`Abilities.tsx`) removed; its 4-state logic merges into `CheckChip`
+Enforced by: Built in T28 — `npm run verify` green (220/41/50 tests).
+`ProficiencyDot` component (`Abilities.tsx`) removed; its 4-state logic merges into `CheckChip`
 (`CheckRow.tsx`).
 Affects: `app/src/views/MainSheet/CheckRow.tsx` (`CheckChip`,
 `ProficiencyDot` retired), `app/src/views/MainSheet/mainSheet.css`
@@ -1123,7 +1123,7 @@ Rejected: click/tap-only trigger (the recommended, single-interaction-model
 option) — Francesco chose hover-on-desktop instead. Just stripping the
 ref-link's tappable styling without restructuring the content — rejected in
 favor of the structured prose/byline split.
-Enforced by: not yet built — filed to T28.
+Enforced by: Built in T28 — `npm run verify` green (220/41/50 tests).
 Affects: `app/src/views/MainSheet/CheckRow.tsx` (`CheckChip`'s note
 handling), `app/src/views/MainSheet/mainSheet.css`.
 
@@ -1154,7 +1154,7 @@ just missing the hover cue.
 Rejected: narrowing the click target to just the modifier number — offered,
 Francesco chose to keep the existing whole-row/whole-tile target and just
 add the missing hover feedback to match it.
-Enforced by: not yet built — filed to T28.
+Enforced by: Built in T28 — `npm run verify` green (220/41/50 tests).
 Affects: `app/src/dice/dice.css` (`.rollable:hover`), and by extension
 every consumer of `rollableProps`/`.rollable` app-wide.
 
@@ -1183,8 +1183,8 @@ offered as the simpler option, rejected since the data to compute any
 skill's passive already exists and the ask was explicitly "choose which
 passive," not just "choose among these three." Per-tile ✕ remove button —
 tried in the first mockup, replaced by the single checkbox-picker modal.
-Enforced by: not yet built — filed to T28. New session-state field for
-pinned passive skill keys (default-seeded from compiled `passives`).
+Enforced by: Built in T28 — `npm run verify` green (220/41/50 tests). New
+`trackers.pinnedPassives` session-state field (default-seeded from compiled `passives`).
 Affects: `app/src/views/MainSheet/Defenses.tsx` (`PassivesRow` moves/
 rebuilds under a `ToolsBlock`-adjacent location), `app/src/state/`
 (session state shape + `sessionEngine.ts` reconciliation), a new picker
@@ -1222,9 +1222,10 @@ and shown twice, dropped both times in favor of just the colored type name.
 A single unified chip field mixing all categories — reverted back to
 per-category lines. A newly-invented up-chevron icon for advantage
 conditions — replaced with the app's real, already-existing `AdvBadge`.
-Enforced by: not yet built — filed to T28. Needs a way to detect
-immunity-vs-advantage phrasing in a `conditionAdvantages` entry's compiled
-markup (parse for an `{adv}` tag) and a new shield-check icon component.
+Enforced by: Built in T28 — `npm run verify` green (220/41/50 tests).
+Immunity-vs-advantage is detected by parsing the entry's markup for a
+`{cond:}` tag plus an optional `{adv}` tag; new `ImmunityIcon` component
+(lucide `ShieldCheck`) alongside the existing `AdvBadge`.
 Affects: `app/src/views/MainSheet/Defenses.tsx` (`DefensesBlock`), new
 condition-icon detection logic, `app/src/components/chips/` (new
 immunity-icon component alongside the existing `AdvBadge`).
@@ -1242,7 +1243,7 @@ what the card is; the list itself needs no second label) — or rename it to
 something more specific if a label is still wanted structurally. Exact
 resolution left to implementation, since this is a bug fix not a design
 decision.
-Enforced by: not yet built — filed to T28.
+Enforced by: Built in T28 — `npm run verify` green (220/41/50 tests).
 Affects: `app/src/views/MainSheet/Defenses.tsx` (`SensesBlock`).
 
 ### D54 — Identity: chip moves to the topbar, MainSheet's own header removed · 2026-08-24 · DECIDED
@@ -1260,7 +1261,7 @@ content becomes the ability rail. The `variantLabel` badge ("Battle Mage")
 and the identity tooltip both move up with the chip.
 Rejected: keeping a smaller header/divider on MainSheet as a landmark —
 Francesco chose full removal, no residual header.
-Enforced by: not yet built — filed to T28.
+Enforced by: Built in T28 — `npm run verify` green (220/41/50 tests).
 Affects: `app/src/app/AppShell.tsx` (topbar gains the chip + tooltip),
 `app/src/views/MainSheet/IdentityStrip.tsx` (retired or emptied),
 `app/src/app/appShell.css`, `app/src/views/MainSheet/mainSheet.css`
@@ -1282,7 +1283,7 @@ existing `rollCheck`/`rollableProps` convention.
 Rejected: bringing the full Spells-tab treatment (tiles + source list) to
 Main too — offered, rejected as duplicating content that's already one tap
 away and adding height to the dense Main view.
-Enforced by: not yet built — filed to T28.
+Enforced by: Built in T28 — `npm run verify` green (220/41/50 tests).
 Affects: `app/src/views/MainSheet/Defense.tsx` (`SpellcastingSummary`
 rebuilt on `.stat-row`/`.stat` from `components/primitives.css`).
 
@@ -1298,7 +1299,7 @@ inconsistent — same audit discipline as D45's typography pass, not a
 spot-fix-as-noticed approach.
 Rejected: fixing only surfaces Francesco calls out explicitly as he notices
 them — offered as the lighter option, full inventory chosen instead.
-Enforced by: not yet built — filed to T28.
+Enforced by: Built in T28 — `npm run verify` green (220/41/50 tests).
 Affects: app-wide (audit scope, not a single file).
 
 ### D57 — No tracking anywhere; prose leading matched to monster-forge's 1.5 · 2026-08-25 · DECIDED
@@ -1374,3 +1375,16 @@ Affects: `app/src/tokens/tokens.css`, `app/src/components/chips/chips.css`,
 `app/src/views/MainSheet/mainSheet.css`, `app/src/library/library.css`,
 `app/src/manage/manage.css`, `docs/DESIGN-SYSTEM.md` (§0 intro, §2, §3
 "Confirmed violations," §4).
+
+---
+
+> **2026-09-29 — moved.** D58–D61 (the successor turn: MPMB's engine inside, an
+> MPMB-structured sheet, private, the A-first ladder) now live in
+> **character-forge v2**, `~/Documents/GitHub/character-forge/DECISIONS.md`, as
+> its founding entries. This repo is v1, read-only; it is archived on GitHub at
+> v2's PLAN T0.2.
+
+- **D58** — moved → v2 `DECISIONS.md#d58` (MPMB's engine runs inside v2, headless).
+- **D59** — moved → v2 (play in our own app structured like MPMB; MPMB-look PDF; no Acrobat).
+- **D60** — moved → v2 (private forever; WotC scripts loaded as data).
+- **D61** — moved → v2 (the A-first ladder).

@@ -21,7 +21,7 @@ companion**: it displays the sheet beautifully on desktop and phone, tracks
 play-time state (HP, slots, uses, prepared spells, loadouts), and pops over
 the full official rules text for anything on the sheet.
 
-The app deliberately contains **no rules engine**. All derived numbers are
+The app deliberately contains **no rules engine**. *(⚠ SUPERSEDED for the successor tool → D58, 2026-09-29: MPMB's engine runs inside it.)* All derived numbers are
 computed at compile time by Claude (exactly as Francesco computes them on
 paper). This is what makes homebrew, reflavoring, and mixed-edition builds free.
 
@@ -97,12 +97,12 @@ v13.1.3, hand-filled digitally. These conventions are the design canon:
 |---|---|---|
 | D1 | Layout | Same information architecture as the paper system, **new responsive visual design**. Not a pixel replica. |
 | D2 | Interactivity | Trackers editable in app; build content read-only from file; **in-session additions allowed** (DM boons, found items, notes) via a separate session layer. |
-| D3 | Runtime | **PWA**; app shell on **GitHub Pages (public repo)**; character data via **Google Drive-synced files** + on-device IndexedDB. |
-| D4 | Fill pipeline | File-based: interview doc → chassis+progression doc → Claude Code compiles → schema-validated JSON → app renders. The chassis doc may itself come from a **guided Claude conversation** (instruction file provided). |
+| D3 | Runtime | **PWA**; app shell on **GitHub Pages (public repo)**; character data via **Google Drive-synced files** + on-device IndexedDB.  ⚠ SUPERSEDED for the successor → D60 |
+| D4 | Fill pipeline | File-based: interview doc → chassis+progression doc → Claude Code compiles → schema-validated JSON → app renders. The chassis doc may itself come from a **guided Claude conversation** (instruction file provided).  ⚠ SUPERSEDED for the successor → D58 |
 | D5 | KB access | **Self-contained character files** (full text of every referenced entry embedded at compile time), plus a **KB-audit flow** to re-check/refresh extracts when the KB is updated. |
 | D6 | v1 scope | Core (main sheet, features, spells) + **equipment/currency/magic items** + **companion sheet**. Deferred: description/roleplay page, notes/cheat-sheets. |
 | D7 | Design flow | **Straight to coded prototype** (no Figma phase); design tokens derived from the sheet's conventions; iterate in browser. |
-| D8 | Repo | `~/Documents/GitHub/character-forge`, public. |
+| D8 | Repo | `~/Documents/GitHub/character-forge`, public.  ⚠ SUPERSEDED for the successor → D60 |
 | D9 | Sync | **Google Drive** is the synced folder for character files (Drive for desktop on Mac; Drive location in the iOS Files app for imports). |
 | D10 | Theme | **Dark mode first.** The palette is *derived from* the paper canon but adapted to dark surfaces. Light mode is backlog. |
 | D11 | Multiclass | **First-class in v1** — schema, views, and pipeline all handle multiple classes per Shigen canon (§2.8). |

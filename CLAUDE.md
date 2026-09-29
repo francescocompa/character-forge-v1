@@ -4,6 +4,9 @@
 > rules engine**: Claude compiles a human-written build document into a
 > validated, self-contained character file; the app only renders it and tracks
 > play-time state. This file is deliberately an index — truth lives in `docs/`.
+> ⚠ **2026-09-29:** a successor tool with MPMB's engine inside it is decided
+> (D58–D61, now in v2 at `~/Documents/GitHub/character-forge`). **This repo is v1:
+> read-only, archived on GitHub at v2's PLAN T0.2.** Don't extend it.
 
 ▶️ **A fresh session should read `docs/PROJECT-SCOPE.md` first** — the source of
 truth for scope, architecture, and decisions.
